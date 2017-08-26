@@ -1,0 +1,45 @@
+.sites {
+  .sites-nav {
+    margin: 0 20px;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    input {
+      display: none;
+    }
+    .view-settings {
+      display: flex;
+      align-items: center;
+      .size {
+        display: inline-block;
+        margin: 0 20px;
+        label {
+          margin: 0 5px;
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          background: rgb(207, 207, 207);
+        }
+      }
+    }
+    .actions {
+      display: inline-block;
+      > div, span {
+        display: inline-block;
+      }
+    }
+  }
+  .content {
+    .sites-scroll-container {
+      overflow-x: scroll;
+      .site-mini {
+        display: inline-block;
+        margin-right: 20px;
+        border-radius: 7px;
+        width: 200px;
+        height: 120px;
+        background: rgb(228, 228, 228)
+      }
+    }
+  }
+}
