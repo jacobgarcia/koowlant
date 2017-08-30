@@ -29,17 +29,35 @@ a {
 }
 
 span.button {
-  border: 1px solid #d2d2d2;
+  border: 1px solid #a4a4a4;
   border-radius: 3px;
-  padding: 2px 15px;
+  padding: 4px 15px;
+  background: #fff;
+  cursor: pointer;
+  &.huge {
+    font-size: 1rem;
+    padding: 6px 20px;
+    font-weight: 500;
+  }
   &.window {
     padding-left: 25px;
   }
 }
 
+input[type="text"] {
+  border-bottom: 1px solid rgb(164, 164, 164);
+}
+
 ul.links {
   display: inline-block;
+  &.nav {
+    li {
+      padding: 0;
+      a { padding: 2px 15px; }
+    }
+  }
   li {
+    cursor: pointer;
     display: inline-block;
     background: #fff;
     border-radius: 0;
@@ -48,10 +66,33 @@ ul.links {
     font-size: 0.8rem;
     color: rgb(47, 47, 47);
     font-weight: 500;
+    border-left: none;
+    overflow: hidden;
+    &.deactivated {
+      cursor: default;
+      color: rgb(208, 208, 208);
+    }
+    a {
+      display: block;
+    }
+    &.selected, a.selected {
+      background: #ccc;
+    }
+    &.big {
+      font-size: 1rem;
+      padding: 4px 15px;
+    }
+    &.huge {
+      font-size: 1.2rem;
+      padding: 8px 20px;
+      input {
+        font-size: 1.2rem;
+      }
+    }
   }
   li:first-child {
     border-radius: 6px 0 0 6px;
-    border-right: 0;
+    border-left: 1px solid rgb(164, 164, 164);
   }
   li:last-child {
     border-left: 0;
@@ -64,11 +105,13 @@ ul.links {
 }
 
 .pop-window {
+  display: block;
   padding-left: 22px;
   background: url('/static/img/icons/window.svg') no-repeat left center;
   background-size: 19px;
   font-size: 0.9rem;
   font-weight: 500;
+  margin-bottom: 30px;
 }
 
 @import "./components/Nav";
