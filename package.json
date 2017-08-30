@@ -25,6 +25,7 @@
     "jsonwebtoken": "^7.4.3",
     "leaflet": "^1.2.0",
     "mongoose": "^4.11.7",
+    "query-string": "^5.0.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-leaflet": "^1.5.0",
