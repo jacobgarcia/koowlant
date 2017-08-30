@@ -16,7 +16,7 @@ class Dashboard extends Component {
     return (
       <div>
         <h1>Dashboard</h1>
-        <Link to="/towers">Torres</Link>
+        <Link to="/">Mapa</Link>
       </div>
     )
   }

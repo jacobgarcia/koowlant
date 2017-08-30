@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { setUser } from '../actions'
+import { setCredentials } from '../actions'
 
 class Login extends Component {
   constructor(props) {
@@ -20,17 +20,20 @@ class Login extends Component {
   onSubmit(event) {
     event.preventDefault()
 
+    // Dumb login
     const user = {
       name: 'John',
       surname: 'Appleseed',
-      token: 'e293je823'
+      token: 'e293je823',
+      permissions: 0
     }
+
     const token = 'kasjndjaksndin39'
 
-    this.props.setUser(user, token)
+    this.props.setCredentials(user, token)
 
     // Get response
-    // localStorage.set('token', 'asjndakjsdnjs2in3')
+    localStorage.setItem('token', token)
 
     this.props.history.push('/')
   }
@@ -82,14 +85,14 @@ function mapStateToProps({ auth }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setUser: user => {
-      dispatch(setUser(user))
+    setCredentials: user => {
+      dispatch(setCredentials(user))
     }
   }
 }
 
 Login.propTypes = {
-  setUser: PropTypes.func
+  setCredentials: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
