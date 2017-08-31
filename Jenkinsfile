@@ -4,7 +4,7 @@ pipeline {
     stage('Build') {
       steps {
         echo 'Initial pipeline'
-        sh 'sudo ls'
+        sh 'ls'
       }
     }
   }
