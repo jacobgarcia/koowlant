@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'gulp build'
+        sh 'ln -s /usr/bin/nodejs /usr/bin/node && gulp build'
       }
     }
   }
