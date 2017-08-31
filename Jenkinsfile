@@ -3,8 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        echo 'Initial pipeline'
-        sh 'ls'
+        sh 'gulp build'
       }
     }
   }
