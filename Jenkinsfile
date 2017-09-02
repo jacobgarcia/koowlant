@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'node -v && npm install'
+        sh 'export PATH=/usr/local/bin && npm install'
         sh 'gulp build'
       }
     }
