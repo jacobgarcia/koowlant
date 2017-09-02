@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'node -v && yarn'
+        sh 'node -v && npm install'
         sh 'gulp build'
       }
     }
