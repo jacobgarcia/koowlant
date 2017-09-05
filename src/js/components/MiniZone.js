@@ -15,8 +15,16 @@ function MiniZone(props) {
       </div>
       <div className="status-graph">
         <div>
-          <p>{props.reports.alerts.length} Alertas</p>
-          <p>{props.reports.warnings.length} Precauciones</p>
+          {
+            props.reports && props.reports.alerts && props.reports.alert.length > 0
+              ? <p className="alert mini-icon"><span>{props.reports.alerts.length}</span> Alertas</p>
+              : null
+          }
+          {
+            props.reports && props.reports.warnings && props.reports.warnings.length > 0
+            ? <p className="warning mini-icon"><span>{props.reports.warnings.length}</span> Precauciones</p>
+            : null
+          }
         </div>
         <div className="graph"></div>
       </div>
