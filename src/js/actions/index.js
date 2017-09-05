@@ -6,6 +6,12 @@ export function setCredentials(user, token) {
   }
 }
 
+export function logout() {
+  return {
+    type: 'LOG_OUT'
+  }
+}
+
 export function setZone(name, positions) {
   return {
     type: 'SET_ZONE',
@@ -19,6 +25,13 @@ export function setSubzone(zoneId, name, positions) {
     type: 'SET_SUBZONE',
     name,
     positions
+  }
+}
+
+export function dismissReport(reportId) {
+  return {
+    type: 'DISMISS_REPORT',
+    report: reportId
   }
 }
 
