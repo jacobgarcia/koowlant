@@ -1,9 +1,9 @@
-const webpack = require('webpack')
-
+/* eslint-env node */
 module.exports = {
   output: {
     filename: 'bundle.min.js'
   },
+  devtool: 'eval-source-map',
   module: {
     rules: [
       {
