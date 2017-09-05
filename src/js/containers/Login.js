@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 import { setCredentials } from '../actions'
 
@@ -53,8 +54,9 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <p>{JSON.stringify(this.props.auth)}</p>
+      <div className="login">
+        <img src="/static/img/iso.svg" alt="" className="iso"/>
+        <img src="/static/img/logo.svg" alt="" className="logo"/>
         <form onSubmit={this.onSubmit}>
           <input
             type="text"
@@ -70,7 +72,8 @@ class Login extends Component {
             name="password"
             placeholder="Contraseña"
           />
-          <input type="submit"/>
+          <input type="submit" value="Iniciar sesión"/>
+          <Link to="/restore-password">Recuperar contraseña</Link>
         </form>
       </div>
     )
