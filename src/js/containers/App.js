@@ -8,6 +8,7 @@ import { setCredentials } from '../actions'
 import Sites from './Sites'
 import NoMatch from './NoMatch'
 import MapView from './Map'
+import Administrators from './Administrators'
 import Settings from './Settings'
 import Nav from '../components/Nav'
 
@@ -16,6 +17,7 @@ function authenticate({setCredentials}) {
     name: 'John',
     surname: 'Appleseed',
     token: 'e293je823',
+    email: 'john.a@apple.com',
     permissions: 0
   }
 
@@ -39,15 +41,15 @@ function App(props) {
     authenticate(props)
   }
 
-  const {isWindow} = qs.parse(props.location.search)
+  const { isWindow } = qs.parse(props.location.search)
 
   return (
     <div id="app-content">
-      { isWindow ? null : <Nav /> }
+      { isWindow ? null : <Nav {...props}/> }
       <div className={`body ${isWindow ? 'window' : ''}`}>
         <Switch>
           <Route exact path="/" component={MapView}/>
-          <Route exact path="/administrators" component={Sites}/>
+          <Route exact path="/administrators" component={Administrators}/>
           <Route exact path="/stadistics" component={Sites}/>
           <Route exact path="/settings" component={Settings}/>
           <Route exact path="/zones/:zoneId" component={MapView}/>
@@ -74,7 +76,8 @@ function mapDispatchToProps(dispatch) {
 
 App.propTypes = {
   credentials: PropTypes.object,
-  setCredentials: PropTypes.func
+  setCredentials: PropTypes.func,
+  location: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
