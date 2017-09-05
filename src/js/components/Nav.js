@@ -20,10 +20,6 @@ class Nav extends Component {
     }))
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('Will recieve props', nextProps)
-  }
-
   componentWillUnmount() {
     clearInterval(this.interval)
   }
