@@ -41,5 +41,5 @@ app.get('*', (req, res) => {
 
 // Start server
 app.listen(PORT, () =>
-  winston.info(`Alfred server is listening on port: ${PORT}!`)
+  winston.info(`Telco server is listening on port: ${PORT}!`)
 )
