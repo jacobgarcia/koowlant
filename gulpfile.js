@@ -1,14 +1,20 @@
 /* eslint-env node */
 const gulp = require('gulp')
-const sourcemaps = require('gulp-sourcemaps')
 const sass = require('gulp-sass')
 const nodemon = require('gulp-nodemon')
 const rename = require('gulp-rename')
 const webpackStream = require('webpack-stream')
 const webpack = require('webpack')
 const path = require('path')
+const gutil = require('gulp-util')
 const webpackConfig = require(path.resolve('config/webpack.config.js'))
-const webpackConfigDev = require(path.resolve('config/webpack-dev.config.js'))
+// const WebpackDevServer = require("webpack-dev-server")
+
+const myDevConfig = Object.create(webpackConfig)
+myDevConfig.devtool = "sourcemap"
+myDevConfig.devServer = { inline: true, compress: true }
+
+const devCompiler = webpack(myDevConfig)
 
 gulp.task('sass', () =>
   gulp.src(path.resolve('src/styles/master.scss'))
@@ -36,16 +42,34 @@ gulp.task('webpack', () =>
 )
 
 // Possible duplicate?
-gulp.task('webpackDev', () =>
-  gulp.src(path.resolve('src/js/index.js'))
-  .pipe(sourcemaps.init())
-  .pipe(webpackStream(webpackConfigDev, webpack)) // Create sourcemaps for better debbuging
-  .on('error', function handleError() {
-    this.emit('end')
-  })
-  .pipe(sourcemaps.write())
-  .pipe(gulp.dest('./dist'))
-)
+gulp.task('webpack:build-dev', callback => {
+    // Start a webpack-dev-server
+    devCompiler.run((error, stats) => {
+      if (error) throw new gutil.PluginError("webpack:build-dev", error);
+      gutil.log("[webpack:build-dev]", stats.toString({
+        colors: true
+      }))
+      callback()
+    })
+})
+
+// gulp.task('webpack-dev-server', () => {
+//   // Start a webpack-dev-server
+//   new WebpackDevServer(webpack(myDevConfig), {
+//     publicPath: './dist',
+//     historyApiFallback: true,
+//     host: 'localhost',
+//     hot: true,
+//     stats: {
+//       colors: true
+//     }
+//   }).listen(8080, "localhost", error => {
+//     if (error) throw new gutil.PluginError("webpack-dev-server", error)
+//     gutil.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html")
+//   })
+// })
+//
+//
 
 gulp.task('start', () => {
   nodemon({
@@ -56,9 +80,9 @@ gulp.task('start', () => {
 })
 
 gulp.task('watch', () => {
-  gulp.watch('src/js/**/*.js', ['webpackDev'])
+  gulp.watch('src/js/**/*.js', ['webpack:build-dev'])
   gulp.watch('src/styles/**/*.scss', ['sassDev'])
 })
 
-gulp.task('develop', ['sassDev', 'webpackDev', 'start', 'watch'])
+gulp.task('develop', ['start', 'sassDev', 'webpack:build-dev', 'watch'])
 gulp.task('build', ['sass', 'webpack'])
