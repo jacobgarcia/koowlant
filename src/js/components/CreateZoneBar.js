@@ -5,11 +5,11 @@ function CreateZoneBar(props) {
   return (
     <div className="create-zone-bar">
       <ul className="links">
-        <li className="huge"><span>Dibuja la zona</span></li>
+        <li className="huge"><span>{props.text}</span></li>
         <li className="huge">
           <input
             type="text"
-            name="newZoneName"
+            name="newName"
             value={props.newZoneName}
             placeholder="Nombre de la zona..."
             onChange={props.onChange}
@@ -27,5 +27,6 @@ CreateZoneBar.propTypes = {
   onChange: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
   onSave: PropTypes.func.isRequired,
+  text: PropTypes.string
 }
 export default CreateZoneBar
