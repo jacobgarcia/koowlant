@@ -1,6 +1,8 @@
-$green: rgb(76, 217, 100);
+$green: #50E3C2;
 $text-gray: rgb(56, 56, 56);
 $gray: #959697;
+$red: #ed2a20;
+$yellow: #FFC511;
 
 *, html, body, p, ul, li, div, span, label, input, textarea, form {
   margin: 0;
@@ -70,10 +72,43 @@ span.small-icon {
   width: 19px;
   height: 19px;
   display: block;
-  background: $text-gray;
   cursor: pointer;
+  background-size: contain;
   &.deactive {
     opacity: 0.6;
+  }
+  &.list { background-image: url('/static/img/icons/list.svg'); }
+  &.dynamic { background-image: url('/static/img/icons/dynamic.svg'); }
+  &.static { background-image: url('/static/img/icons/static.svg'); }
+  &.grid { background-image: url('/static/img/icons/grid.svg'); }
+}
+
+.tooltip {
+  width: 70px;
+  height: 20px;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .hidable {
+    display: none;
+  }
+  &.active {
+    width: 70px;
+    height: 70px;
+    .hidable {
+      display: block;
+    }
+  }
+  .general {
+    position: absolute;
+  }
+  span {
+    font-size: 0.8rem;
+    font-weight: 500;
+    position: relative;
   }
 }
 
@@ -158,6 +193,7 @@ ul.links {
 }
 
 .pop-window, .back {
+  cursor: pointer;
   display: block;
   padding-left: 22px;
   background-size: 19px;
@@ -165,21 +201,59 @@ ul.links {
   font-weight: 500;
   margin-bottom: 30px;
   background-repeat: no-repeat;
-   background-position: left center;
+  background-position: left center;
 }
 .pop-window {
+  display: inline-block;
+  margin-left: auto;
   background-image: url('/static/img/icons/window.svg');
 }
 .back {
   background-image: url('/static/img/icons/back.png');
 }
 
-@import "./components/Nav";
-@import "./containers/App";
 @import "./containers/Sites";
-
-@import "./containers/Map";
+@import "./containers/App";
 @import "./leaflet";
+
+nav {
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.4);
+  position: fixed;
+  z-index: 1100;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  span {
+    color: rgb(105, 105, 105);
+    margin-right: 20px;
+  }
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  }
+  .user {
+    display: inline-flex;
+  }
+  .username {
+    margin-left: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #000;
+    p:last-child {
+      font-size: 0.7rem;
+    }
+  }
+}
+
 
 /*
 
@@ -299,6 +373,18 @@ ul.links {
 }
 
 .alerts {
+  .general-alerts {
+    padding-left: 45px;
+    background: url('/static/img/icons/alert-red.png') no-repeat left center;
+    background-size: 40px;
+    margin-bottom: 20px;
+    h3 {
+      font-weight: 400;
+    }
+    p {
+      font-weight: 600;
+    }
+  }
   .close-tab.alerts-side {
     left: -40px;
     border-radius: 6px 0 0 6px;
@@ -317,24 +403,38 @@ ul.links {
     background-size: 30px;
     padding-left: 40px;
     background-repeat: no-repeat;
-    background-position: 5px 10px;
-    .location {
+    background-position: 5px center;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    .location, .date {
       font-size: 0.9rem;
       color: $gray;
+      font-weight: 500;
     }
     .status {
       display: flex;
       align-items: flex-end;
+      margin-top: 3px;
+      font-size: 1.05rem;
       .value {
         margin-left: 10px;
       }
     }
+    .value, .check {
+      color: $red;
+      font-weight: 600;
+    }
+    .check {
+      margin-top: 3px;
+      text-align: right;
+    }
     .type {
       font-weight: 500;
     }
-    &.energy {
-      background-image: url('/static/img/icons/energy.png');
-    }
+    &.battery { background-image: url('/static/img/icons/battery.png'); }
+    &.fuel { background-image: url('/static/img/icons/fuel.png'); }
+    &.temperature { background-image: url('/static/img/icons/temperature.png'); }
   }
 }
 
@@ -365,6 +465,7 @@ ul.links {
   .mini-sites-menu {
     display: flex;
     justify-content: space-between;
+    margin: 30px 0 10px;
     .view-settings, .view-ordering {
       display: flex;
       span {
@@ -400,6 +501,20 @@ ul.links {
     &.hidden .side-content {
       transform: translateX(-500px);
     }
+    .overall {
+      // padding-left: 45px;
+      // background: url('/static/img/icons/tower.png') no-repeat left top;
+      background-size: 40px;
+      span {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: $gray;
+      }
+      h3 {
+        margin-right: 10px;
+        margin-bottom: 10px;
+      }
+    }
     .sites-status {
       display: flex;
       flex-direction: column;
@@ -420,16 +535,19 @@ ul.links {
       }
       .total {
         flex: 1;
-        background: rgb(156, 156, 156);
+        display: flex;
+        background: $gray;
         width: 200px;
-        position: relative;
         box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
       }
-      .current {
-        position: absolute;
-        width: 100px;
-        background: $green;
+      .normal, .warnings, .alerts {
+        display: inline-block;
+        height: 10px;
       }
+      .normal { background: $green; }
+      .warnings { background: $yellow; }
+      .alerts { background: $red; box-shadow: none; }
     }
   }
   .map-view {
@@ -488,10 +606,20 @@ ul.links {
       display: flex;
       align-items: flex-end;
       .graph {
-        width: 60px;
-        height: 60px;
-        background: gray;
+        width: 70px;
+        height: 70px;
         margin-left: 5px;
+        position: relative;
+        .percentage {
+          position: absolute;
+          width: 70px;
+          height: 20px;
+          text-align: center;
+          vertical-align: middle;
+          font-weight: 500;
+          top: 25px;
+          color: $text-gray
+        }
       }
     }
     .status-text {
