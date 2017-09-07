@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { MiniZone } from './'
 
 function ZonesContainer(props) {
+  console.log('ZONES CONTAINER PROPS', props)
   return (
     <div>
       <div className="mini-sites-menu">
@@ -25,9 +26,10 @@ function ZonesContainer(props) {
       </div>
       <div className={`mini-sites-container ${props.viewStyle}`}>
         {
-          props.zones.map(zone =>
+          props.isZone || props.isGeneral
+          ? props.zones.map(zone =>
             <Link
-              to={`/zones/${zone._id}`}
+              to={props.isZone ? `/zones/${props.zone._id}/${zone._id}` : `/zones/${zone._id}`}
               key={zone._id}>
               <MiniZone
                 id={zone._id}
@@ -37,9 +39,21 @@ function ZonesContainer(props) {
                 highlighted={props.highlightedZone}
                 onHover={props.onHover}
                 active={props.highlightedZone === zone._id}
-                subZone={props.subZones}
+                subZone={props.isZone}
               />
             </Link>
+          )
+          : props.sites.map(site =>
+            <MiniZone
+              key={site._id}
+              id={site._id}
+              name={site.name}
+              zone={props.subzone}
+              reports={props.reports}
+              highlighted={props.highlightedZone}
+              onHover={props.onHover}
+              active={props.highlightedZone === site._id}
+            />
           )
         }
       </div>
