@@ -1,4 +1,6 @@
-dist/**
+dist/
+
+.DS_Store
 
 # Yarn
 yarn.lock
