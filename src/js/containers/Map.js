@@ -1,14 +1,14 @@
 /* eslint max-statements: ["error", 20, { "ignoreTopLevelFunctions": true }]*/
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import qs from 'query-string'
-import { Map, TileLayer, Polygon, Popup, Marker } from 'react-leaflet'
+import { Map, TileLayer, Polygon, Popup, Marker, Tooltip } from 'react-leaflet'
 
 import { setZone } from '../actions'
-import { MiniZone, MiniAlert, CreateZoneBar } from '../components'
-import { hashCode, intToRGB } from '../SpecialFunctions'
+import { CreateZoneBar, ZoneDetail, StatusOverall, ZonesContainer, Reports, ZonePolygon } from '../components'
+import { getAreaCenter } from '../SpecialFunctions'
 
 class MapView extends Component {
   constructor(props) {
@@ -16,22 +16,26 @@ class MapView extends Component {
     this.isWindow = qs.parse(props.location.search).isWindow
 
     const zoneId = props.match.params.zoneId
+    const subzoneId = props.match.params.subzoneId
+
     const selectedZone = props.zones.filter(zone => zone._id === zoneId).pop()
+    const selectedSubzone = selectedZone ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
 
     this.state = {
       isCreatingZone: false,
       isGeneralStatusHidden: true,
-      isAlertsHidden: false,
-      currentZoom: 5.25, // TODO load from localStorage
+      isAlertsHidden: true,
+      currentZoom: 5, // TODO load from localStorage
       currentPosition: [23.2096057, -101.6139503], // TODO load from localStorage
       highlightedZone: null,
       zones: props.zones,
       selectedZone,
+      selectedSubzone,
       newZoneName: '',
       newPositions: [],
       sitesViewStyle: 'list', // TODO load from localStorage
       sitesViewOrdering: 'static', // TODO load from localStorage
-      isCreatingSite: false
+      isCreatingSite: false,
     }
 
     this.hide = this.hide.bind(this)
@@ -44,6 +48,7 @@ class MapView extends Component {
     this.popWindow = this.popWindow.bind(this)
     this.changeSitesView = this.changeSitesView.bind(this)
     this.onSelectElement = this.onSelectElement.bind(this)
+    this.onViewportChanged = this.onViewportChanged.bind(this)
   }
 
   isNewZoneValid() {
@@ -124,10 +129,36 @@ class MapView extends Component {
 
   componentWillReceiveProps(nextProps) {
     const zoneId = nextProps.match.params.zoneId
-    if (zoneId !== this.state.selectedZone) {
+    const subzoneId = nextProps.match.params.subzoneId
+
+    const selectedZone = this.props.zones.filter(zone => zone._id === zoneId).pop()
+    const selectedSubzone = selectedZone ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
+
+    if (!selectedZone) {
       this.setState({
-        selectedZone: this.props.zones.filter(zone => zone._id === zoneId).pop()
+        selectedZone: null,
+        selectedSubzone: null,
+        currentZoom: 5,
+        currentPosition: [23.2096057, -101.6139503]
       })
+      return
+    }
+
+    if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
+      this.setState({
+        selectedZone,
+        currentZoom: 5.5,
+        currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions[0]) : [23.2096057, -101.6139503],
+        selectedSubzone: null
+      })
+      return
+    }
+
+    if (selectedSubzone && (!this.state.selectedSubzone || (this.state.selectedSubzone && subzoneId !== this.state.selectedSubzone._id))) {
+      this.setState(prevState => ({
+        selectedSubzone,
+        currentZoom: 6.5
+      }), () => this.setState({currentPosition: selectedSubzone.positions[0] ? getAreaCenter(selectedSubzone.positions[0]) : prevState.currentPosition}))
     }
   }
 
@@ -145,6 +176,7 @@ class MapView extends Component {
 
     // If we're creating a zone, replace the old position
     if (this.state.isCreatingSite) {
+      console.log(newPosition)
       this.setState({
         newPositions: [newPosition]
       })
@@ -163,6 +195,11 @@ class MapView extends Component {
 
   changeSitesView(style) {
     this.setState({ sitesViewStyle: style })
+  }
+
+  onViewportChanged(viewport) {
+    console.log(this.map)
+    console.log({viewport})
   }
 
   onSelectElement(elementType) {
@@ -208,68 +245,39 @@ class MapView extends Component {
               { this.isWindow === 'zones' ? null : <span
                 className="pop-window"
                 onClick={() => this.popWindow('zones')}>Hacer ventana</span>}
-              <div className="overall">
-                <span>Estatus</span>
-                <div className="sites-status">
-                  <div className="sites-graph">
-                    <h3>Sitios</h3>
-                    <div className="total">
-                      <div className="current"></div>
-                    </div>
-                  </div>
-                  <p><span>93.2%</span> de funcionalidad, <span className="alert"></span> 18 Alertas totales</p>
-                  <p>Atender</p>
-                </div>
-              </div>
-              <div className="mini-sites-menu">
-                <div>
-                  <span>Mostrar</span>
-                </div>
-                <div className="view-ordering">
-                  <p>{this.state.sitesViewOrdering}</p>
-                  <span className="dinamic small-icon" />
-                  <span className="static small-icon" />
-                </div>
-                <div className="view-settings">
-                  <span className={`list small-icon ${this.state.sitesViewStyle === 'list' ? '' : 'deactive'}`} onClick={() => this.changeSitesView('list')}/>
-                  <span className={`grid small-icon ${this.state.sitesViewStyle === 'grid' ? '' : 'deactive'}`} onClick={() => this.changeSitesView('grid')}/>
-                </div>
-              </div>
-              <div className={`mini-sites-container ${this.state.sitesViewStyle}`}>
-                {
-                  this.props.zones.map(zone =>
-                    <Link
-                      to={`/zones/${zone._id}`}
-                      key={zone._id}>
-                      <MiniZone
-                        id={zone._id}
-                        name={zone.name}
-                        subzones={[]}
-                        sites={[]}
-                        admins={[]}
-                        reports={this.props.reports}
-                        highlighted={this.state.highlightedZone}
-                        onHover={this.onSiteHover}
-                        active={this.state.highlightedZone === zone._id}
-                      />
-                    </Link>
-                  )
-                }
-              </div>
+              <StatusOverall
+                status={{}}
+                reports={{}}
+                type="general"
+              />
+              <ZonesContainer
+                viewOrdering={this.state.sitesViewOrdering}
+                viewStyle={this.state.sitesViewStyle}
+                changeSitesView={type => this.changeSitesView(type)}
+                zones={this.props.zones}
+                reports={this.props.reports}
+                highlightedZone={this.state.highlightedZone}
+                onHover={this.onSiteHover}
+                isGeneral
+              />
             </div>
         }/>
         {
           this.isWindow === 'alerts'
           ? null
-          : <Route exact path="/zones/:zoneId" render={() =>
-            <div className="side-content">
-              <div className="top">
-                <span className="back"><Link to="/">Regresar</Link></span>
-                { this.isWindow === 'zones' ? null : <span className="pop-window">Hacer ventana</span> }
-              </div>
-              <h3>ZONE DETAIL</h3>
-            </div>
-          }/>
+          : <Route exact path="/zones/:zoneId" render={() => <ZoneDetail isWindow={this.isWindow} zone={this.state.selectedZone} subzones isZone/>}/>
+        }
+        {
+          this.isWindow === 'alerts'
+          ? null
+          : <Route exact path="/zones/:zoneId/:subzoneId" render={() =>
+              <ZoneDetail
+                isWindow={this.isWindow}
+                zone={this.state.selectedZone}
+                subzone={this.state.selectedSubzone}
+                sites
+                isSubzone/>
+            } />
         }
         </div>
         {
@@ -287,42 +295,76 @@ class MapView extends Component {
               onClick={this.onMapClick}
               center={this.state.currentPosition}
               zoom={this.state.currentZoom}
+              onViewportChanged={this.onViewportChanged}
+              ref={map => {
+                this.map = map
+              }}
+              animate
               >
               {
-                this.state.selectedZone && this.state.selectedZone.positions.length > 1
-                ? <Polygon
-                  positions={[
-                    [[-85,-180], [-85,180], [85,180], [85,-180]],
-                    [this.state.selectedZone.positions]
-                  ]}
-                  fillColor="#000"
-                  fillOpacity={0.1}
-                  color={'#' + intToRGB(hashCode(this.state.selectedZone.name))}
-                  onClick={event => event.stopPropagation() }
-                />
+                this.state.selectedZone && this.state.selectedZone.subzones && !this.state.selectedSubzone
+                ? this.state.selectedZone.subzones.map(zone =>
+                  <ZonePolygon
+                    key={zone._id}
+                    zone={zone}
+                    highlightedZone={this.state.highlightedZone}
+                    onMouseOver={this.onSiteHover}
+                    onMouseOut={this.onSiteHover}
+                  />
+                )
                 : null
               }
-              <TileLayer
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              />
+              {
+                this.state.selectedSubzone && this.state.selectedSubzone.sites
+                ? this.state.selectedSubzone.sites.map(site =>
+                  <Marker key={site._id} position={site.position}>
+                    <Tooltip permanent opacity={1}>
+                      <h3>Torre {site.name}</h3>
+                    </Tooltip>
+                  </Marker>
+                )
+                : null
+              }
+              {
+                this.state.selectedSubzone
+                ? <Polygon
+                    positions={[
+                      [[-85,-180], [-85,180], [85,180], [85,-180]],
+                      [this.state.selectedSubzone.positions]
+                    ]}
+                    fillOpacity={0.3}
+                    color="#666"
+                    weight={0}
+                    onClick={event => event.stopPropagation() }
+                  />
+                : this.state.selectedZone && this.state.selectedZone.positions.length > 1
+                ? <Polygon
+                    positions={[
+                      [[-85,-180], [-85,180], [85,180], [85,-180]],
+                      [this.state.selectedZone.positions]
+                    ]}
+                    fillOpacity={0.3}
+                    color="#666"
+                    weight={0}
+                    onClick={event => event.stopPropagation() }
+                  />
+                : null
+              }
               {
                 this.state.selectedZone
                 ? null
-                : this.props.zones.map(({name, _id, positions}, index) =>
-                  <Polygon
-                    key={index}
-                    color={'#' + intToRGB(hashCode(name))}
-                    positions={positions}
-                    fillOpacity={this.state.highlightedZone === _id ? 0.8 : 0.2}
-                    onMouseOver={() => this.onSiteHover(_id)}
-                    onMouseOut={() => this.onSiteHover(null)}
+                : this.props.zones.map(zone =>
+                  <ZonePolygon
+                    key={zone._id}
+                    zone={zone}
+                    highlightedZone={this.state.highlightedZone}
+                    onMouseOver={this.onSiteHover}
+                    onMouseOut={this.onSiteHover}
                   />
                 )
               }
               {
-                this.state.isCreatingSite
-                ? (
+                this.state.isCreatingSite ? (
                   this.state.newPositions[0]
                   ? <Marker position={this.state.newPositions[0]}>
                       <Popup>
@@ -330,12 +372,17 @@ class MapView extends Component {
                       </Popup>
                     </Marker>
                   : null
-                  )
-                : <Polygon
-                    color="#aaa"
-                    positions={this.state.newPositions}
-                  />
+                ) : (
+                  <Polygon
+                      color="#aaa"
+                      positions={this.state.newPositions}
+                    />
+                )
               }
+              <TileLayer
+                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              />
             </Map>
             <CreateZoneBar
               newZoneName={this.state.newZoneName}
@@ -348,45 +395,12 @@ class MapView extends Component {
         {
           this.isWindow === 'zones'
           ? null
-          : <div className={`alerts ${this.state.isAlertsHidden ? 'hidden' : ''}`}>
-            <input
-              type="button"
-              onClick={() => this.hide('alerts')}
-              className="close-tab alerts-side"
+          : <Reports
+              isAlertsHidden={this.state.isAlertsHidden}
+              onHide={() => this.hide('alerts')}
+              isWindow={this.isWindow}
+              reports={this.props.reports}
             />
-            <div className="side-content">
-              { this.isWindow === 'zones' ? null : <span className="pop-window">Hacer ventana</span> }
-              <div className="general-alerts">
-                <h3>Alertas totales</h3>
-                <p>18</p>
-              </div>
-              <div>
-                <p>Mostrando <span>Zona A</span> <span>Eliminar selección</span></p>
-                <div>
-                  <p>Alertas</p>
-                  <input type="button"/>
-                  <input type="button"/>
-                </div>
-              </div>
-              <div className="zone-section">
-                <h2>Zona A</h2><span>11 Alertas</span>
-              </div>
-              <div className="mini-alerts-container">
-                {
-                  this.props.reports.map(report =>
-                    <MiniAlert
-                      key={report._id}
-                      type={report.type}
-                      report={report}
-                      site={report.site}
-                      zone={report.zone}
-                      subzone={report.subZone}
-                    />
-                  )
-                }
-              </div>
-            </div>
-          </div>
         }
       </div>
     )
