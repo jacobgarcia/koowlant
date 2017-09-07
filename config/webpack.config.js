@@ -1,17 +1,15 @@
-const webpack = require('webpack')
+/* eslint-env node */
+const path = require("path")
+// const webpack = require('webpack')
 
 module.exports = {
+  cache: true,
+  entry: path.resolve('src/js/index.js'),
   output: {
+    path: path.resolve('dist'),
+    // publicPath: 'dist/',
     filename: 'bundle.min.js'
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin()
-  ],
   module: {
     rules: [
       {
@@ -27,5 +25,15 @@ module.exports = {
         loader: 'json-loader'
       }
     ]
-  }
+  },
+  // plugins: [
+  //   new webpack.HotModuleReplacementPlugin(),
+  //   // enable HMR globally
+  //
+  //   new webpack.NamedModulesPlugin(),
+  //   // prints more readable module names in the browser console on HMR updates
+  //
+  //   new webpack.NoEmitOnErrorsPlugin(),
+  //   // do not emit compiled assets that include errors
+  // ]
 }
