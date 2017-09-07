@@ -1,35 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function MiniAlert(props) {
-  const getClass = type => {
-    switch (type) {
-      case 0:
-        return 'energy'
-      default:
-        return 'generic'
-    }
-  }
+import { getTypeClass, getTypeText } from '../Decoder'
 
-  const getText = type => {
-    switch (type) {
-      case 0:
-        return 'Energía'
-      default:
-        return 'Alerta'
-    }
-  }
+function MiniAlert(props) {
+
+  const date = new Date(props.report.timeStamp)
 
   return (
-    <div className={`mini-alert ${getClass(props.type)}`} key={alert}>
+    <div className={`mini-alert ${getTypeClass(props.type)}`} key={alert}>
       <div>
         <p className="location">Torre {props.site.name}. {props.subzone.name ? `Subzona ${props.subzone.name}. ` : ''} Zona {props.zone.name}.</p>
         <div className="status">
-          <p className="type">{getText(props.type)}</p>
+          <p className="type">{getTypeText(props.type)}</p>
           <p className="value">{props.report.sensor.state.value}</p>
         </div>
       </div>
-      <div></div>
+      <div>
+        <span className="date">{`${date.getMinutes()}:${date.getHours()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</span>
+        { props.report.checked ? null : <p className="check">Sin revisar</p> }
+      </div>
     </div>
   )
 }
