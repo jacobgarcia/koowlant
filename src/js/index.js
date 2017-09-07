@@ -2,7 +2,8 @@ import { render } from 'react-dom'
 import React from 'react'
 import Routes from './router'
 
-window.host = 'http://54.241.156.65'
+window.host = 'https://beta.kawlantid.com'
+// window.host = 'http://localhost:8080'
 
 render(
   <Routes />,
