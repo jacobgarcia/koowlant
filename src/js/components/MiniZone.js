@@ -18,7 +18,7 @@ function MiniZone(props) {
     <div className={`mini-zone ${props.active ? 'active' : ''}`} onMouseEnter={() => props.onHover(props.id)} onMouseLeave={() => props.onHover(null)}>
       <div className="status-text">
         <div className="status-color" style={{ background: '#' + intToRGB(hashCode(props.name)) }}></div>
-        <h3>{props.subZone ? 'Subzona' : 'Zona'} {props.name}</h3>
+        <h3>{props.isZone ? 'Subzona' : props.isSite ? 'Sitio' : 'Zona'} {props.name}</h3>
         { props.zone.subzones ? <p>{props.zone.subzones.length} Sub-zonas</p> : null }
         { props.zone.sites ? <p>{props.zone.sites.length} torres</p> : null }
         { props.zone.admin ? <p>{props.zone.admins.length} admin</p> : null}

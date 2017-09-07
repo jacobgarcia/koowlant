@@ -5,9 +5,39 @@ import { Link } from 'react-router-dom'
 import { MiniZone } from './'
 
 function ZonesContainer(props) {
-  console.log('ZONES CONTAINER PROPS', props)
+
+  const getMiniZoneLink = zone => {
+    switch (props.type) {
+      case 'general': return `/zones/${zone._id}`
+      case 'zone': return `/zones/${props.zone._id}/${zone._id}`
+      case 'subzone': return `/zones/${props.zone._id}/${props.subzone._id}/${zone._id}`
+      case 'site': return 'Torre ' + name
+      default: return `/`
+    }
+  }
+
+  const getElements = type => {
+    switch (type) {
+      case 'general': return props.zones
+      case 'zone': return props.zone.subzones
+      case 'subzone': return props.subzone.sites
+      case 'site': return props.site.sensors
+      default: return []
+    }
+  }
+
+  const elements = getElements(props.type)
+
   return (
     <div>
+      {
+        props.type === 'site'
+        ? <div className="sensors-cameras">
+            <span>Sensores</span>
+            <span>Cámaras</span>
+          </div>
+        : null
+      }
       <div className="mini-sites-menu">
         <div className="view-ordering">
           <span className="dynamic small-icon" />
@@ -26,35 +56,21 @@ function ZonesContainer(props) {
       </div>
       <div className={`mini-sites-container ${props.viewStyle}`}>
         {
-          props.isZone || props.isGeneral
-          ? props.zones.map(zone =>
+          elements
+          ? elements.map(element =>
             <Link
-              to={props.isZone ? `/zones/${props.zone._id}/${zone._id}` : `/zones/${zone._id}`}
-              key={zone._id}>
+              to={getMiniZoneLink(element)}
+              key={element._id}>
               <MiniZone
-                id={zone._id}
-                name={zone.name}
-                zone={zone}
-                reports={props.reports}
-                highlighted={props.highlightedZone}
-                onHover={props.onHover}
-                active={props.highlightedZone === zone._id}
-                subZone={props.isZone}
+                {...props}
+                id={element._id}
+                name={element.name}
+                zone={element}
+                active={props.highlightedZone === element._id}
               />
             </Link>
           )
-          : props.sites.map(site =>
-            <MiniZone
-              key={site._id}
-              id={site._id}
-              name={site.name}
-              zone={props.subzone}
-              reports={props.reports}
-              highlighted={props.highlightedZone}
-              onHover={props.onHover}
-              active={props.highlightedZone === site._id}
-            />
-          )
+          : null
         }
       </div>
     </div>
@@ -62,9 +78,16 @@ function ZonesContainer(props) {
 }
 
 ZonesContainer.propTypes = {
-  zones: PropTypes.array.isRequired,
+  type: PropTypes.string,
+  zones: PropTypes.array,
+  subzones: PropTypes.array,
   viewStyle: PropTypes.string.isRequired,
-  viewOrdering: PropTypes.string
+  viewOrdering: PropTypes.string,
+  changeSitesView: PropTypes.func,
+  site: PropTypes.object,
+  subzone: PropTypes.object,
+  zone: PropTypes.object,
+  highlightedZone: PropTypes.string
 }
 
 export default ZonesContainer

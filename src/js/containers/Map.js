@@ -1,13 +1,13 @@
 /* eslint max-statements: ["error", 20, { "ignoreTopLevelFunctions": true }]*/
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import qs from 'query-string'
-import { Map, TileLayer, Polygon, Popup, Marker, Tooltip } from 'react-leaflet'
+import { Map, TileLayer, Polygon } from 'react-leaflet'
 
 import { setZone } from '../actions'
-import { CreateZoneBar, ZoneDetail, StatusOverall, ZonesContainer, Reports, ZonePolygon } from '../components'
+import { CreateZoneBar, ZoneDetail, StatusOverall, ZonesContainer, Reports, ZonePolygon, SiteMarker } from '../components'
 import { getAreaCenter } from '../SpecialFunctions'
 
 class MapView extends Component {
@@ -15,11 +15,11 @@ class MapView extends Component {
     super(props)
     this.isWindow = qs.parse(props.location.search).isWindow
 
-    const zoneId = props.match.params.zoneId
-    const subzoneId = props.match.params.subzoneId
+    const {zoneId, subzoneId, siteId} = props.match.params
 
     const selectedZone = props.zones.filter(zone => zone._id === zoneId).pop()
     const selectedSubzone = selectedZone ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
+    const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
 
     this.state = {
       isCreatingZone: false,
@@ -31,7 +31,8 @@ class MapView extends Component {
       zones: props.zones,
       selectedZone,
       selectedSubzone,
-      newZoneName: '',
+      selectedSite,
+      newName: '',
       newPositions: [],
       sitesViewStyle: 'list', // TODO load from localStorage
       sitesViewOrdering: 'static', // TODO load from localStorage
@@ -48,13 +49,13 @@ class MapView extends Component {
     this.popWindow = this.popWindow.bind(this)
     this.changeSitesView = this.changeSitesView.bind(this)
     this.onSelectElement = this.onSelectElement.bind(this)
-    this.onViewportChanged = this.onViewportChanged.bind(this)
+    // this.onViewportChanged = this.onViewportChanged.bind(this)
   }
 
   isNewZoneValid() {
-    const newZoneName = this.state.newZoneName
+    const newName = this.state.newName
     const newPositions = this.state.newPositions
-    const isNewZoneValid = (newZoneName.split('').length > 2 && newPositions.length > 2)
+    const isNewZoneValid = (newName.split('').length > 2 && newPositions.length > 2)
 
     this.setState({
       isNewZoneValid
@@ -84,14 +85,14 @@ class MapView extends Component {
   saveNewZone() {
     if (!this.isNewZoneValid()) return
 
-    const name = this.state.newZoneName
+    const name = this.state.newName
     const positions = this.state.newPositions
 
     this.props.setZone(name, positions)
 
     this.setState({
       newPositions: [],
-      newZoneName: '',
+      newName: '',
       isCreatingZone: false
     })
   }
@@ -128,11 +129,11 @@ class MapView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const zoneId = nextProps.match.params.zoneId
-    const subzoneId = nextProps.match.params.subzoneId
+    const {zoneId, subzoneId, siteId} = nextProps.match.params
 
     const selectedZone = this.props.zones.filter(zone => zone._id === zoneId).pop()
     const selectedSubzone = selectedZone ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
+    const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
 
     if (!selectedZone) {
       this.setState({
@@ -155,10 +156,22 @@ class MapView extends Component {
     }
 
     if (selectedSubzone && (!this.state.selectedSubzone || (this.state.selectedSubzone && subzoneId !== this.state.selectedSubzone._id))) {
-      this.setState(prevState => ({
+      this.setState({
         selectedSubzone,
-        currentZoom: 6.5
-      }), () => this.setState({currentPosition: selectedSubzone.positions[0] ? getAreaCenter(selectedSubzone.positions[0]) : prevState.currentPosition}))
+        currentZoom: 6.7
+      }, () => {
+        selectedSubzone.positions[0]
+        ? this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
+        : null
+      })
+      return
+    }
+
+    if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
+      this.setState({
+        selectedSite,
+        currentZoom: 7.5
+      }, () => this.setState({currentPosition: selectedSite.position}))
     }
   }
 
@@ -189,18 +202,21 @@ class MapView extends Component {
   }
 
   popWindow(section) {
-    const { path } = this.props.match
-    window.open(`${window.host}${path}?isWindow=${section}`,'Telco','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=493')
+    const { url } = this.props.match
+    window.open(`${window.host}${url}?isWindow=${section}`,'Telco','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=493')
   }
 
   changeSitesView(style) {
     this.setState({ sitesViewStyle: style })
   }
 
-  onViewportChanged(viewport) {
-    console.log(this.map)
-    console.log({viewport})
-  }
+  // onViewportChange(nextViewPort) {
+  //   console.log({nextViewPort})
+  // }
+  //
+  // onViewportChanged(viewport) {
+  //   console.log({viewport})
+  // }
 
   onSelectElement(elementType) {
     this.setState({
@@ -258,26 +274,42 @@ class MapView extends Component {
                 reports={this.props.reports}
                 highlightedZone={this.state.highlightedZone}
                 onHover={this.onSiteHover}
-                isGeneral
+                type="general"
               />
             </div>
         }/>
         {
           this.isWindow === 'alerts'
           ? null
-          : <Route exact path="/zones/:zoneId" render={() => <ZoneDetail isWindow={this.isWindow} zone={this.state.selectedZone} subzones isZone/>}/>
-        }
-        {
-          this.isWindow === 'alerts'
-          ? null
-          : <Route exact path="/zones/:zoneId/:subzoneId" render={() =>
-              <ZoneDetail
-                isWindow={this.isWindow}
-                zone={this.state.selectedZone}
-                subzone={this.state.selectedSubzone}
-                sites
-                isSubzone/>
-            } />
+          : <Switch>
+              <Route exact path="/zones/:zoneId" render={() =>
+                <ZoneDetail
+                  onPopWindow={() => this.popWindow('zones')}
+                  isWindow={this.isWindow}
+                  zone={this.state.selectedZone}
+                  type="zone"
+                />
+              }/>
+              <Route exact path="/zones/:zoneId/:subzoneId" render={() =>
+                <ZoneDetail
+                  onPopWindow={() => this.popWindow('zones')}
+                  isWindow={this.isWindow}
+                  zone={this.state.selectedZone}
+                  subzone={this.state.selectedSubzone}
+                  type="subzone"
+                />
+              }/>
+              <Route exact path="/zones/:zoneId/:subzoneId/:siteId" render={() =>
+                <ZoneDetail
+                  onPopWindow={() => this.popWindow('zones')}
+                  isWindow={this.isWindow}
+                  zone={this.state.selectedZone}
+                  subzone={this.state.selectedSubzone}
+                  site={this.state.selectedSite}
+                  type="site"
+                />
+              }/>
+            </Switch>
         }
         </div>
         {
@@ -295,6 +327,7 @@ class MapView extends Component {
               onClick={this.onMapClick}
               center={this.state.currentPosition}
               zoom={this.state.currentZoom}
+              onViewportChange={this.onViewportChange}
               onViewportChanged={this.onViewportChanged}
               ref={map => {
                 this.map = map
@@ -317,11 +350,11 @@ class MapView extends Component {
               {
                 this.state.selectedSubzone && this.state.selectedSubzone.sites
                 ? this.state.selectedSubzone.sites.map(site =>
-                  <Marker key={site._id} position={site.position}>
-                    <Tooltip permanent opacity={1}>
-                      <h3>Torre {site.name}</h3>
-                    </Tooltip>
-                  </Marker>
+                  <SiteMarker
+                    key={site._id}
+                    position={site.position}
+                    title={site.name}
+                  />
                 )
                 : null
               }
@@ -366,11 +399,10 @@ class MapView extends Component {
               {
                 this.state.isCreatingSite ? (
                   this.state.newPositions[0]
-                  ? <Marker position={this.state.newPositions[0]}>
-                      <Popup>
-                        <span>A pretty CSS3 popup. <br/> Easily customizable.</span>
-                      </Popup>
-                    </Marker>
+                  ? <SiteMarker
+                      position={this.state.newPositions[0]}
+                      title={this.state.newName}
+                    />
                   : null
                 ) : (
                   <Polygon
@@ -385,10 +417,11 @@ class MapView extends Component {
               />
             </Map>
             <CreateZoneBar
-              newZoneName={this.state.newZoneName}
+              newZoneName={this.state.newName}
               onChange={this.onChange}
               isValid={this.state.isNewZoneValid}
               onSave={this.saveNewZone}
+              text={this.isCreatingSite ? 'Traza la zona' : 'Localiza el sitio'}
             />
           </div>
         }

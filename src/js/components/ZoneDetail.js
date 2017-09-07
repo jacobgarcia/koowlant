@@ -10,63 +10,79 @@ class ZoneDetail extends Component {
     super(props)
 
     this.state = {
-      viewStyle: 'list'
+      viewStyle: 'list',
+      selectedZone: null
     }
 
     this.changeSitesView = this.changeSitesView.bind(this)
+    this.onHover = this.onHover.bind(this)
   }
 
   changeSitesView(viewStyle) {
     this.setState({ viewStyle })
   }
 
-  onHover(subzoneId) {
-    console.log(subzoneId)
+  onHover(zoneId) {
+    this.setState({
+      selectedZone: zoneId
+    })
+  }
+
+  getBackLink(props) {
+    switch (props.type) {
+      case 'zone': return '/'
+      case 'subzone': return `/zones/${props.zone._id}`
+      case 'site': return `/zones/${props.zone._id}/${props.subzone._id}`
+      default: return '/'
+    }
   }
 
   render() {
-    console.log(this.props)
-    const { completeStatus, normalPercentage } = this.props.isZone ? getStatus(this.props.zone.status) : { completeStatus: '', normalPercentage: ''}
+    // normalPercentage
+    const { completeStatus } = this.props.zone ? getStatus(this.props.zone.status) : { completeStatus: '', normalPercentage: ''}
 
     return (
       <div className="side-content">
         <div className="top">
-          <span className="back"><Link to={`${this.props.isSubzone ? `/zones/${this.props.zone._id}` : '/'}`}>Regresar</Link></span>
-          { this.props.isWindow === 'zones' ? null : <Link to="/"><span className="pop-window">Hacer ventana</span></Link> }
+          <span className="back"><Link to={this.getBackLink(this.props)}>Regresar</Link></span>
+          { this.props.isWindow === 'zones' ? null : <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span> }
         </div>
         <StatusOverall
           status={completeStatus}
           zone={this.props.zone || this.props.subzone}
-          type={this.props.isZone ? 'zone' : 'subzone'}
+          site={this.props.site}
+          type={this.props.type}
         />
         <div>
-          <div>
-            Sensores
-            Cámaras
-          </div>
           {
-            this.props.isZone
-            ? <ZonesContainer
-                zone={this.props.zone}
-                zones={this.props.zone.subzones}
-                changeSitesView={this.changeSitesView}
-                viewStyle={this.state.viewStyle}
-                onHover={this.onHover}
-                isZone
-              />
-            : <ZonesContainer
-                subzone={this.props.subzone}
-                sites={this.props.subzone.sites}
-                changeSitesView={this.changeSitesView}
-                viewStyle={this.state.viewStyle}
-                onHover={this.onHover}
-                isSubzone
-              />
+            this.isSite
+            ? <div>
+                Sensores
+                Cámaras
+              </div>
+            : null
           }
+          <ZonesContainer
+            {...this.props}
+            changeSitesView={this.changeSitesView}
+            viewStyle={this.state.viewStyle}
+            onHover={this.onHover}
+            highlightedZone={this.state.selectedZone}
+            type={this.props.type}
+          />
         </div>
       </div>
     )
   }
+}
+
+ZoneDetail.propTypes = {
+  site: PropTypes.object,
+  subzone: PropTypes.object,
+  zone: PropTypes.object,
+  type: PropTypes.string,
+  isWindow: PropTypes.bool,
+  onPopWindow: PropTypes.func
 }
 
 export default ZoneDetail
