@@ -7,6 +7,7 @@ const webpackStream = require('webpack-stream')
 const webpack = require('webpack')
 const path = require('path')
 const gutil = require('gulp-util')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const webpackConfig = require(path.resolve('config/webpack.config.js'))
 // const WebpackDevServer = require("webpack-dev-server")
 
@@ -14,6 +15,17 @@ const myDevConfig = Object.create(webpackConfig)
 myDevConfig.devtool = "sourcemap"
 myDevConfig.devServer = { inline: true, compress: true }
 
+const prodConfig = Object.create(webpackConfig)
+prodConfig.plugins = [
+  new UglifyJSPlugin(),
+  new webpack.DefinePlugin({
+    'process.env': {
+      'NODE_ENV': JSON.stringify('production')
+    }
+  })
+]
+
+const prodCompiler = webpack(prodConfig)
 const devCompiler = webpack(myDevConfig)
 
 gulp.task('sass', () =>
@@ -32,13 +44,14 @@ gulp.task('sassDev', () =>
 )
 
 // Possible duplicate?
-gulp.task('webpack', () =>
-  gulp.src(path.resolve('src/js/index.js'))
-  .pipe(webpackStream(webpackConfig, webpack)) // Create sourcemaps for better debbuging
-  .on('error', function handleError() {
-    this.emit('end')
+gulp.task('webpack:build-prod', callback =>
+  prodCompiler.run((error, stats) => {
+    if (error) throw new gutil.PluginError("webpack:build-dev", error);
+    gutil.log("[webpack:build-dev]", stats.toString({
+      colors: true
+    }))
+    callback()
   })
-  .pipe(gulp.dest('./dist'))
 )
 
 // Possible duplicate?
@@ -85,4 +98,4 @@ gulp.task('watch', () => {
 })
 
 gulp.task('develop', ['start', 'sassDev', 'webpack:build-dev', 'watch'])
-gulp.task('build', ['sass', 'webpack'])
+gulp.task('prod', ['sass', 'webpack:build-prod'])
