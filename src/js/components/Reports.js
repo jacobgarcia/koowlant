@@ -48,9 +48,9 @@ function Reports(props) {
 }
 
 Reports.propTypes = {
-  isAlertsHidden: PropTypes.boolean,
+  isAlertsHidden: PropTypes.bool,
   onHide: PropTypes.func,
-  isWindow: PropTypes.boolean,
+  isWindow: PropTypes.bool,
   reports: PropTypes.array
 }
 
