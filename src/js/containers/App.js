@@ -54,6 +54,7 @@ function App(props) {
           <Route exact path="/settings" component={Settings}/>
           <Route exact path="/zones/:zoneId" component={MapView}/>
           <Route exact path="/zones/:zoneId/:subzoneId" component={MapView}/>
+          <Route exact path="/zones/:zoneId/:subzoneId/:siteId" component={MapView}/>
           <Route component={NoMatch}/>
         </Switch>
       </div>
