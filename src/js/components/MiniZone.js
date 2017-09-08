@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { hashCode, intToRGB, getStatus } from '../SpecialFunctions'
+import { getStatus } from '../SpecialFunctions'
 
 const COLORS = {
   alerts: '#ed2a20',
@@ -13,14 +13,20 @@ const COLORS = {
 function MiniZone(props) {
 
   const { completeStatus, normalPercentage } = getStatus(props.zone.status)
+  let numberSites = props.zone.subzones ? (props.zone.subzones.reduce((sum, subzone) => sum + (subzone.sites ? subzone.sites.length : 0), 0)) : 0
+  numberSites += props.zone.sites ? props.zone.sites.length : 0
 
   return (
     <div className={`mini-zone ${props.active ? 'active' : ''}`} onMouseEnter={() => props.onHover(props.id)} onMouseLeave={() => props.onHover(null)}>
       <div className="status-text">
-        <div className="status-color" style={{ background: '#' + intToRGB(hashCode(props.name)) }}></div>
+        <div className="status-color" style={{ background: COLORS.normal }}></div>
         <h3>{props.isZone ? 'Subzona' : props.isSite ? 'Sitio' : 'Zona'} {props.name}</h3>
-        { props.zone.subzones ? <p>{props.zone.subzones.length} Sub-zonas</p> : null }
-        { props.zone.sites ? <p>{props.zone.sites.length} torres</p> : null }
+        <div className="count">
+          { props.zone.sites ? <p className="sites">{numberSites} Sitios</p> : null }
+          { props.zone.subzones ? <p className="subzones">{props.zone.subzones.length} Subzonas</p> : null }
+          { <p className="admin">0 Administradores</p> }
+        </div>
+
         { props.zone.admin ? <p>{props.zone.admins.length} admin</p> : null}
       </div>
       <div className="status-graph">
