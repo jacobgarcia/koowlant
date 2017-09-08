@@ -318,8 +318,8 @@ class MapView extends Component {
           : <div className={`map-view`}>
             <div className="actions">
               <ul className="links hiddable">
-                <li className="big" onClick={this.onCreate}><span className="create">Crear</span></li>
-                <li className="big" onClick={this.onSearch}><span className="search">Buscar</span></li>
+                <li className="big search" onClick={this.onSearch}><span className="search">Buscar</span></li>
+                <li className="big create" onClick={this.onCreate}><span className="create">Crear</span></li>
               </ul>
               <span className="button huge cancel" onClick={this.onCreate}>Cancelar</span>
             </div>
