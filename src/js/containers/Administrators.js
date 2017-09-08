@@ -17,28 +17,35 @@ class Administrators extends Component {
 
   render() {
     return (
-      <div>
-        <div>
+      <div className="administrators">
+        <div className="header">
           <h3>11 Administradores</h3>
           <span className="button">Agregar administrador</span>
         </div>
         <div>
           <span>Zona</span>
+          <select name="Todas las zonas" id=""></select>
         </div>
-        <div>
+        <div className="zone-container">
           {
             this.state.zoneAdministrators.map(zone =>
               <div className="zone" key={zone._id}>
-                <div>Zona {zone.name}</div>
+                <div className="zone-name">Zona {zone.name}</div>
                 {
                   zone.administrators.map(administrator =>
                     <div className="admin" key={administrator._id}>
-                      <p>Nombre del administrador</p>
-                      <p>administrador@mail.com</p>
-                      <p>Permisos</p>
-                      <p>Monitoreando</p>
-                      <span className="button">Chat</span>
-                      <p>activo</p>
+                      <div className="names">
+                        <p className="name">Nombre del administrador</p>
+                        <p>administrador@mail.com</p>
+                      </div>
+                      <div className="permits">
+                        <p>Permisos</p>
+                        <p>Monitoreando</p>
+                      </div>
+                      <div className="chat">
+                        <span className="button">Chat</span>
+                        <p>activo</p>
+                      </div>
                     </div>
                   )
                 }
