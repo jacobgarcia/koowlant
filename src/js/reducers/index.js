@@ -34,6 +34,9 @@ const dumbZones = [
       {
         _id: '4d1288sh2394fc13a8087301',
         positions: [],
+        alerts: [
+          { _id: 'oi23j94h23u4ijkjin', site: '324234234234' }
+        ],
         sites: [
           {
             _id: '4d1288s8sh94fc9sj1h37301',
@@ -49,6 +52,9 @@ const dumbZones = [
     status: [
       { name: 'alerts', value: 0.051 },
       { name: 'warnings', value: 0.04 }
+    ],
+    warnings: [
+      { _id: 'oi23j94h23u4ijkjin', site: '324234234234', subzone: '4d1288sh2394fc13a8087301' }
     ],
     sites: [],
     subzones: [
