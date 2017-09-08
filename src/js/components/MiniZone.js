@@ -26,8 +26,10 @@ function MiniZone(props) {
           { props.zone.subzones ? <p className="subzones">{props.zone.subzones.length} Subzonas</p> : null }
           { <p className="admin">0 Administradores</p> }
         </div>
-
-        { props.zone.admin ? <p>{props.zone.admins.length} admin</p> : null}
+        <div className="reports-count">
+          { props.zone.alerts ? <p><span className="alerts-icon"/>{props.zone.alerts.length} Alertas</p> : null }
+          { props.zone.warnings ? <p><span className="warnings-icon"/>{props.zone.warnings.length} Advertencias</p> : null }
+        </div>
       </div>
       <div className="status-graph">
         {/* <div>
