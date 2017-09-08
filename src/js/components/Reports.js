@@ -5,7 +5,7 @@ import { MiniAlert } from './'
 
 function Reports(props) {
   return (
-    <div className={`alerts ${props.isAlertsHidden ? 'hidden' : ''}`}>
+    <div className={`reports ${props.isAlertsHidden ? 'hidden' : ''}`}>
       <input
         type="button"
         onClick={props.onHide}
