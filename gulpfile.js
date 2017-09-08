@@ -38,8 +38,10 @@ gulp.task('sass', () =>
 // Possible duplicate?
 gulp.task('sassDev', () =>
   gulp.src(path.resolve('src/styles/master.scss'))
+      .pipe(sourcemaps.init())
       .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
       .pipe(rename({suffix: '.min'}))
+      .pipe(sourcemaps.write())
       .pipe(gulp.dest('./dist/styles'))
 )
 
