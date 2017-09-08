@@ -8,6 +8,12 @@ const dumbZones = [
       { name: 'alerts', value: 0.04 },
       { name: 'warnings', value: 0.11 }
     ],
+    alerts: [
+      { _id: 'oi23j94h23u4ijkjin', site: '324234234234', subzone: '4d1288sh2394fc13a8087301' }
+    ],
+    warnings: [
+      { _id: 'oi23j94h23u4ijkjin', site: '324234234234', subzone: '4d1288sh2394fc13a8087301' }
+    ],
     positions: [
       [21.739091217718574, -97.55859375000001],
       [22.51255695405145, -100.06347656250001],
@@ -33,11 +39,10 @@ const dumbZones = [
             _id: '4d1288s8sh94fc9sj1h37301',
             position: [],
             sensors: []
-          }
+          },{},{},{},{}
         ]
       }
-    ],
-    sites: []
+    ]
   }, {
     name: 'Norte',
     _id: '4d128b6ea794fc13a8004301',
