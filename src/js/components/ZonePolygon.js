@@ -12,6 +12,10 @@ const COLORS = {
 }
 
 function ZonePolygon(props) {
+  const status = getStatus(props.zone.status)
+  const alerts = props.zone.alerts ? props.zone.alerts.length : null
+  const warnings = props.zone.warnings ? props.zone.warnings.length : null
+
   return (
     <Polygon
       color="#666"
@@ -27,24 +31,30 @@ function ZonePolygon(props) {
           <div className="hidable">
             {
               props.zone.status
-              ? <PieChart width={70} height={70}>
+              ? <PieChart width={85} height={85}>
                 <Pie
                   dataKey="value"
-                  data={getStatus(props.zone.status).completeStatus}
-                  outerRadius={35}
-                  innerRadius={28}
+                  data={status.completeStatus}
+                  outerRadius={42}
+                  innerRadius={34}
                   startAngle={90}
                   endAngle={-270}
                   fill=""
                   isAnimationActive={false}
                 >
-                { getStatus(props.zone.status).completeStatus.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                { status.completeStatus.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
                 </Pie>
               </PieChart>
               : null
             }
           </div>
-          <div className="general"><h3>{props.zone.name}</h3></div>
+          <div className={`general`}>
+            <div className="icons">
+              { warnings > 0 ? <span className="warnings" /> : null }
+              { alerts > 0 ? <span className="alerts" /> : null }
+            </div>
+            <h3>{props.zone.name}</h3>
+          </div>
           {/* <span className="hidable">{getStatus(status).normalPercentage * 100}%</span> */}
         </div>
       </Tooltip>
