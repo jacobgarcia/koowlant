@@ -50,8 +50,8 @@ function ZonePolygon(props) {
           </div>
           <div className={`general`}>
             <div className="icons">
-              { warnings > 0 ? <span className="warnings" /> : null }
-              { alerts > 0 ? <span className="alerts" /> : null }
+              { warnings > 0 ? <span className="warnings-icon" /> : null }
+              { alerts > 0 ? <span className="alerts-icon" /> : null }
             </div>
             <h3>{props.zone.name}</h3>
           </div>
