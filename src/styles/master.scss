@@ -84,7 +84,7 @@ span.small-icon {
 }
 
 .tooltip {
-  width: 70px;
+  min-width: 85px;
   height: 20px;
   text-align: center;
   position: relative;
@@ -96,14 +96,48 @@ span.small-icon {
     display: none;
   }
   &.active {
-    width: 70px;
-    height: 70px;
+    min-width: 85px;
+    height: 85px;
+    .general {
+      flex-direction: column;
+    }
     .hidable {
       display: block;
     }
   }
   .general {
     position: absolute;
+    display: flex;
+    align-items: center;
+    .icons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .warnings, .alerts {
+      display: block;
+      width: 16px;
+      height: 16px;
+      margin-right: 3px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 16px;
+    }
+    @keyframes grow {
+      0% { transform: scale(1.0); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1.0); }
+    }
+    .warnings { background-image: url('/static/img/icons/attention-yellow.png'); }
+    .alerts {
+      background-image: url('/static/img/icons/attention-red.png');
+      animation: grow 2s infinite;
+    }
+    h3 {
+      max-width: 70px;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+    }
   }
   span {
     font-size: 0.8rem;
@@ -141,20 +175,18 @@ ul.links {
   &.nav {
     li {
       padding: 0;
-      a { padding: 2px 15px; }
+      a { padding: 19px 15px; }
     }
   }
   li {
     cursor: pointer;
     display: inline-block;
     background: #fff;
-    border-radius: 0;
-    border: 1px solid rgb(164, 164, 164);
-    padding: 2px 15px;
-    font-size: 0.8rem;
+    text-transform: uppercase;
+    padding: 19px 15px;
+    font-size: 0.75rem;
     color: rgb(47, 47, 47);
     font-weight: 500;
-    border-left: none;
     overflow: hidden;
     &.deactivated {
       cursor: default;
@@ -162,13 +194,36 @@ ul.links {
     }
     a {
       display: block;
+      height: 50px;
+      padding: 19px 8px;
     }
-    &.selected, a.selected {
-      background: #ccc;
+    a.selected {
+      position: relative;
+      &:after {
+        content: '';
+        display: block;
+        width: 100%;
+        top: 48px;
+        left: 0;
+        right: 0;
+        position: absolute;
+        height: 2px;
+        background: #000;
+      }
     }
     &.big {
+      text-transform: none;
       font-size: 1rem;
       padding: 4px 15px;
+      border: 1px solid $gray;
+      background-color: #fff;
+      background-repeat: no-repeat;
+      background-size: 16px;
+      &.search { padding-left: 38px; background-image: url('/static/img/icons/search.svg'); background-position: 12px center; }
+      &.create { padding-right: 38px; background-image: url('/static/img/icons/add.svg'); background-position: 62px center;  }
+      &:first-child {
+        border-right: 0;
+      }
     }
     &.huge {
       font-size: 1.2rem;
@@ -177,14 +232,6 @@ ul.links {
         font-size: 1.2rem;
       }
     }
-  }
-  li:first-child {
-    border-radius: 6px 0 0 6px;
-    border-left: 1px solid rgb(164, 164, 164);
-  }
-  li:last-child {
-    border-left: 0;
-    border-radius: 0  6px 6px 0;
   }
 }
 
@@ -229,6 +276,7 @@ nav {
   width: 100%;
   height: 50px;
   align-items: center;
+  flex-shrink: 0;
   span {
     color: rgb(105, 105, 105);
     margin-right: 20px;
@@ -239,6 +287,18 @@ nav {
     border-radius: 50%;
     border: 2px solid #fff;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  }
+  .navigation {
+    display: flex;
+    align-items: center;
+    img.logo.mini {
+      width: 30px;
+      height: 30px;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+      opacity: 0.6;
+    }
   }
   .user {
     display: inline-flex;
@@ -314,7 +374,7 @@ nav {
   }
 }
 
-.alerts, .general-status {
+.reports, .general-status {
   top: 0;
   background: #f7f7f7;
   width: 500px;
@@ -497,6 +557,19 @@ nav {
       .mini-zone {
         display: flex;
         flex-direction: row;
+        .count {
+          display: flex;
+        }
+        .sites, .admin, .subzones {
+          padding-left: 20px;
+          background-size: 16px;
+          background-repeat: no-repeat;
+          background-position: left center;
+          margin-right: 10px;
+        }
+        .sites { background-image: url('/static/img/icons/sites-mini.png'); }
+        .admin { background-image: url('/static/img/icons/admin-mini.png'); }
+        .subzones { background-image: url('/static/img/icons/zones-mini.png'); }
       }
     }
     &.grid {
@@ -693,6 +766,7 @@ nav {
     height: 75px;
     margin-top: 50px;
   }
+
   .logo {
     display: block;
     width: 160px;
