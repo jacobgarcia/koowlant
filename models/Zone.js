@@ -7,7 +7,10 @@ class ZoneClass {
 }
 
 const schema = new Schema({
-
+  parentZone: String,
+  positions: [[Number]],
+  name: String,
+  sites: [{type: mongoose.schema.objectId, ref: ''}]
 })
 
 schema.loadClass(ZoneClass)

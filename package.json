@@ -32,7 +32,10 @@
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.1.2",
     "recharts": "^1.0.0-alpha.4",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "rethinkdb": "^2.3.3",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

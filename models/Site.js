@@ -7,7 +7,16 @@ class SiteClass {
 }
 
 const schema = new Schema({
-
+  id: String,
+  name: String,
+  position: [Number],
+  sensors: [{
+    value: Number
+  }],
+  alarms: [{
+    value: Number,
+    timestamp: Date
+  }]
 })
 
 schema.loadClass(SiteClass)

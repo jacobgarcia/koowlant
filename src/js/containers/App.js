@@ -11,6 +11,22 @@ import MapView from './Map'
 import Administrators from './Administrators'
 import Settings from './Settings'
 import Nav from '../components/Nav'
+import io from 'socket.io-client'
+
+
+const socket = io() // window.location
+
+socket.connect(status => {
+  console.log(status)
+})
+
+socket.on('connect', () => {
+  socket.emit('join', '0293j4ji')
+})
+
+socket.on('report', message => {
+  console.log(message)
+})
 
 function authenticate({setCredentials}) {
   const user = {

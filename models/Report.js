@@ -7,7 +7,14 @@ class ReportClass {
 }
 
 const schema = new Schema({
-
+  sensors: [{
+    id: String,
+    value: Number
+  }],
+  alarms: [{
+    sensor: String,
+    value: Number
+  }]
 })
 
 schema.loadClass(ReportClass)
