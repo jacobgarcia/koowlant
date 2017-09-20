@@ -7,7 +7,7 @@ import { setCredentials } from '../actions'
 
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
+    return re.test(email)
 }
 
 class Login extends Component {
@@ -49,7 +49,6 @@ class Login extends Component {
     const { name, value } = event.target
 
     if (name === 'user') {
-      console.log('Setting user')
       this.setState({
         isValidEmail: validateEmail(value)
       })

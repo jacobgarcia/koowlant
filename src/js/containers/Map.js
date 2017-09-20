@@ -202,8 +202,6 @@ class MapView extends Component {
   }
 
   popWindow(section) {
-    const { url } = this.props.match
-    console.log(window.host)
     window.open(
       `${window.host}?isWindow=${section}`,
       'Telco',
@@ -236,13 +234,12 @@ class MapView extends Component {
   }
 
   render() {
-    console.log('Map reports', this.props.zones)
     return (
       <div className={`map-container ${this.state.isCreatingZone ? 'creating' : ''}`}>
         { this.state.promptElement
           && <div className="prompt-element">
             <div className="content">
-              <span>Selecciona elemento a crear:</span>
+              <span>Selecciona elemento a crear: </span>
               <ul className="options">
                 <li onClick={() => this.onSelectElement('site')}>Sitio (torre)</li>
                 <li onClick={() => this.onSelectElement('subzone')}>Subzona</li>
@@ -269,10 +266,10 @@ class MapView extends Component {
                     className="pop-window"
                     onClick={() => this.popWindow('zones')}>Hacer ventana</span>
               }
-              {/* <StatusOverall
+              <StatusOverall
                 reports={this.props.reports}
                 type="general"
-              /> */}
+              />
               <ZonesContainer
                 viewOrdering={this.state.sitesViewOrdering}
                 viewStyle={this.state.sitesViewStyle}

@@ -11,11 +11,8 @@ const COLORS = {
 }
 
 function MiniZone(props) {
-
   const data = getZoneData(props.zone)
   let { status, percentage } = getStatus(data)
-
-  console.log(props)
 
   if (!status && props.type === 'site') {
     status = getSensorChart('TEMPERATURE')

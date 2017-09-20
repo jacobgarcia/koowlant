@@ -281,6 +281,7 @@ nav {
   height: 50px;
   align-items: center;
   flex-shrink: 0;
+  background: #fff;
   span {
     color: rgb(105, 105, 105);
     margin-right: 20px;
@@ -319,6 +320,40 @@ nav {
 }
 
 
+.alert-container {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  z-index: 2000;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .alert-content {
+    width: 350px;
+    height: 170px;
+    background: $red;
+    border-radius: 7px;
+    padding: 20px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    h2 {
+      margin-bottom: 10px;
+    }
+    .dismiss {
+      cursor: pointer;
+      font-weight: 600;
+      margin-left: auto;
+    }
+  }
+}
+
+
 /*
 
   M A P
@@ -328,6 +363,11 @@ nav {
 .leaflet-container {
     height: 100%;
     width: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
 }
 
 .prompt-element {

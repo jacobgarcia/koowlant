@@ -120,21 +120,116 @@ const dumbZones = [
             _id: 'akjsndjkasnd9i23',
             position: [25.720735134412106, -100.31616210937501],
             name: '3T',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }, {
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }, {
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
           },
           {
             _id: 'akjs3j5435nd9i23',
             position: [25.71083691964062, -99.25048828125],
             name: '1D',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
           },
           {
             _id: 'akjs3j5435nd9i24',
             position: [24.856534339310674, -99.56359863281251],
             name: '9R',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
           },
           {
             _id: 'akjs3j5435nd9i25',
             position: [26.730893022137383, -99.90966796875001],
             name: '3Y',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
           }
         ],
         positions: [
@@ -360,6 +455,20 @@ function credentials(state = {}, action) {
   }
 }
 
+function appAlert(state = {}, action) {
+  switch (action.type) {
+    case 'DISMISS_ALERT':
+      return {}
+    case 'SET_ALERT':
+      return {
+        title: action.title,
+        body: action.body
+      }
+    default:
+      return state
+  }
+}
+
 function zones(state = dumbZones, action) {
   switch (action.type) {
     case 'SET_ZONE':
@@ -392,7 +501,8 @@ function administrators(state = dumbAdministrators, action) {
 const appReducer = combineReducers({
   credentials,
   zones,
-  administrators
+  administrators,
+  appAlert
 })
 
 export default appReducer

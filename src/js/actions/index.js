@@ -1,3 +1,25 @@
+// Alerts
+export function alert(title, body) {
+  return {
+    type: 'SET_ALERT',
+    title,
+    body
+  }
+}
+
+export function dismissAlert() {
+  return {
+    type: 'DISMISS_ALERT'
+  }
+}
+
+// Auth
+export function logout() {
+  return {
+    type: 'LOG_OUT'
+  }
+}
+
 export function setCredentials(user, token) {
   return {
     type: 'SET_USER',
@@ -6,12 +28,7 @@ export function setCredentials(user, token) {
   }
 }
 
-export function logout() {
-  return {
-    type: 'LOG_OUT'
-  }
-}
-
+// Zones
 export function setZone(name, positions) {
   return {
     type: 'SET_ZONE',

@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import qs from 'query-string'
 
-import { setCredentials } from '../actions'
+import { setCredentials, alert, dismissAlert } from '../actions'
 import Sites from './Sites'
 import NoMatch from './NoMatch'
 import MapView from './Map'
@@ -61,6 +61,19 @@ function App(props) {
   return (
     <div id="app-content">
       { isWindow ? null : <Nav {...props}/> }
+      {
+        props.appAlert && props.appAlert.title
+        &&
+        <div className="alert-container">
+          <div className="alert-content">
+            <div className="main">
+              <h2>{props.appAlert.title}</h2>
+              <p>{props.appAlert.body}</p>
+            </div>
+            <div onClick={() => props.dismissAlert()} className="dismiss">OK</div>
+          </div>
+        </div>
+      }
       <div className={`body ${isWindow ? 'window' : ''}`}>
         <Switch>
           <Route exact path="/" component={MapView}/>
@@ -77,9 +90,10 @@ function App(props) {
   )
 }
 
-function mapStateToProps({ credentials }) {
+function mapStateToProps({ credentials, appAlert }) {
   return {
-    credentials
+    credentials,
+    appAlert
   }
 }
 
@@ -87,6 +101,12 @@ function mapDispatchToProps(dispatch) {
   return {
     setCredentials: user => {
       dispatch(setCredentials(user))
+    },
+    dismissAlert: () => {
+      dispatch(dismissAlert())
+    },
+    alert: (title, body) => {
+      dispatch(alert(title, body))
     }
   }
 }
@@ -94,7 +114,9 @@ function mapDispatchToProps(dispatch) {
 App.propTypes = {
   credentials: PropTypes.object,
   setCredentials: PropTypes.func,
-  location: PropTypes.object
+  location: PropTypes.object,
+  appAlert: PropTypes.object,
+  dismissAlert: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

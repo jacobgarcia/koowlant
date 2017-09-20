@@ -12,7 +12,6 @@ class Administrators extends Component {
       zoneAdministrators
     }
 
-    console.log(this.state.zoneAdministrators)
   }
 
   render() {
@@ -28,12 +27,12 @@ class Administrators extends Component {
         </div>
         <div className="zone-container">
           {
-            this.state.zoneAdministrators.map(zone =>
-              <div className="zone" key={zone._id}>
+            this.state.zoneAdministrators.map((zone, index) =>
+              <div className="zone" key={index}>
                 <div className="zone-name">Zona {zone.name}</div>
                 {
-                  zone.administrators.map(administrator =>
-                    <div className="admin" key={administrator._id}>
+                  zone.administrators.map((administrator, index) =>
+                    <div className="admin" key={index}>
                       <div className="names">
                         <p className="name">Nombre del administrador</p>
                         <p>administrador@mail.com</p>
