@@ -1,16 +1,14 @@
 /* eslint-env node */
 const express = require('express')
 const path = require('path')
-const winston = require('winston')
 const router = new express.Router()
 const mongoose = require('mongoose')
 
-mongoose.connect(
-  'mongodb://localhost/kawlantid',
-  { useMongoClient: true, promiseLibrary: global.Promise
-  }
-)
+const config = require(path.resolve('config/config'))
 
+mongoose.connect(config.database)
+
+// Authenticate before any possible request
 router.use(require(path.resolve('router/v1/auth')))
 
 // The next things will be protected by auth

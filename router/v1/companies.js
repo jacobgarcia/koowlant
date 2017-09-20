@@ -4,17 +4,10 @@ const jwt = require('jsonwebtoken')
 const path = require('path')
 const winston = require('winston')
 const router = express.Router()
-const mongoose = require('mongoose')
 
 const Site = require(path.resolve('models/Site'))
 const Zone = require(path.resolve('models/Zone'))
 const Subzone = require(path.resolve('models/Subzone'))
-
-mongoose.connect(
-  'mongodb://localhost/kawlantid',
-  { useMongoClient: true, promiseLibrary: global.Promise
-  }
-)
 
 // TODO: Save sites and stream change
 router.route('/companies/:company/:subzone/sites')
@@ -33,7 +26,7 @@ router.route('/companies/:company/:subzone/sites')
       Subzone.findOneAndUpdate({ '_id': subzone }, { $push: { sites: site } }, { new: true })
       .exec((error, subzone) => {
         if (error) {
-          console.log(error)
+          winston.error({error})
           return res.status(500).json({ error })
         }
 
@@ -59,7 +52,7 @@ router.route('/companies/:company/:zone/subzones')
       Zone.findOneAndUpdate({ '_id': zone }, { $push: { subzones: subzone } }, { new: true })
       .exec((error, subzone) => {
         if (error) {
-          console.log(error)
+          winston.error({error})
           return res.status(500).json({ error })
         }
 
@@ -81,7 +74,7 @@ router.route('/companies/:company/zones')
     })
     .save((error, zone) => {
         if (error) {
-          console.log(error)
+          winston.error({error})
           return res.status(500).json({ error })
         }
 
@@ -103,7 +96,7 @@ router.route('/companies/:company/:site/reports')
 
       site.save((error, updatedSite) => {
         if (error) {
-          console.log(error)
+          winston.error({error})
           return res.status(500).json({ error })
         }
 
