@@ -33,11 +33,7 @@ app.use(
 )
 
 // Resolve API v1
-<<<<<<< HEAD
  app.use('/v1', API)
-=======
-app.use('/v1', v1)
->>>>>>> 0b6180c90a0840f65444e6d5ba828b24dbe71583
 
 // Send index to all other routes
 app.get('*', (req, res) => {
