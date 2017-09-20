@@ -32,11 +32,10 @@ function ZonesContainer(props) {
     <div>
       {
         props.type === 'site'
-        ? <div className="sensors-cameras">
+        && <div className="sensors-cameras">
             <span>Sensores</span>
             <span>Cámaras</span>
           </div>
-        : null
       }
       <div className="mini-sites-menu">
         <div className="view-ordering">
@@ -57,7 +56,7 @@ function ZonesContainer(props) {
       <div className={`mini-sites-container ${props.viewStyle}`}>
         {
           elements
-          ? elements.map(element =>
+          && elements.map(element =>
             <Link
               to={getMiniZoneLink(element)}
               key={element._id}>
@@ -70,7 +69,6 @@ function ZonesContainer(props) {
               />
             </Link>
           )
-          : null
         }
       </div>
     </div>

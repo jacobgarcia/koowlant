@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { getStatus } from '../SpecialFunctions'
+import { getZoneData, getStatus, getSensorChart } from '../SpecialFunctions'
 
 const COLORS = {
   alerts: '#ed2a20',
@@ -11,24 +11,44 @@ const COLORS = {
 }
 
 function MiniZone(props) {
+  const data = getZoneData(props.zone)
+  let { status, percentage } = getStatus(data)
 
-  const { completeStatus, normalPercentage } = getStatus(props.zone.status)
+  if (!status && props.type === 'site') {
+    status = getSensorChart('TEMPERATURE')
+  }
+
   let numberSites = props.zone.subzones ? (props.zone.subzones.reduce((sum, subzone) => sum + (subzone.sites ? subzone.sites.length : 0), 0)) : 0
   numberSites += props.zone.sites ? props.zone.sites.length : 0
+
+  const getTitle = (type, {name, _id}) => {
+    switch (type) {
+      case 'general': return 'Zona ' + name
+      case 'zone': return 'Subzona ' + name
+      case 'subzone': return 'Sitio ' + (name || _id)
+      case 'site': return 'Sensor ' + (name || _id)
+      default: return 'Indefinido'
+    }
+  }
 
   return (
     <div className={`mini-zone ${props.active ? 'active' : ''}`} onMouseEnter={() => props.onHover(props.id)} onMouseLeave={() => props.onHover(null)}>
       <div className="status-text">
         <div className="status-color" style={{ background: COLORS.normal }}></div>
-        <h3>{props.isZone ? 'Subzona' : props.isSite ? 'Sitio' : 'Zona'} {props.name}</h3>
+        <h3>{getTitle(props.type, props.zone)} </h3>
         <div className="count">
           { props.zone.sites ? <p className="sites">{numberSites} Sitios</p> : null }
           { props.zone.subzones ? <p className="subzones">{props.zone.subzones.length} Subzonas</p> : null }
-          { <p className="admin">0 Administradores</p> }
+          {/* { <p className="admin">0 Administradores</p> } */}
         </div>
         <div className="reports-count">
-          { props.zone.alerts ? <p><span className="alerts-icon"/>{props.zone.alerts.length} Alertas</p> : null }
-          { props.zone.warnings ? <p><span className="warnings-icon"/>{props.zone.warnings.length} Advertencias</p> : null }
+          {
+            (
+              (data && data.alarms && data.alarms.length > 0) && <p><span className="alerts-icon"/>{data.alarms.length} Alarmas</p>
+            )
+            || <p className="no-failures"><span className="no-failures-icon" /> Sin fallas</p>
+          }
+          {/* { props.zone.warnings && <p><span className="warnings-icon"/>{props.zone.warnings.length} Posibles fallas</p> } */}
         </div>
       </div>
       <div className="status-graph">
@@ -45,25 +65,28 @@ function MiniZone(props) {
           }
         </div> */}
         {
-          props.zone.status
-          ? <div className="graph">
+          status
+          && <div className="graph">
               <PieChart width={70} height={70}>
                 <Pie
                   dataKey="value"
-                  data={completeStatus}
+                  data={status}
                   outerRadius={35}
                   innerRadius={28}
-                  startAngle={90}
-                  endAngle={-270}
+                  startAngle={props.type === 'site' ? -45 : 90}
+                  endAngle={props.type === 'site' ? 225 : -270}
                   fill=""
                   isAnimationActive={false}
                 >
-                { completeStatus.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
                 </Pie>
               </PieChart>
-              <span className="percentage">{normalPercentage}%</span>
+              {
+                props.type === 'site'
+                ? <span className="percentage">{props.zone.value}°</span>
+                : <span className="percentage">{percentage}%</span>
+              }
             </div>
-          : null
         }
       </div>
     </div>
@@ -79,7 +102,8 @@ MiniZone.propTypes = {
   reports: PropTypes.array,
   onHover: PropTypes.func,
   active: PropTypes.bool,
-  zone: PropTypes.object
+  zone: PropTypes.object,
+  type: PropTypes.string
 }
 
 export default MiniZone

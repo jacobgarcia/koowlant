@@ -4,16 +4,6 @@ const dumbZones = [
   {
     name: 'Centro',
     _id: '4d128b6ea794fc13a8000001',
-    status: [
-      { name: 'alerts', value: 0.04 },
-      { name: 'warnings', value: 0.11 }
-    ],
-    alerts: [
-      { _id: 'oi23j94h23u4ijkjin', site: '324234234234', subzone: '4d1288sh2394fc13a8087301' }
-    ],
-    warnings: [
-      { _id: 'oi23j94h23u4ijkjin', site: '324234234234', subzone: '4d1288sh2394fc13a8087301' }
-    ],
     positions: [
       [21.739091217718574, -97.55859375000001],
       [22.51255695405145, -100.06347656250001],
@@ -34,42 +24,213 @@ const dumbZones = [
       {
         _id: '4d1288sh2394fc13a8087301',
         positions: [],
-        alerts: [
-          { _id: 'oi23j94h23u4ijkjin', site: '324234234234' }
-        ],
+        name: 'Valle de Toluca',
         sites: [
           {
             _id: '4d1288s8sh94fc9sj1h37301',
             position: [],
-            sensors: []
-          },{},{},{},{}
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
+          },
+          {
+            _id: '4d123234s8shubdiu9sj1afad1',
+            position: [],
+            sensors: [
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        _id: '4d1223423494fc13a8087301',
+        positions: [],
+        name: 'CDMX',
+        sites: [
+          {
+            _id: '4d128g435g435534541h37301',
+            position: [],
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
+          }
         ]
       }
     ]
   }, {
     name: 'Norte',
     _id: '4d128b6ea794fc13a8004301',
-    status: [
-      { name: 'alerts', value: 0.051 },
-      { name: 'warnings', value: 0.04 }
-    ],
-    warnings: [
-      { _id: 'oi23j94h23u4ijkjin', site: '324234234234', subzone: '4d1288sh2394fc13a8087301' }
-    ],
-    sites: [],
     subzones: [
       {
         _id: '234h293842342ji3423j4',
         name: 'Nuevo León',
-        status: [
-          { name: 'alerts', value: 0.04 },
-          { name: 'warnings', value: 0.11 }
-        ],
         sites: [
-          {_id: 'akjsndjkasnd9i23', position: [25.720735134412106, -100.31616210937501], name: '3T'},
-          {_id: 'akjs3j5435nd9i23', position: [25.71083691964062, -99.25048828125], name: '1D'},
-          {_id: 'akjs3j5435nd9i24', position: [24.856534339310674, -99.56359863281251], name: '9R'},
-          {_id: 'akjs3j5435nd9i25', position: [26.730893022137383, -99.90966796875001], name: '3Y'}
+          {
+            _id: 'akjsndjkasnd9i23',
+            position: [25.720735134412106, -100.31616210937501],
+            name: '3T',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }, {
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }, {
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
+          },
+          {
+            _id: 'akjs3j5435nd9i23',
+            position: [25.71083691964062, -99.25048828125],
+            name: '1D',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+          },
+          {
+            _id: 'akjs3j5435nd9i24',
+            position: [24.856534339310674, -99.56359863281251],
+            name: '9R',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
+          },
+          {
+            _id: 'akjs3j5435nd9i25',
+            position: [26.730893022137383, -99.90966796875001],
+            name: '3Y',
+            sensors: [
+              {
+                _id: "ts1",
+                value: 45.9
+              },
+              {
+                _id: "ts2",
+                value: 21.5
+              },
+              {
+                _id: "ts3",
+                value: 23.5
+              },
+              {
+                _id: "ts4",
+                value: 21.5
+              }
+            ],
+            alarms: [{
+                sensor: "ts1", // Sensor id
+                timestamp: 1505495552211, // Unix timestamp
+                value: 45.9
+            }]
+          }
         ],
         positions: [
           [27.63487379134253, -100.00854492187501],
@@ -179,27 +340,23 @@ const dumbZones = [
       [21.98380141738471, -97.77832031250001],
       [23.845649887659352, -103.62304687500001]
     ]
-  }, {
+  },
+  {
     name: 'Californias',
     _id: '4d128b6ea794fc13a8093001',
-    status: [
-      { name: 'alerts', value: 0.0123 },
-      { name: 'warnings', value: 0.142 }
-    ],
-    sites: [
-      { _id: '4d1288sh2394fc13a8087301' },
-      { _id: '4d1288sh2394fc13a8087301' },
-      { _id: '4d1288sh2394fc13a8087301' },
-      { _id: '4d1288sh2394fc13a8087301' },
-      { _id: '4d1288sh2394fc13a8087301' },
-      { _id: '4d1288sh2394fc13a8087301' },
-      { _id: '4d1288sh2394fc13a8087301' },
-      { _id: '4d1288sh2394fc13a8087301' }
-    ],
     subzones: [
-      { _id: '4d1288sh2394fc13a8037301', name: '3-B' },
-      { _id: '4d1288sh2394fc13a8017301', name: '3-B' },
-      { _id: '4d1288sh2394fc13a8077301', name: '3-T' }
+      {
+        _id: '4d1288sh2394fc13a8037301',
+        name: '3-B'
+      },
+      {
+        _id: '4d1288sh2394fc13a8017301',
+        name: '3-B'
+      },
+      {
+        _id: '4d1288sh2394fc13a8077301',
+        name: '3-T'
+      }
     ],
     positions: [
       [32.62087018318113, -114.96093750000001],
@@ -219,13 +376,10 @@ const dumbZones = [
       [30.221101852485987, -114.60937500000001],
       [31.50362930577303, -115.04882812500001]
     ]
-  }, {
+  },
+  {
     name: 'Sur-',
     _id: '4d128b6ea794fc13a8000101',
-    status: [
-      { name: 'alerts', value: 0.0251 },
-      { name: 'warnings', value: 0.212 }
-    ],
     sites: [],
     subzones: [],
     positions: [
@@ -247,10 +401,6 @@ const dumbZones = [
   }, {
     name: 'Peninsula',
     _id: '4d128b6ea794fc13a8200001',
-    status: [
-      { name: 'alerts', value: 0.3311 },
-      { name: 'warnings', value: 0.1224 }
-    ],
     sites: [],
     subzones: [],
     positions: [
@@ -265,67 +415,6 @@ const dumbZones = [
       [19.973348786110602, -90.30761718750001],
       [19.062117883514652, -90.92285156250001]
     ]
-  }
-]
-
-const dumbReports = [
-  {
-    _id: '9223432eu32eni32ej2',
-    timeStamp: 1504458241188,
-    zone: {
-      _id: '4d128b6ea794fc13a8200001',
-      name: 'Centro'
-    },
-    subZone: {
-      _id: '4d1287bea794fca3a8200001',
-      name: '3B'
-    },
-    site: {
-      _id: '4d1287bea794fca3a8us63h1',
-      position: [],
-      name: '12'
-    },
-    type: 0,
-    severity: 2,
-    sensor: {
-      _id: '4d127sy0a794fca3a8200001',
-      type: 3,
-      data: [],
-      state: {
-        value: 0.9,
-        type: 0
-      }
-    },
-    checked: false
-  },
-  {
-    _id: '923neu32dahsu32ej2',
-    timeStamp: 1504712109305,
-    zone: {
-      _id: '4d128b6ea794fc13a8200001',
-      name: 'Californias'
-    },
-    subZone: {
-      _id: '4d1287bea794fca3a8200001',
-      name: '2T'
-    },
-    site: {
-      _id: '4d1287bea794fca3a8us63h1',
-      position: [],
-      name: '92'
-    },
-    type: 2,
-    severity: 1,
-    sensor: {
-      _id: '4d127sy0a794fca3a8200001',
-      type: 3,
-      data: [],
-      state: {
-        value: 0.9,
-        type: 0
-      }
-    },
-    checked: true
   }
 ]
 
@@ -366,15 +455,37 @@ function credentials(state = {}, action) {
   }
 }
 
+function appAlert(state = {}, action) {
+  switch (action.type) {
+    case 'DISMISS_ALERT':
+      return {}
+    case 'SET_ALERT':
+      return {
+        title: action.title,
+        body: action.body
+      }
+    default:
+      return state
+  }
+}
+
 function zones(state = dumbZones, action) {
   switch (action.type) {
     case 'SET_ZONE':
-    return [...state, {
-      name: action.name,
-      positions: action.positions
-    }]
+      return [...state, {
+        name: action.name,
+        positions: action.positions
+      }]
     case 'SET_SUBZONE':
-    return [...state]
+      return [...state]
+    case 'ADD_REPORT':
+      return state.map(zone => {
+        zone.subzones.map(subzone => {
+          subzone.sites.map(site => {
+            return { ...site, reports: [...site.reports, action.report] }
+          })
+        })
+      })
     default:
     return state
   }
@@ -387,28 +498,11 @@ function administrators(state = dumbAdministrators, action) {
   }
 }
 
-function reports(state = dumbReports, action) {
-  switch (action.type) {
-    case 'SET_REPORTS':
-      return [
-        ...action.reports
-      ]
-    case 'DISMISS_REPORT':
-      return state.map(report =>
-        (report._id === action.report)
-          ? {...report, dismissed: true}
-          : report
-      )
-    default:
-      return state
-  }
-}
-
 const appReducer = combineReducers({
   credentials,
   zones,
-  reports,
-  administrators
+  administrators,
+  appAlert
 })
 
 export default appReducer

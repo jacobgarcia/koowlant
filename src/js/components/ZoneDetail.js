@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 import { StatusOverall, ZonesContainer } from './'
-import { getStatus } from '../SpecialFunctions'
+import { getStatus, getZoneData } from '../SpecialFunctions'
 
 class ZoneDetail extends Component {
   constructor(props) {
@@ -39,28 +39,30 @@ class ZoneDetail extends Component {
 
   render() {
     // normalPercentage
-    const { completeStatus } = this.props.zone ? getStatus(this.props.zone.status) : { completeStatus: '', normalPercentage: ''}
+    const data = getZoneData(this.props.zone)
+    const { status, percentage } = getStatus(data)
 
     return (
       <div className="side-content">
         <div className="top">
           <span className="back"><Link to={this.getBackLink(this.props)}>Regresar</Link></span>
-          { this.props.isWindow === 'zones' ? null : <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span> }
+          { this.props.isWindow !== 'zones' && <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span> }
         </div>
         <StatusOverall
-          status={completeStatus}
-          zone={this.props.zone || this.props.subzone}
+          status={status}
+          percentage={percentage}
+          alarms={data.alarms && data.alarms}
+          zone={this.props.subzone || this.props.zone}
           site={this.props.site}
           type={this.props.type}
         />
         <div>
           {
             this.isSite
-            ? <div>
+            && <div>
                 Sensores
                 Cámaras
               </div>
-            : null
           }
           <ZonesContainer
             {...this.props}

@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression')
 const winston = require('winston')
 const app = express()
-// const v1 = require(path.resolve('router/v1'))
+const v1 = require(path.resolve('router/v1'))
 
 const PORT = process.env.PORT || 8080
 
@@ -33,7 +33,11 @@ app.use(
 )
 
 // Resolve API v1
+<<<<<<< HEAD
  app.use('/v1', API)
+=======
+app.use('/v1', v1)
+>>>>>>> 0b6180c90a0840f65444e6d5ba828b24dbe71583
 
 // Send index to all other routes
 app.get('*', (req, res) => {
@@ -44,27 +48,8 @@ app.get('*', (req, res) => {
 const server = app.listen(PORT, () =>
   winston.info(`Telco server is listening on port: ${PORT}!`)
 )
+
 const io = require('socket.io').listen(server)
 
-io.on('connection', socket => {
-  winston.info('New connection')
-  socket.on('join', room => {
-    socket.join(room)
-  })
-})
-
-setInterval(() => {
-  console.log('Sending report...')
-   io.in('0293j4ji').emit('report', {
-  "site": "A4050",
-  "sensors": [{
-          "id": "ts1",
-          "value": 28.5
-  }],
-  "alarms": [{
-      "sensor": "ts1", // Sensor id
-      "timestamp": 1505495552211, //Unix timestamp
-      "value": 28.5
-  }]
-  })
-}, 1000)
+// Connect sockets
+require(path.resolve('router/v1/sockets'))(io)

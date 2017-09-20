@@ -5,6 +5,11 @@ import { Link } from 'react-router-dom'
 
 import { setCredentials } from '../actions'
 
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email)
+}
+
 class Login extends Component {
   constructor(props) {
     super(props)
@@ -26,7 +31,8 @@ class Login extends Component {
       name: 'John',
       surname: 'Appleseed',
       token: 'e293je823',
-      permissions: 0
+      permissions: 0,
+      isValidEmail: false
     }
 
     const token = 'kasjndjaksndin39'
@@ -41,6 +47,12 @@ class Login extends Component {
 
   onChange(event) {
     const { name, value } = event.target
+
+    if (name === 'user') {
+      this.setState({
+        isValidEmail: validateEmail(value)
+      })
+    }
 
     this.setState({
       [name]: value
@@ -63,7 +75,7 @@ class Login extends Component {
             onChange={this.onChange}
             value={this.state.user}
             name="user"
-            placeholder="Usuario o correo"
+            placeholder="Correo electrónico"
           />
           <input
             type="password"
@@ -72,7 +84,15 @@ class Login extends Component {
             name="password"
             placeholder="Contraseña"
           />
-          <input type="submit" value="Iniciar sesión"/>
+          <input
+            type="submit"
+            value="Iniciar sesión"
+            className={
+              this.state.user && this.state.password && this.state.isValidEmail
+              ? 'active'
+              : ''
+            }
+          />
           <Link to="/restore-password">Recuperar contraseña</Link>
         </form>
       </div>

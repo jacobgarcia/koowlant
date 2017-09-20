@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Polygon, Tooltip} from 'react-leaflet'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { getStatus } from '../SpecialFunctions'
+import { getZoneData, getStatus } from '../SpecialFunctions'
 
 const COLORS = {
   alerts: '#ed2a20',
@@ -12,9 +12,11 @@ const COLORS = {
 }
 
 function ZonePolygon(props) {
-  const status = getStatus(props.zone.status)
-  const alerts = props.zone.alerts ? props.zone.alerts.length : null
-  const warnings = props.zone.warnings ? props.zone.warnings.length : null
+  const data = getZoneData(props.zone)
+  const { status } = getStatus(data)
+
+  const alerts = data.alarms ? data.alarms.length : null
+  // const warnings = data.warnings ? data.warnings.length : null
 
   return (
     <Polygon
@@ -30,11 +32,11 @@ function ZonePolygon(props) {
         <div className={`tooltip ${props.highlightedZone === props.zone._id ? 'active' : ''}`}>
           <div className="hidable">
             {
-              props.zone.status
-              ? <PieChart width={85} height={85}>
+              status
+              && <PieChart width={85} height={85}>
                 <Pie
                   dataKey="value"
-                  data={status.completeStatus}
+                  data={status}
                   outerRadius={42}
                   innerRadius={34}
                   startAngle={90}
@@ -42,15 +44,14 @@ function ZonePolygon(props) {
                   fill=""
                   isAnimationActive={false}
                 >
-                { status.completeStatus.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
                 </Pie>
               </PieChart>
-              : null
             }
           </div>
           <div className={`general`}>
             <div className="icons">
-              { warnings > 0 ? <span className="warnings-icon" /> : null }
+              {/* { warnings > 0 ? <span className="warnings-icon" /> : null } */}
               { alerts > 0 ? <span className="alerts-icon" /> : null }
             </div>
             <h3>{props.zone.name}</h3>

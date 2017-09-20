@@ -9,13 +9,26 @@ class SiteClass {
 const schema = new Schema({
   id: String,
   name: String,
-  position: [Number],
+  position: [Number], // Lat, lng
   sensors: [{
+    name: String,
     value: Number
   }],
   alarms: [{
-    value: Number,
-    timestamp: Date
+    sensor: String, // Sensor id
+    timestamp: { type: Number, default: Date.now() }, // Unix timestamp
+    value: Number
+  }],
+  history: [{ // Save a history of sensors and alarms reports
+    sensors: [{
+      name: String,
+      value: Number
+    }],
+    alerts: [{
+      sensor: String, // Sensor id
+      timestamp: { type: Number, default: Date.now() }, // Unix timestamp
+      value: Number
+    }],
   }]
 })
 

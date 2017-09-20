@@ -16,15 +16,69 @@ export function intToRGB(i) {
     return "00000".substring(0, 6 - c.length) + c;
 }
 
+function getSubzoneData(subzone) {
+  return subzone.sites
+  ? subzone.sites.reduce((array, {alarms = [], sensors = []}) =>
+    ({ alarms: [...array.alarms, ...alarms], sensors: [...array.sensors, ...sensors] })
+  , { alarms: [], sensors: [] })
+  : ({ alarms: [], sensors: [] })
+}
 
-export function getStatus(zoneStatus) {
-  const reportsPercentage = zoneStatus ? zoneStatus.reduce((sum, status) => sum + status.value, 0) : 0
-  return {
-    completeStatus: zoneStatus ? [...zoneStatus, { name: 'normal', value: (1 - reportsPercentage) }] : null,
-    normalPercentage: Math.round((1 - reportsPercentage) * 1000) / 10
+export function getZoneData(zone) {
+  if (zone.subzones) {
+    // Complete zone
+    return zone.subzones.reduce((array, subzone) => {
+      const { alarms = [], sensors = [] } = getSubzoneData(subzone) || { alarms: [], sensors: []}
+      return ({ alarms: [...array.alarms, ...alarms], sensors: [...array.sensors, ...sensors] })
+    }, { alarms: [], sensors: [] })
+  } else if (zone.sites) {
+    // Subzone
+    return getSubzoneData(zone)
+  } else if (zone.sensors) {
+    // Site
+    return { alarms: zone.alarms || [], sensors: zone.sensors || [] }
+  } else {
+    return null
   }
 }
 
+export function getSensorChart(type) {
+  switch (type) {
+    case 'TEMPERATURE':
+      return [{
+        name: 'alerts',
+        value: 15,
+      },{
+        name: 'warnings',
+        value: 10,
+      },{
+        name: 'normal',
+        value: 80
+      },{
+        name: 'warnings',
+        value: 5,
+      },{
+        name: 'alerts',
+        value: 10,
+      }]
+    default:
+      return null
+  }
+}
+
+export function getStatus(data) {
+  if (data && data.sensors && data.sensors.length > 0) {
+    return ({
+        status: [
+          { name: 'normal', value: data.sensors.length - (data.alarms ? data.alarms.length : 0) },
+          { name: 'alerts', value: data.alarms ? data.alarms.length : 0 },
+        ],
+        percentage: Math.round((1 - ((data.alarms ? data.alarms.length : 0) / data.sensors.length)) * 1000) / 10
+    })
+  } else {
+    return { status: null, percentage: null }
+  }
+}
 
 export function getAreaCenter(coordsArray) {
   // For rect and poly areas we need to loop through the coordinates

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { dispatch } from 'redux'
 import PropTypes from 'prop-types'
+
+import { logout } from '../actions'
 
 class Settings extends Component {
   constructor(props) {
@@ -13,6 +16,7 @@ class Settings extends Component {
     }
 
     this.onChange = this.onChange.bind(this)
+    this.logout = this.logout.bind(this)
   }
 
   onChange(event) {
@@ -23,7 +27,8 @@ class Settings extends Component {
   }
 
   logout() {
-    console.log('Logging out...')
+    localStorage.removeItem('token')
+    location.reload()
   }
 
   render() {
@@ -76,4 +81,17 @@ function mapStateToProps({ credentials }) {
   }
 }
 
-export default connect(mapStateToProps)(Settings)
+function mapDispatchToProps(dispatch) {
+  return {
+    logout: () => {
+      dispatch(logout())
+    }
+  }
+}
+
+Settings.propTypes = {
+  logout: PropTypes.func,
+  credentials: PropTypes.object
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings)
