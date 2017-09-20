@@ -21,4 +21,4 @@ const schema = new Schema({
 
 schema.loadClass(SiteClass)
 
-module.exports = mongoose.model('Zone', schema)
+module.exports = mongoose.model('Site', schema)

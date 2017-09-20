@@ -10,6 +10,8 @@ const app = express()
 
 const PORT = process.env.PORT || 8080
 
+const API = require(path.resolve('router/v1/api.js'))
+
 app.use(helmet())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -31,7 +33,7 @@ app.use(
 )
 
 // Resolve API v1
-// app.use('/v1', v1)
+ app.use('/v1', API)
 
 // Send index to all other routes
 app.get('*', (req, res) => {
