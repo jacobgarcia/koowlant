@@ -323,67 +323,6 @@ const dumbZones = [
   }
 ]
 
-const dumbReports = [
-  {
-    _id: '9223432eu32eni32ej2',
-    timeStamp: 1504458241188,
-    zone: {
-      _id: '4d128b6ea794fc13a8200001',
-      name: 'Centro'
-    },
-    subZone: {
-      _id: '4d1287bea794fca3a8200001',
-      name: '3B'
-    },
-    site: {
-      _id: '4d1287bea794fca3a8us63h1',
-      position: [],
-      name: '12'
-    },
-    type: 0,
-    severity: 2,
-    sensor: {
-      _id: '4d127sy0a794fca3a8200001',
-      type: 3,
-      data: [],
-      state: {
-        value: 0.9,
-        type: 0
-      }
-    },
-    checked: false
-  },
-  {
-    _id: '923neu32dahsu32ej2',
-    timeStamp: 1504712109305,
-    zone: {
-      _id: '4d128b6ea794fc13a8200001',
-      name: 'Californias'
-    },
-    subZone: {
-      _id: '4d1287bea794fca3a8200001',
-      name: '2T'
-    },
-    site: {
-      _id: '4d1287bea794fca3a8us63h1',
-      position: [],
-      name: '92'
-    },
-    type: 2,
-    severity: 1,
-    sensor: {
-      _id: '4d127sy0a794fca3a8200001',
-      type: 3,
-      data: [],
-      state: {
-        value: 0.9,
-        type: 0
-      }
-    },
-    checked: true
-  }
-]
-
 const dumbAdministrators = [
   {
     zone: 'siadjh9sa9djsad09asj9di',

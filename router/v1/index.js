@@ -1,31 +1,27 @@
 /* eslint-env node */
 const express = require('express')
-// const jwt = require('jsonwebtoken')
-// const path = require('path')
+const path = require('path')
 const winston = require('winston')
 const router = new express.Router()
-const rethink = require('rethinkdb')
+const mongoose = require('mongoose')
 
-router.route('/:companyId/:siteId/reports')
-.post((req, res) => {
-  rethink.connect({ host: 'localhost', port: 28015 })
-  .then(connection => {
-    return rethink.db('kawlantid').table('reports')
-    .insert({
-      sensors: req.body.sensors,
-      alarms: req.body.alarms,
-      site: req.params.siteId,
-      company: req.params.companyId
-    })
-    .run(connection)
-  })
-  .then(result => {
-    winston.debug(result)
-    res.status(200).json({ result })
-  })
-  .catch(error => {
-    res.status(500).json({ error })
-  })
-})
+mongoose.connect(
+  'mongodb://localhost/kawlantid',
+  { useMongoClient: true, promiseLibrary: global.Promise
+  }
+)
+
+router.use(require(path.resolve('router/v1/auth')))
+
+// The next things will be protected by auth
+
+// TODO: Save sites and stream change
+
+// TODO: Save zone/subzone and stream change
+
+// TODO: Save sensors and alerts, add to history and stream change
+
+// TODO: Send user invitee (mail)
+// TODO: Accept user invitee
 
 module.exports = router
