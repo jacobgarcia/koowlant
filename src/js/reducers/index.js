@@ -2,8 +2,8 @@ import { combineReducers } from 'redux'
 
 const dumbZones = [
   {
-    name: 'Centro',
     _id: '4d128b6ea794fc13a8000001',
+    name: 'Centro',
     positions: [
       [21.739091217718574, -97.55859375000001],
       [22.51255695405145, -100.06347656250001],
@@ -28,10 +28,11 @@ const dumbZones = [
         sites: [
           {
             _id: '4d1288s8sh94fc9sj1h37301',
+            key: 'A4050',
             position: [],
             sensors: [
               {
-                _id: "ts1",
+                _id: 'ts1',
                 value: 45.9
               },
               {
@@ -48,13 +49,14 @@ const dumbZones = [
               }
             ],
             alarms: [{
-                sensor: "ts1", // Sensor id
+                sensor: 'w32df44t', // Sensor id
                 timestamp: 1505495552211, // Unix timestamp
                 value: 45.9
             }]
           },
           {
             _id: '4d123234s8shubdiu9sj1afad1',
+            key: 'asudu2br',
             position: [],
             sensors: [
               {
@@ -118,6 +120,7 @@ const dumbZones = [
         sites: [
           {
             _id: 'akjsndjkasnd9i23',
+            key: 'udnaidnjs',
             position: [25.720735134412106, -100.31616210937501],
             name: '3T',
             sensors: [

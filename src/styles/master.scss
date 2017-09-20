@@ -746,6 +746,7 @@ nav {
       .normal, .warnings, .alerts {
         display: inline-block;
         height: 10px;
+        transition: ease 0.5s;
       }
       .normal { background: $green; }
       .warnings { background: $yellow; }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 import { StatusOverall, ZonesContainer } from './'
-import { getStatus, getZoneData } from '../SpecialFunctions'
+import { getStatus, getData } from '../SpecialFunctions'
 
 class ZoneDetail extends Component {
   constructor(props) {
@@ -22,12 +22,14 @@ class ZoneDetail extends Component {
     this.setState({ viewStyle })
   }
 
-  onHover(zoneId) {
+  onHover(elementId) {
+    this.props.onHover(elementId)
+
     this.setState({
-      selectedZone: zoneId
+      selectedZone: elementId
     })
   }
-
+  
   getBackLink(props) {
     switch (props.type) {
       case 'zone': return '/'
@@ -37,15 +39,24 @@ class ZoneDetail extends Component {
     }
   }
 
+  getCorrectData({type, site, subzone, zone }) {
+    switch (type) {
+      case 'general': return zone
+      case 'zone': return zone
+      case 'subzone': return subzone
+      case 'site': return site
+      default: return null
+    }
+  }
+
   render() {
     // normalPercentage
-    const data = getZoneData(this.props.zone)
+    const data = getData(this.getCorrectData(this.props))
     const { status, percentage } = getStatus(data)
-
     return (
       <div className="side-content">
         <div className="top">
-          <span className="back"><Link to={this.getBackLink(this.props)}>Regresar</Link></span>
+          { (this.props.type !== 'general') && <span className="back"><Link to={this.getBackLink(this.props)}>Regresar</Link></span> }
           { this.props.isWindow !== 'zones' && <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span> }
         </div>
         <StatusOverall
@@ -81,10 +92,14 @@ class ZoneDetail extends Component {
 ZoneDetail.propTypes = {
   site: PropTypes.object,
   subzone: PropTypes.object,
-  zone: PropTypes.object,
+  zone: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ]),
   type: PropTypes.string,
   isWindow: PropTypes.bool,
-  onPopWindow: PropTypes.func
+  onPopWindow: PropTypes.func,
+  onHover: PropTypes.func
 }
 
 export default ZoneDetail

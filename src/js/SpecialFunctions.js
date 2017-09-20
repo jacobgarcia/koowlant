@@ -24,13 +24,23 @@ function getSubzoneData(subzone) {
   : ({ alarms: [], sensors: [] })
 }
 
-export function getZoneData(zone) {
-  if (zone.subzones) {
-    // Complete zone
-    return zone.subzones.reduce((array, subzone) => {
-      const { alarms = [], sensors = [] } = getSubzoneData(subzone) || { alarms: [], sensors: []}
-      return ({ alarms: [...array.alarms, ...alarms], sensors: [...array.sensors, ...sensors] })
+function getZoneData(zone) {
+  return zone.subzones.reduce((array, subzone) => {
+    const { alarms = [], sensors = [] } = getSubzoneData(subzone) || { alarms: [], sensors: []}
+    return ({ alarms: [...array.alarms, ...alarms], sensors: [...array.sensors, ...sensors] })
+  }, { alarms: [], sensors: [] })
+}
+
+export function getData(zone) {
+  if (Array.isArray(zone)) {
+    // All zones
+    return zone.reduce((array, zone) => {
+      const zoneData = getZoneData(zone)
+      return { alarms: [...array.alarms, ...zoneData.alarms], sensors: [...array.sensors, ...zoneData.sensors] }
     }, { alarms: [], sensors: [] })
+  } else if (zone.subzones) {
+    // Complete zone
+    return getZoneData(zone)
   } else if (zone.sites) {
     // Subzone
     return getSubzoneData(zone)
