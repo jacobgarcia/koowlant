@@ -203,7 +203,12 @@ class MapView extends Component {
 
   popWindow(section) {
     const { url } = this.props.match
-    window.open(`${window.host}${url}?isWindow=${section}`,'Telco','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=493')
+    console.log(window.host)
+    window.open(
+      `${window.host}?isWindow=${section}`,
+      'Telco',
+      'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=493'
+    )
   }
 
   changeSitesView(style) {
@@ -231,10 +236,11 @@ class MapView extends Component {
   }
 
   render() {
+    console.log('Map reports', this.props.zones)
     return (
       <div className={`map-container ${this.state.isCreatingZone ? 'creating' : ''}`}>
         { this.state.promptElement
-          ? <div className="prompt-element">
+          && <div className="prompt-element">
             <div className="content">
               <span>Selecciona elemento a crear:</span>
               <ul className="options">
@@ -248,7 +254,6 @@ class MapView extends Component {
               </div>
             </div>
           </div>
-          : null
         }
         <div className={`general-status ${this.state.isGeneralStatusHidden && this.isWindow !== 'zones' ? 'hidden' : ''} ${this.isWindow === 'zones' ? 'window' : ''}`}>
           <input
@@ -258,14 +263,16 @@ class MapView extends Component {
           />
         <Route exact path="/" render={() =>
             <div className="side-content">
-              { this.isWindow === 'zones' ? null : <span
-                className="pop-window"
-                onClick={() => this.popWindow('zones')}>Hacer ventana</span>}
-              <StatusOverall
-                status={{}}
-                reports={{}}
+              {
+                this.isWindow !== 'zones'
+                && <span
+                    className="pop-window"
+                    onClick={() => this.popWindow('zones')}>Hacer ventana</span>
+              }
+              {/* <StatusOverall
+                reports={this.props.reports}
                 type="general"
-              />
+              /> */}
               <ZonesContainer
                 viewOrdering={this.state.sitesViewOrdering}
                 viewStyle={this.state.sitesViewStyle}
@@ -279,9 +286,8 @@ class MapView extends Component {
             </div>
         }/>
         {
-          this.isWindow === 'alerts'
-          ? null
-          : <Switch>
+          this.isWindow !== 'alerts'
+          && <Switch>
               <Route exact path="/zones/:zoneId" render={() =>
                 <ZoneDetail
                   onPopWindow={() => this.popWindow('zones')}
@@ -359,7 +365,7 @@ class MapView extends Component {
                 : null
               }
               {
-                this.state.selectedSubzone
+                this.state.selectedSubzone && this.state.selectedSubzone.positions
                 ? <Polygon
                     positions={[
                       [[-85,-180], [-85,180], [85,180], [85,-180]],
@@ -370,23 +376,21 @@ class MapView extends Component {
                     weight={0}
                     onClick={event => event.stopPropagation() }
                   />
-                : this.state.selectedZone && this.state.selectedZone.positions.length > 1
-                ? <Polygon
-                    positions={[
-                      [[-85,-180], [-85,180], [85,180], [85,-180]],
-                      [this.state.selectedZone.positions]
-                    ]}
-                    fillOpacity={0.3}
-                    color="#666"
-                    weight={0}
-                    onClick={event => event.stopPropagation() }
-                  />
-                : null
+                : (this.state.selectedZone && this.state.selectedZone.positions.length > 1)
+                  && <Polygon
+                      positions={[
+                        [[-85,-180], [-85,180], [85,180], [85,-180]],
+                        [this.state.selectedZone.positions]
+                      ]}
+                      fillOpacity={0.3}
+                      color="#666"
+                      weight={0}
+                      onClick={event => event.stopPropagation() }
+                    />
               }
               {
-                this.state.selectedZone
-                ? null
-                : this.props.zones.map(zone =>
+                this.state.selectedZone === null
+                && this.props.zones.map(zone =>
                   <ZonePolygon
                     key={zone._id}
                     zone={zone}
@@ -399,16 +403,15 @@ class MapView extends Component {
               {
                 this.state.isCreatingSite ? (
                   this.state.newPositions[0]
-                  ? <SiteMarker
+                  && <SiteMarker
                       position={this.state.newPositions[0]}
                       title={this.state.newName}
                     />
-                  : null
                 ) : (
                   <Polygon
-                      color="#aaa"
-                      positions={this.state.newPositions}
-                    />
+                    color="#aaa"
+                    positions={this.state.newPositions}
+                  />
                 )
               }
               <TileLayer
@@ -426,9 +429,8 @@ class MapView extends Component {
           </div>
         }
         {
-          this.isWindow === 'zones'
-          ? null
-          : <Reports
+          this.isWindow !== 'zones'
+          && <Reports
               isAlertsHidden={this.state.isAlertsHidden}
               onHide={() => this.hide('alerts')}
               isWindow={this.isWindow}
@@ -440,10 +442,9 @@ class MapView extends Component {
   }
 }
 
-function mapStateToProps({ zones, reports }) {
+function mapStateToProps({ zones }) {
   return {
-    zones,
-    reports
+    zones
   }
 }
 

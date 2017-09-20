@@ -13,7 +13,6 @@ import Settings from './Settings'
 import Nav from '../components/Nav'
 import io from 'socket.io-client'
 
-
 const socket = io() // window.location
 
 socket.connect(status => {

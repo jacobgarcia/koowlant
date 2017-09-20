@@ -30,6 +30,7 @@ function Reports(props) {
         </div>
         <div className="mini-alerts-container">
           {
+            props.reports &&
             props.reports.map(report =>
               <MiniAlert
                 key={report._id}
