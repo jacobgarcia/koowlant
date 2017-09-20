@@ -50,7 +50,7 @@ router.post('/authenticate', (req, res) => {
   })
   .catch(error => {
     winston.error({error})
-    return res.status(500).json({ error })
+    return res.status(500).json({ error }) //Causes an error for cannot set headers after sent
   })
 })
 

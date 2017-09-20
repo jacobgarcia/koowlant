@@ -378,7 +378,7 @@ const dumbZones = [
     ]
   },
   {
-    name: 'Sur-',
+    name: 'Sur',
     _id: '4d128b6ea794fc13a8000101',
     sites: [],
     subzones: [],

@@ -7,10 +7,10 @@ class SubzoneClass {
 }
 
 const schema = new Schema({
-  positions: [[Number]],
   name: String,
-  parentZone: { type: mongoose.schema.objectId, ref: 'Zone' },
-  sites: [{ type: mongoose.schema.objectId, ref: 'Site' }]
+  positions: [[Number]],
+  parentZone: { type: Schema.Types.ObjectId, ref: 'Zone' },
+  sites: [{ type: Schema.Types.ObjectId, ref: 'Site' }]
 })
 
 schema.loadClass(SubzoneClass)

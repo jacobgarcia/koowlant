@@ -14,12 +14,7 @@ mongoose.connect(
 router.use(require(path.resolve('router/v1/auth')))
 
 // The next things will be protected by auth
-
-// TODO: Save sites and stream change
-
-// TODO: Save zone/subzone and stream change
-
-// TODO: Save sensors and alerts, add to history and stream change
+router.use(require(path.resolve('router/v1/companies')))
 
 // TODO: Send user invitee (mail)
 // TODO: Accept user invitee

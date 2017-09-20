@@ -7,8 +7,7 @@ class SiteClass {
 }
 
 const schema = new Schema({
-  id: String,
-  name: String,
+  key: String,
   position: [Number], // Lat, lng
   sensors: [{
     name: String,
@@ -26,9 +25,11 @@ const schema = new Schema({
     }],
     alerts: [{
       sensor: String, // Sensor id
-      timestamp: { type: Number, default: Date.now() }, // Unix timestamp
-      value: Number
+      timestamp: { type: Number, default: Date.now() }, // Unix timestamp. Time of the alert event
+      value: Number,
+      dissmissed: Boolean
     }],
+     timestamp: { type: Number, default: Date.now() } // Unix timestamp. Time when the capture was done
   }]
 })
 
