@@ -26,7 +26,11 @@ function StatusOverall(props) {
 
 StatusOverall.propTypes = {
   type: PropTypes.string.isRequired,
-  zone: PropTypes.object,
+  zone: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ]),
+  alarms: PropTypes.array,
   site: PropTypes.object,
   status: PropTypes.array,
   percentage: PropTypes.number

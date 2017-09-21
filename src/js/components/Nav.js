@@ -33,6 +33,8 @@ class Nav extends Component {
   render() {
     const date = new Date(this.state.time)
 
+    const isZone = this.props.location.pathname.includes('zones')
+
     return (
       <nav>
         <div className="user">
@@ -46,7 +48,7 @@ class Nav extends Component {
           <span>{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</span>
           <span>{date.getHours()}:{date.getMinutes()}:{date.getSeconds()}</span>
           <ul className="nav links">
-            <li><NavLink exact to="/" activeClassName="selected">Mapa</NavLink></li>
+            <li><NavLink exact to="/" activeClassName="selected" className={isZone && 'selected'}>Mapa</NavLink></li>
             <li><NavLink to="/administrators" activeClassName="selected">Administradores</NavLink></li>
             <li><NavLink to="/stadistics" activeClassName="selected">Estadísiticas</NavLink></li>
             <li><NavLink to="/settings" activeClassName="selected">Configuración</NavLink></li>

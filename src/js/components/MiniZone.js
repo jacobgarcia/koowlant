@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { getZoneData, getStatus, getSensorChart } from '../SpecialFunctions'
+import { getData, getStatus, getSensorChart } from '../SpecialFunctions'
 
 const COLORS = {
   alerts: '#ed2a20',
@@ -11,8 +11,10 @@ const COLORS = {
 }
 
 function MiniZone(props) {
-  const data = getZoneData(props.zone)
+  const data = getData(props.zone)
   let { status, percentage } = getStatus(data)
+
+  // console.log('MINI ZONE', props.zone, status, percentage)
 
   if (!status && props.type === 'site') {
     status = getSensorChart('TEMPERATURE')

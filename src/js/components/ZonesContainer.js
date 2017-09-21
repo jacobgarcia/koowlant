@@ -18,7 +18,7 @@ function ZonesContainer(props) {
 
   const getElements = type => {
     switch (type) {
-      case 'general': return props.zones
+      case 'general': return props.zone
       case 'zone': return props.zone.subzones
       case 'subzone': return props.subzone.sites
       case 'site': return props.site.sensors
@@ -55,7 +55,7 @@ function ZonesContainer(props) {
       </div>
       <div className={`mini-sites-container ${props.viewStyle}`}>
         {
-          elements
+          Array.isArray(elements)
           && elements.map(element =>
             <Link
               to={getMiniZoneLink(element)}
@@ -84,7 +84,10 @@ ZonesContainer.propTypes = {
   changeSitesView: PropTypes.func,
   site: PropTypes.object,
   subzone: PropTypes.object,
-  zone: PropTypes.object,
+  zone: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array
+  ]),
   highlightedZone: PropTypes.string
 }
 
