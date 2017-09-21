@@ -538,19 +538,38 @@ nav {
 
 .alerts {
   .general-alerts {
-    padding-left: 45px;
-    background: url('/static/img/icons/alert-red.png') no-repeat left center;
     background-size: 40px;
     margin-bottom: 20px;
-    h3 {
-      font-weight: 400;
+    display: flex;
+    align-items: baseline;
+    h2 {
+      font-weight: 500;
     }
-    p {
-      font-weight: 600;
+    span {
+      padding-left: 20px;
+      position: relative;
+      font-size: 0.85rem;
+      color: $gray;
+      &:before {
+        content: '';
+        position: absolute;
+        display: block;
+        width: 6px;
+        height: 6px;
+        background: $red;
+        border-radius: 3px;
+        bottom: 7px;
+        left: 9px;
+      }
     }
+  }
+  .pop-window {
+    margin-left: auto;
   }
   .side-content {
     border-left: 1px solid $gray;
+    display: flex;
+    flex-direction: column;
   }
   .close-tab.alerts-side {
     left: -40px;
@@ -561,43 +580,43 @@ nav {
     align-items: baseline;
   }
   .mini-alert {
-    // box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgb(173, 173, 173);
-    border-radius: 7px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
     margin: 5px 0;
     padding: 10px;
     background: #fff;
     background-size: 30px;
-    padding-left: 40px;
+    padding-left: 50px;
     background-repeat: no-repeat;
-    background-position: 5px center;
+    background-position: 7px center;
     display: flex;
     justify-content: space-between;
     cursor: pointer;
-    .location, .date {
+    border-left: 5px solid #fff;
+    &:hover {
+      border-left: 5px solid $red;
+    }
+    .time {
       font-size: 0.9rem;
       color: $gray;
       font-weight: 500;
-    }
-    .status {
-      display: flex;
-      align-items: flex-end;
-      margin-top: 3px;
-      font-size: 1.05rem;
-      .value {
+      span {
         margin-left: 10px;
       }
     }
-    .value, .check {
-      color: $red;
-      font-weight: 600;
-    }
-    .check {
-      margin-top: 3px;
-      text-align: right;
-    }
-    .type {
-      font-weight: 500;
+    .details {
+      display: flex;
+      flex-direction: column;
+      font-size: 1.05rem;
+      span {
+        font-size: 0.85rem;
+        color: $gray;
+      }
+      p {
+        color: #000;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
     }
     &.battery { background-image: url('/static/img/icons/battery.png'); }
     &.fuel { background-image: url('/static/img/icons/fuel.png'); }
