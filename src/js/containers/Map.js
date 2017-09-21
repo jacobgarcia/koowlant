@@ -63,31 +63,18 @@ class MapView extends Component {
   }
 
   hide(componentName) {
-    switch (componentName) {
-      case 'general-status':
-        this.setState(prevState => ({
-          isGeneralStatusHidden: !prevState.isGeneralStatusHidden,
-          isAlertsHidden: true,
-        }))
-        break
-      case 'alerts':
-        this.setState(prevState => ({
-          isGeneralStatusHidden: true,
-          isAlertsHidden: !prevState.isAlertsHidden,
-        }))
-        break
-      default:
-        break
-    }
+    this.setState(prevState => ({
+      isGeneralStatusHidden: componentName === 'alerts' ? true : !prevState.isGeneralStatusHidden,
+      isAlertsHidden: componentName === 'general-status' ? true : !prevState.isAlertsHidden,
+    }))
   }
 
   saveNewZone() {
     if (!this.isNewZoneValid()) return
 
-    const name = this.state.newName
-    const positions = this.state.newPositions
+    const { newName, newPositions } = this.state.newName
 
-    this.props.setZone(name, positions)
+    this.props.setZone(newName, newPositions)
 
     this.setState({
       newPositions: [],
@@ -195,7 +182,10 @@ class MapView extends Component {
 
     this.setState(prevState => ({
       newPositions: prevState.newPositions.concat([newPosition])
-    }), () => this.isNewZoneValid())
+    }), () => {
+      console.log(this.state.newPositions)
+      this.isNewZoneValid()
+    })
   }
 
   popWindow(section) {
