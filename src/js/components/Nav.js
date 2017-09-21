@@ -33,6 +33,8 @@ class Nav extends Component {
   render() {
     const date = new Date(this.state.time)
 
+    const isZone = this.props.location.pathname.includes('zones')
+
     return (
       <nav>
         <div className="user">
