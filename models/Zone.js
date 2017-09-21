@@ -7,9 +7,9 @@ class ZoneClass {
 }
 
 const schema = new Schema({
-  positions: [[Number]],
   name: String,
-  subzones: [{ type: mongoose.schema.objectId, ref: 'Zone' }], // Id of the subzones that belong to this zone, if applicable
+  positions: [[Number]],
+  subzones: [{ type: Schema.Types.ObjectId, ref: 'Subzone' }], // Id of the subzones that belong to this zone, if applicable
 })
 
 schema.loadClass(ZoneClass)

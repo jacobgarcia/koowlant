@@ -6,9 +6,22 @@ class SiteClass {
 
 }
 
+const History = new Schema({
+    sensors: [{
+      name: String,
+      value: Number
+    }],
+    alarms: [{
+      sensor: String, // Sensor id
+      timestamp: { type: Number, default: Date.now() }, // Unix timestamp. Time of the alert event
+      value: Number,
+      dissmissed: Boolean
+    }],
+     timestamp: { type: Number, default: Date.now() } // Unix timestamp. Time when the capture was done
+},{ _id : false })
+
 const schema = new Schema({
-  id: String,
-  name: String,
+  key: { type: String, unique: true, required: true },
   position: [Number], // Lat, lng
   sensors: [{
     name: String,
@@ -19,19 +32,9 @@ const schema = new Schema({
     timestamp: { type: Number, default: Date.now() }, // Unix timestamp
     value: Number
   }],
-  history: [{ // Save a history of sensors and alarms reports
-    sensors: [{
-      name: String,
-      value: Number
-    }],
-    alerts: [{
-      sensor: String, // Sensor id
-      timestamp: { type: Number, default: Date.now() }, // Unix timestamp
-      value: Number
-    }],
-  }]
+  history: [ History ]
 })
 
 schema.loadClass(SiteClass)
 
-module.exports = mongoose.model('Zone', schema)
+module.exports = mongoose.model('Site', schema)

@@ -31,7 +31,7 @@ app.use(
 )
 
 // Resolve API v1
-app.use('/v1', v1)
+ app.use('/v1', v1)
 
 // Send index to all other routes
 app.get('*', (req, res) => {
