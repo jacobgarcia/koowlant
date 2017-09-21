@@ -365,8 +365,8 @@ class MapView extends Component {
                 )
               }
               <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url={`https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}${window.devicePixelRatio > 1 ? '@2' : ''}.png`}
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
               />
             </Map>
             <CreateZoneBar
