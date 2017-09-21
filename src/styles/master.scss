@@ -185,23 +185,25 @@ ul.links {
     cursor: pointer;
     display: inline-block;
     background: #fff;
-    text-transform: uppercase;
     padding: 19px 15px;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: rgb(47, 47, 47);
-    font-weight: 500;
+    font-weight: 600;
     overflow: hidden;
     &.deactivated {
       cursor: default;
       color: rgb(208, 208, 208);
+      opacity: 0.8;
     }
     a {
       display: block;
       height: 50px;
       padding: 19px 8px;
+      opacity: 0.6;
     }
     a.selected {
       position: relative;
+      opacity: 1;
       &:after {
         content: '';
         display: block;
@@ -270,7 +272,6 @@ nav {
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid $gray;
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3);
   position: fixed;
   z-index: 1100;
@@ -303,6 +304,11 @@ nav {
       padding: 0;
       margin: 0;
       opacity: 0.6;
+    }
+    span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #000;
     }
   }
   .user {
