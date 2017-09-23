@@ -29,7 +29,7 @@ const dumbZones = [
           {
             _id: '4d1288s8sh94fc9sj1h37301',
             key: 'A4050',
-            position: [],
+            position: [19.2893525,-99.7064102],
             sensors: [
               {
                 _id: 'ts1',
@@ -56,8 +56,8 @@ const dumbZones = [
           },
           {
             _id: '4d123234s8shubdiu9sj1afad1',
-            key: 'asudu2br',
-            position: [],
+            key: 'A23094',
+            position: [19.692634, -99.247175],
             sensors: [
               {
                 _id: "ts2",
@@ -79,6 +79,7 @@ const dumbZones = [
           {
             _id: '4d128g435g435534541h37301',
             position: [],
+            key: 'A23095',
             sensors: [
               {
                 _id: "ts1",
@@ -120,7 +121,7 @@ const dumbZones = [
         sites: [
           {
             _id: 'akjsndjkasnd9i23',
-            key: 'udnaidnjs',
+            key: 'A23096',
             position: [25.720735134412106, -100.31616210937501],
             name: '3T',
             sensors: [
@@ -159,6 +160,7 @@ const dumbZones = [
             _id: 'akjs3j5435nd9i23',
             position: [25.71083691964062, -99.25048828125],
             name: '1D',
+            key: 'A23097',
             sensors: [
               {
                 _id: "ts1",
@@ -182,6 +184,7 @@ const dumbZones = [
             _id: 'akjs3j5435nd9i24',
             position: [24.856534339310674, -99.56359863281251],
             name: '9R',
+            key: 'A23098',
             sensors: [
               {
                 _id: "ts1",
@@ -210,6 +213,7 @@ const dumbZones = [
             _id: 'akjs3j5435nd9i25',
             position: [26.730893022137383, -99.90966796875001],
             name: '3Y',
+            key: 'A23099',
             sensors: [
               {
                 _id: "ts1",
@@ -481,13 +485,25 @@ function zones(state = dumbZones, action) {
       }]
     case 'SET_SUBZONE':
       return [...state]
-    case 'ADD_REPORT':
+    case 'SET_REPORT':
       return state.map(zone => {
-        zone.subzones.map(subzone => {
-          subzone.sites.map(site => {
-            return { ...site, reports: [...site.reports, action.report] }
-          })
-        })
+        return {...zone,
+          subzones: zone.subzones.map(subzone => {
+          return Array.isArray(subzone.sites)
+          ?
+          {...subzone,
+            sites: subzone.sites.map(site => {
+            return site.key === action.report.site
+            ? ({
+                ...site,
+                sensors: action.report.sensors,
+                alarms: action.report.alarms
+              })
+            : ({...site})
+            })
+          }
+          : []
+        })}
       })
     default:
     return state

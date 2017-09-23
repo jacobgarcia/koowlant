@@ -1,6 +1,7 @@
 $green: #50E3C2;
 $text-gray: rgb(56, 56, 56);
 $gray: #959697;
+$light-gray: #959697;
 $red: #ed2a20;
 $yellow: #FFC511;
 
@@ -455,7 +456,7 @@ nav {
     width: 500px;
     transition: ease 0.5s;
     overflow-y: scroll;
-    border-right: 1px solid $gray;
+    border-right: 1px solid $light-gray;
     .top {
       display: flex;
       justify-content: space-between;
@@ -486,13 +487,13 @@ nav {
     background-size: 30px;
     &.sites {
       transform: translateX(-1px);
-      border: 1px solid $gray;
+      border: 1px solid $light-gray;
       border-left: none;
       background-image: url('/static/img/icons/large-back.png');
     }
     &.alerts-side {
       transform: rotate(180deg) translateX(-1px);
-      border: 1px solid $gray;
+      border: 1px solid $light-gray;
       border-left: none;
       background-image: url('/static/img/icons/large-back.png');
     }

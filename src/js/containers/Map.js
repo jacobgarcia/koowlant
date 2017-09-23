@@ -183,7 +183,6 @@ class MapView extends Component {
     this.setState(prevState => ({
       newPositions: prevState.newPositions.concat([newPosition])
     }), () => {
-      console.log(this.state.newPositions)
       this.isNewZoneValid()
     })
   }

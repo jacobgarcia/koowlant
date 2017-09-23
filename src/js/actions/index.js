@@ -45,6 +45,13 @@ export function setSubzone(zoneId, name, positions) {
   }
 }
 
+export function setReport(report) {
+  return {
+    type: 'SET_REPORT',
+    report
+  }
+}
+
 export function dismissReport(reportId) {
   return {
     type: 'DISMISS_REPORT',

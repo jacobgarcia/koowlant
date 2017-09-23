@@ -23,12 +23,12 @@ function MiniZone(props) {
   let numberSites = props.zone.subzones ? (props.zone.subzones.reduce((sum, subzone) => sum + (subzone.sites ? subzone.sites.length : 0), 0)) : 0
   numberSites += props.zone.sites ? props.zone.sites.length : 0
 
-  const getTitle = (type, {name, _id}) => {
+  const getTitle = (type, {name, _id, key}) => {
     switch (type) {
       case 'general': return 'Zona ' + name
       case 'zone': return 'Subzona ' + name
       case 'subzone': return 'Sitio ' + (name || _id)
-      case 'site': return 'Sensor ' + (name || _id)
+      case 'site': return 'Sensor ' + (key || _id)
       default: return 'Indefinido'
     }
   }
@@ -78,7 +78,9 @@ function MiniZone(props) {
                   startAngle={props.type === 'site' ? -45 : 90}
                   endAngle={props.type === 'site' ? 225 : -270}
                   fill=""
-                  isAnimationActive={false}
+                  animationEase="ease"
+                  animationDuration={500}
+                  animationBegin={0}
                 >
                 { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
                 </Pie>
