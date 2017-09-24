@@ -56,10 +56,10 @@ function ZonesContainer(props) {
       <div className={`mini-sites-container ${props.viewStyle}`}>
         {
           Array.isArray(elements)
-          && elements.map(element =>
+          && elements.map((element, index) =>
             <Link
               to={getMiniZoneLink(element)}
-              key={element._id}>
+              key={index}>
               <MiniZone
                 {...props}
                 id={element._id}

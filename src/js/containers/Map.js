@@ -128,10 +128,7 @@ class MapView extends Component {
         currentZoom: 5,
         currentPosition: [23.2096057, -101.6139503]
       })
-      return
-    }
-
-    if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
+    } else if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
       this.setState({
         selectedZone,
         currentZoom: 5.5,
@@ -139,10 +136,7 @@ class MapView extends Component {
         selectedSubzone: null,
         selectedSite: null
       })
-      return
-    }
-
-    if (selectedSubzone && (!this.state.selectedSubzone || (this.state.selectedSubzone && subzoneId !== this.state.selectedSubzone._id))) {
+    } else if (selectedSubzone && !selectedSite && (!this.state.selectedSubzone || (this.state.selectedSubzone))) {
       this.setState({
         selectedSubzone,
         selectedSite: null,
@@ -151,10 +145,7 @@ class MapView extends Component {
         selectedSubzone.positions[0]
         && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
       })
-      return
-    }
-
-    if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
+    } else if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
       this.setState({
         selectedSite,
         currentZoom: 7.5
