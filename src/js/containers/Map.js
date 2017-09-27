@@ -215,7 +215,7 @@ class MapView extends Component {
 
   render() {
     return (
-      <div className={`map-container ${this.state.isCreatingZone ? 'creating' : ''}`}>
+      <div className={`map-container ${this.state.isCreatingZone ? 'creating' : ''} ${(this.state.isGeneralStatusHidden && this.state.isAlertsHidden) ? 'awake' : 'sleeping'}`}>
         { this.state.promptElement
           && <div className="prompt-element">
             <div className="content">
@@ -232,7 +232,7 @@ class MapView extends Component {
             </div>
           </div>
         }
-        <div className={`general-status ${this.state.isGeneralStatusHidden && this.isWindow !== 'zones' ? 'hidden' : ''} ${this.isWindow === 'zones' ? 'window' : ''}`}>
+        <div className={`general-status ${this.state.isGeneralStatusHidden && this.isWindow !== 'zones' ? 'hidden' : 'active'} ${this.isWindow === 'zones' ? 'window' : ''}`}>
           <input
             type="button"
             onClick={() => this.hide('general-status')}
@@ -364,7 +364,7 @@ class MapView extends Component {
               isAlertsHidden={this.state.isAlertsHidden}
               onHide={() => this.hide('alerts')}
               isWindow={this.isWindow}
-              reports={this.props.reports}
+              zones={this.props.zones}
             />
         }
       </div>

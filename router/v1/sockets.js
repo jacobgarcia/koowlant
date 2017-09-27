@@ -22,7 +22,7 @@ function sockets(io) {
     io.to('0293j4ji').emit('report',
     {
       "site": "A4050",
-      "timestamp": 1505495552211, // Unix timestamp
+      "timestamp": 1505495552212, // Unix timestamp
       "sensors": [{
               key: "ts1",
               "value": 28.5
@@ -41,7 +41,7 @@ function sockets(io) {
     })
     io.to('0293j4ji').emit('report', {
       site: "A23096",
-      timestamp: 1505495552211, // Unix timestamp
+      timestamp: 1505495552212, // Unix timestamp
       sensors: [{
               key: "ts1",
               value: 28.5
@@ -60,7 +60,7 @@ function sockets(io) {
               "value": 26.5
       }]
     })
-  }, 3000)
+  }, 12000)
 
 
 
@@ -70,7 +70,7 @@ function sockets(io) {
       io.to('0293j4ji').emit('report',
       {
         "site": "A4050",
-        "timestamp": 1505495552211, // Unix timestamp
+        "timestamp": 1505495998211, // Unix timestamp
         "sensors": [{
                 key: "ts1",
                 "value": 29.5
@@ -85,7 +85,7 @@ function sockets(io) {
       })
       io.to('0293j4ji').emit('report', {
         site: "A23096",
-        timestamp: 1505495552211, // Unix timestamp
+        timestamp: 1505495998211, // Unix timestamp
         sensors: [{
                 key: "ts1",
                 value: 21.5
@@ -110,8 +110,8 @@ function sockets(io) {
             "value": 60.5
         }]
       })
-    }, 3000)
-  }, 1500)
+    }, 12000)
+  }, 6000)
 }
 
 module.exports = sockets

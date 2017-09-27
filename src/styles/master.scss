@@ -179,8 +179,9 @@ ul.links {
   &.nav {
     li {
       padding: 0;
-      a { padding: 19px 15px; }
+      a { padding: 17px 15px; }
     }
+
   }
   li {
     cursor: pointer;
@@ -199,7 +200,6 @@ ul.links {
     a {
       display: block;
       height: 50px;
-      padding: 19px 8px;
       opacity: 0.6;
     }
     a.selected {
@@ -294,6 +294,36 @@ nav {
     border-radius: 50%;
     border: 2px solid #fff;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  }
+  &.active {
+    span.sandwitch {
+      &::before {
+        transform: translateY(5px) rotate(-45deg);
+      }
+      &::after {
+        transform: translateY(-5px) rotate(45deg) ;
+      }
+    }
+  }
+  span.sandwitch {
+    height: 30px;
+    width: 22px;
+    position: relative;
+    cursor: pointer;
+    display: none;
+    &::before, &::after {
+      transition: 0.5s;
+      content: '';
+      display: block;
+      width: 100%;
+      height: 2px;
+      position: absolute;
+      top: 11px;
+      background: #000;
+    }
+    &::after {
+      top: 21px;
+    }
   }
   .navigation {
     display: flex;
@@ -517,6 +547,8 @@ nav {
       .admin {
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
+        margin: 10px 0;
         p, div {
           flex-grow: 1;
         }
@@ -684,6 +716,12 @@ nav {
       .mini-zone {
         display: flex;
         flex-direction: row;
+        h3 {
+          max-width: 150px;
+          overflow-y: hidden;
+          text-overflow: ellipsis;
+          position: absolute;
+        }
         .count, .reports-count {
           display: flex;
         }
@@ -939,5 +977,81 @@ nav {
   a {
     margin-top: 10px;
     margin-left: auto;
+  }
+}
+ @media (max-width: 900px) {
+   nav {
+     padding: 0 10px;
+   }
+   ul.links.nav li a {
+     padding: 19px 7px;
+   }
+ }
+
+@media (max-width: 770px) {
+  nav {
+    span.sandwitch {
+      display: block;
+    }
+    .date, .time {
+      display: none;
+    }
+  }
+  ul.links.nav {
+    position: absolute;
+    transition: 0.5s;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 2000;
+    flex-direction: column;
+    display: flex;
+    background: #fff;
+    align-items: center;
+    height: 0;
+    &.active {
+      height: 100vh;
+    }
+    li {
+      max-width: 150px;
+      font-size: 1.2rem;
+    }
+  }
+  .map-container.sleeping>div.hidden .close-tab{
+    display: none;
+  }
+  .alerts.active .close-tab.alerts-side {
+    left: 0;
+    border: none;
+  }
+  .map-container>.alerts {
+    .general-alerts {
+      padding-left: 30px;
+    }
+  }
+  .map-container>.alerts, .map-container .general-status {
+    width: 100%;
+    &.hidden {
+      width: 0px;
+    }
+    &.active {
+      .close-tab {
+        top: 13px;
+        right: 0;
+        border: none;
+      }
+    }
+    .side-content {
+      width: 100%;
+      .top {
+        padding-right: 40px;
+      }
+      .pop-window {
+        display: none;
+      }
+    }
   }
 }
