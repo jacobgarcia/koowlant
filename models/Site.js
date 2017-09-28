@@ -32,7 +32,7 @@ const schema = new Schema({
     timestamp: { type: Number, default: Date.now() }, // Unix timestamp
     value: Number
   }],
-  history: [ History ]
+  history: [History]
 })
 
 schema.loadClass(SiteClass)

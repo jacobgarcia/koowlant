@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { getData, getStatus, getSensorChart } from '../SpecialFunctions'
+import { getStatus, getSensorChart } from '../SpecialFunctions'
 
 const COLORS = {
   alerts: '#ed2a20',
@@ -11,10 +11,12 @@ const COLORS = {
 }
 
 function MiniZone(props) {
-  const data = getData(props.zone)
-  let { status, percentage } = getStatus(data)
+  const reports = {
+    alarms: (props.reports && props.reports[0]) ? props.reports[0].alarms[0].values : [],
+    sensors: (props.reports && props.reports[0]) ? props.reports[0].sensors[0].values : []
+  }
 
-  // console.log('MINI ZONE', props.zone, status, percentage)
+  let { status, percentage } = getStatus(reports || null)
 
   if (!status && props.type === 'site') {
     status = getSensorChart('TEMPERATURE')
@@ -27,7 +29,7 @@ function MiniZone(props) {
     switch (type) {
       case 'general': return 'Zona ' + name
       case 'zone': return 'Subzona ' + name
-      case 'subzone': return 'Sitio ' + (name || _id)
+      case 'subzone': return 'Sitio ' + (name || _id) + ' ' + (key || null)
       case 'site': return 'Sensor ' + (key || _id)
       default: return 'Indefinido'
     }
@@ -46,7 +48,7 @@ function MiniZone(props) {
         <div className="reports-count">
           {
             (
-              (data && data.alarms && data.alarms.length > 0) && <p><span className="alerts-icon"/>{data.alarms.length} Alarmas</p>
+              (props.reports && props.reports.alarms && props.reports.alarms.length > 0) && <p><span className="alerts-icon"/>{props.reports.alarms.length} Alarmas</p>
             )
             || <p className="no-failures"><span className="no-failures-icon" /> Sin fallas</p>
           }
@@ -107,7 +109,7 @@ MiniZone.propTypes = {
   onHover: PropTypes.func,
   active: PropTypes.bool,
   zone: PropTypes.object,
-  type: PropTypes.string
+  type: PropTypes.string.isRequired
 }
 
 export default MiniZone

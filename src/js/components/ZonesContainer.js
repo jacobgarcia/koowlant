@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 import { MiniZone } from './'
+import { getFilteredReports } from '../SpecialFunctions'
 
 function ZonesContainer(props) {
 
@@ -61,11 +62,13 @@ function ZonesContainer(props) {
               to={getMiniZoneLink(element)}
               key={index}>
               <MiniZone
-                {...props}
+                onHover={props.onHover}
+                type={props.type}
                 id={element._id}
                 name={element.name}
                 zone={element}
                 active={props.highlightedZone === element._id}
+                reports={getFilteredReports(props.reports, element)}
               />
             </Link>
           )
@@ -84,11 +87,13 @@ ZonesContainer.propTypes = {
   changeSitesView: PropTypes.func,
   site: PropTypes.object,
   subzone: PropTypes.object,
+  onHover: PropTypes.func,
   zone: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.array
   ]),
-  highlightedZone: PropTypes.string
+  highlightedZone: PropTypes.string,
+  reports: PropTypes.array
 }
 
 export default ZonesContainer

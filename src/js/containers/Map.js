@@ -6,7 +6,7 @@ import qs from 'query-string'
 import { Map, TileLayer, Polygon } from 'react-leaflet'
 
 import { setZone } from '../actions'
-import { CreateZoneBar, ZoneDetail, Reports, ZonePolygon, SiteMarker } from '../components'
+import { CreateZoneBar, ZoneDetail, Reports, ZonePolygon, SiteMarker, Search } from '../components'
 import { getAreaCenter } from '../SpecialFunctions'
 
 class MapView extends Component {
@@ -21,7 +21,6 @@ class MapView extends Component {
     const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
 
     this.state = {
-      isCreatingZone: false,
       isGeneralStatusHidden: true,
       isAlertsHidden: true,
       currentZoom: 5, // TODO load from localStorage
@@ -36,6 +35,7 @@ class MapView extends Component {
       sitesViewStyle: 'list', // TODO load from localStorage
       sitesViewOrdering: 'static', // TODO load from localStorage
       isCreatingSite: false,
+      isCreatingZone: false,
     }
 
     this.hide = this.hide.bind(this)
@@ -43,7 +43,7 @@ class MapView extends Component {
     this.onCreate = this.onCreate.bind(this)
     this.saveNewZone = this.saveNewZone.bind(this)
     this.onChange = this.onChange.bind(this)
-    this.isNewZoneValid = this.isNewZoneValid.bind(this)
+    this.isNewElementValid = this.isNewElementValid.bind(this)
     this.onSiteHover = this.onSiteHover.bind(this)
     this.popWindow = this.popWindow.bind(this)
     this.changeSitesView = this.changeSitesView.bind(this)
@@ -51,15 +51,22 @@ class MapView extends Component {
     this.getType = this.getType.bind(this)
   }
 
-  isNewZoneValid() {
+  isNewElementValid() {
     const newName = this.state.newName
     const newPositions = this.state.newPositions
-    const isNewZoneValid = (newName.split('').length > 2 && newPositions.length > 2)
+
+    let isNewElementValid = false
+    if (this.state.isCreatingSite) {
+      isNewElementValid = newName.split('').length > 2 && newPositions.length === 1
+    } else {
+      isNewElementValid = newName.split('').length > 2 && newPositions.length > 2
+    }
 
     this.setState({
-      isNewZoneValid
+      isNewElementValid
     })
-    return isNewZoneValid
+
+    return isNewElementValid
   }
 
   hide(componentName) {
@@ -70,7 +77,7 @@ class MapView extends Component {
   }
 
   saveNewZone() {
-    if (!this.isNewZoneValid()) return
+    if (!this.isNewElementValid()) return
 
     const { newName, newPositions } = this.state.newName
 
@@ -87,11 +94,11 @@ class MapView extends Component {
     const { name, value } = event.target
     this.setState({
       [name]: value
-    }, () => this.isNewZoneValid())
+    }, () => this.isNewElementValid())
   }
 
   onSearch() {
-    console.log('Searching...')
+    // console.log('Searching...')
   }
 
   onCreate() {
@@ -174,7 +181,7 @@ class MapView extends Component {
     this.setState(prevState => ({
       newPositions: prevState.newPositions.concat([newPosition])
     }), () => {
-      this.isNewZoneValid()
+      this.isNewElementValid()
     })
   }
 
@@ -216,6 +223,7 @@ class MapView extends Component {
   render() {
     return (
       <div className={`map-container ${this.state.isCreatingZone ? 'creating' : ''} ${(this.state.isGeneralStatusHidden && this.state.isAlertsHidden) ? 'awake' : 'sleeping'}`}>
+        <Search />
         { this.state.promptElement
           && <div className="prompt-element">
             <div className="content">
@@ -247,6 +255,7 @@ class MapView extends Component {
               subzone={this.state.selectedSubzone}
               site={this.state.selectedSite}
               onHover={this.onSiteHover}
+              reports={this.props.reports}
               type={this.getType(this.props.match.params)}
             />
         }
@@ -257,7 +266,7 @@ class MapView extends Component {
             <div className="actions">
               <ul className="links hiddable">
                 <li className="big search" onClick={this.onSearch}><span className="search">Buscar</span></li>
-                <li className="big create" onClick={this.onCreate}><span className="create">Crear</span></li>
+                <li className="big create" onClick={this.onCreate}><span className="create">{this.state.selectedZone ? (this.state.selectedSubzone ? 'Sitio' : 'Subzona') : 'Zona'}</span></li>
               </ul>
               <span className="button huge cancel" onClick={this.onCreate}>Cancelar</span>
             </div>
@@ -350,9 +359,10 @@ class MapView extends Component {
               />
             </Map>
             <CreateZoneBar
+              elementSelected={this.state.selectedZone ? (this.state.selectedSubzone ? 'site' : 'subzone') : 'zone'}
               newZoneName={this.state.newName}
               onChange={this.onChange}
-              isValid={this.state.isNewZoneValid}
+              isValid={this.state.isNewElementValid}
               onSave={this.saveNewZone}
               text={this.isCreatingSite ? 'Traza la zona' : 'Localiza el sitio'}
             />
@@ -364,7 +374,7 @@ class MapView extends Component {
               isAlertsHidden={this.state.isAlertsHidden}
               onHide={() => this.hide('alerts')}
               isWindow={this.isWindow}
-              zones={this.props.zones}
+              reports={this.props.reports}
             />
         }
       </div>
@@ -372,9 +382,10 @@ class MapView extends Component {
   }
 }
 
-function mapStateToProps({ zones }) {
+function mapStateToProps({ zones, reports }) {
   return {
-    zones
+    zones,
+    reports
   }
 }
 

@@ -29,45 +29,13 @@ const dumbZones = [
           {
             _id: '4d1288s8sh94fc9sj1h37301',
             key: 'A4050',
-            position: [19.2893525,-99.7064102],
-            sensors: [
-              {
-                _id: 'ts1',
-                value: 45.9
-              },
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts3",
-                value: 23.5
-              },
-              {
-                _id: "ts4",
-                value: 21.5
-              }
-            ],
-            alarms: [{
-                sensor: 'w32df44t', // Sensor id
-                timestamp: 1505495552211, // Unix timestamp
-                value: 45.9
-            }]
+            name: '7Y',
+            position: [19.2893525,-99.7064102]
           },
           {
             _id: '4d123234s8shubdiu9sj1afad1',
             key: 'A23094',
-            position: [19.692634, -99.247175],
-            sensors: [
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts3",
-                value: 23.5
-              }
-            ]
+            position: [19.692634, -99.247175]
           }
         ]
       },
@@ -79,41 +47,14 @@ const dumbZones = [
           {
             _id: '4d128g435g435534541h37301',
             position: [],
-            key: 'A23095',
-            sensors: [
-              {
-                _id: "ts1",
-                value: 45.9
-              },
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts1",
-                value: 45.9
-              },
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts3",
-                value: 23.5
-              }
-            ],
-            alarms: [{
-                sensor: "ts1", // Sensor id
-                timestamp: 1505495552211, // Unix timestamp
-                value: 45.9
-            }]
+            key: 'A23095'
           }
         ]
       }
     ]
   }, {
-    name: 'Norte',
     _id: '4d128b6ea794fc13a8004301',
+    name: 'Norte',
     subzones: [
       {
         _id: '234h293842342ji3423j4',
@@ -123,120 +64,25 @@ const dumbZones = [
             _id: 'akjsndjkasnd9i23',
             key: 'A23096',
             position: [25.720735134412106, -100.31616210937501],
-            name: '3T',
-            sensors: [
-              {
-                _id: "ts1",
-                value: 45.9
-              },
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts3",
-                value: 23.5
-              },
-              {
-                _id: "ts4",
-                value: 21.5
-              }
-            ],
-            alarms: [{
-                sensor: "ts1", // Sensor id
-                timestamp: 1505495552211, // Unix timestamp
-                value: 45.9
-            }, {
-                sensor: "ts1", // Sensor id
-                timestamp: 1505495552211, // Unix timestamp
-                value: 45.9
-            }, {
-                sensor: "ts1", // Sensor id
-                timestamp: 1505495552211, // Unix timestamp
-                value: 45.9
-            }]
+            name: '3T'
           },
           {
             _id: 'akjs3j5435nd9i23',
             position: [25.71083691964062, -99.25048828125],
             name: '1D',
-            key: 'A23097',
-            sensors: [
-              {
-                _id: "ts1",
-                value: 45.9
-              },
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts3",
-                value: 23.5
-              },
-              {
-                _id: "ts4",
-                value: 21.5
-              }
-            ],
+            key: 'A23097'
           },
           {
             _id: 'akjs3j5435nd9i24',
             position: [24.856534339310674, -99.56359863281251],
             name: '9R',
-            key: 'A23098',
-            sensors: [
-              {
-                _id: "ts1",
-                value: 45.9
-              },
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts3",
-                value: 23.5
-              },
-              {
-                _id: "ts4",
-                value: 21.5
-              }
-            ],
-            alarms: [{
-                sensor: "ts1", // Sensor id
-                timestamp: 1505495552211, // Unix timestamp
-                value: 45.9
-            }]
+            key: 'A23098'
           },
           {
             _id: 'akjs3j5435nd9i25',
             position: [26.730893022137383, -99.90966796875001],
             name: '3Y',
-            key: 'A23099',
-            sensors: [
-              {
-                _id: "ts1",
-                value: 45.9
-              },
-              {
-                _id: "ts2",
-                value: 21.5
-              },
-              {
-                _id: "ts3",
-                value: 23.5
-              },
-              {
-                _id: "ts4",
-                value: 21.5
-              }
-            ],
-            alarms: [{
-                sensor: "ts1", // Sensor id
-                timestamp: 1505495552211, // Unix timestamp
-                value: 45.9
-            }]
+            key: 'A23099'
           }
         ],
         positions: [
@@ -447,6 +293,7 @@ const dumbAdministrators = [
   }
 ]
 
+// Authentication
 function credentials(state = {}, action) {
   switch (action.type) {
     case 'SET_USER':
@@ -462,6 +309,7 @@ function credentials(state = {}, action) {
   }
 }
 
+// Global alerts
 function appAlert(state = {}, action) {
   switch (action.type) {
     case 'DISMISS_ALERT':
@@ -476,6 +324,120 @@ function appAlert(state = {}, action) {
   }
 }
 
+const dummyReports = [
+  {
+    attended: true,
+    site: 'A23099',
+    timestamp: 1506565282809, // Unix timestamp
+    sensors: [
+      {
+        _id: "ts1",
+        value: 45.9
+      },
+      {
+        _id: "ts2",
+        value: 21.5
+      },
+      {
+        _id: "ts3",
+        value: 23.5
+      },
+      {
+        _id: "ts4",
+        value: 21.5
+      }
+    ],
+    alarms: [{
+        sensor: "ts1", // Sensor id
+        value: 45.9
+    }]
+  },
+  {
+    site: 'A23099',
+    timestamp: 1506565296218, // Unix timestamp
+    sensors: [
+      {
+        _id: "ts1",
+        value: 45.9
+      },
+      {
+        _id: "ts2",
+        value: 21.5
+      },
+      {
+        _id: "ts3",
+        value: 23.5
+      },
+      {
+        _id: "ts4",
+        value: 21.5
+      }
+    ],
+    alarms: [{
+      attended: false,
+      sensor: "ts1", // Sensor id
+      value: 45.9
+    }]
+  }
+]
+
+/*
+let foundIndex = state.findIndex(({ site }) => site === action.report.site)
+let newState = state
+console.log(foundIndex)
+foundIndex > -1
+? newState[foundIndex] = {
+  key: newState[foundIndex].key,
+  alerts: [...newState[foundIndex].alerts, ...action.report.alerts],
+  sensors: [...newState[foundIndex].sensors, ...action.report.sensors],
+}
+: newState.push(action.report)
+console.log(newState)
+return newState
+ */
+
+
+function reports(state = [], action) {
+  switch (action.type) {
+    case 'SET_REPORT': {
+      const foundIndex = state.findIndex(({ site }) => site === action.report.site)
+      const newState = state
+      foundIndex > -1
+      ? newState[foundIndex] = {
+        site: newState[foundIndex].site,
+        zone: action.report.zone,
+        subzone: action.report.subzone,
+        alarms: [{
+          timestamp: action.report.timestamp,
+          values: [...(action.report.alarms || [])],
+          attended: false
+        }, ...(newState[foundIndex].alarms || [])],
+        sensors: [{
+          timestamp: action.report.timestamp,
+          values: [...(action.report.sensors || [])]
+        }, ...(newState[foundIndex].sensors || [])]
+      }
+      : newState.push({
+        site: action.report.site,
+        zone: action.report.zone,
+        subzone: action.report.subzone,
+        alarms: [{
+          timestamp: action.report.timestamp,
+          values: [...(action.report.alarms || [])],
+          attended: false
+        }],
+        sensors: [{
+          timestamp: action.report.timestamp,
+          values: [...(action.report.sensors || [])]
+        }]
+      })
+      return [...newState]
+    }
+    default:
+      return state
+  }
+}
+
 function zones(state = dumbZones, action) {
   switch (action.type) {
     case 'SET_ZONE':
@@ -485,26 +447,8 @@ function zones(state = dumbZones, action) {
       }]
     case 'SET_SUBZONE':
       return [...state]
-    case 'SET_REPORT':
-      return state.map(zone => {
-        return {...zone,
-          subzones: zone.subzones.map(subzone => {
-          return Array.isArray(subzone.sites)
-          ?
-          {...subzone,
-            sites: subzone.sites.map(site => {
-            return site.key === action.report.site
-            ? ({
-                ...site,
-                sensors: action.report.sensors,
-                alarms: action.report.alarms
-              })
-            : ({...site})
-            })
-          }
-          : []
-        })}
-      })
+    case 'SET_SITE':
+      return state
     default:
     return state
   }
@@ -521,7 +465,8 @@ const appReducer = combineReducers({
   credentials,
   zones,
   administrators,
-  appAlert
+  appAlert,
+  reports
 })
 
 export default appReducer

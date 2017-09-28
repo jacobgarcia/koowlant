@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 import { StatusOverall, ZonesContainer } from './'
-import { getStatus, getData } from '../SpecialFunctions'
+import { getStatus, getData, getFilteredReports } from '../SpecialFunctions'
 
 class ZoneDetail extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class ZoneDetail extends Component {
       selectedZone: elementId
     })
   }
-  
+
   getBackLink(props) {
     switch (props.type) {
       case 'zone': return '/'
@@ -49,10 +49,28 @@ class ZoneDetail extends Component {
     }
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   console.log('nextProps filtered reports', getFilteredReports(this.nextProps.reports, this.getCorrectData(this.props)))
+  // }
+
   render() {
-    // normalPercentage
-    const data = getData(this.getCorrectData(this.props))
+    console.log('Reports', this.props.reports)
+    // console.log('Correct data', this.getCorrectData(this.props))
+    let data = getFilteredReports(this.props.reports, this.getCorrectData(this.props))
+    console.log(this.getCorrectData(this.props))
+    console.log('dat', data)
+    data = data.reduce((sum, {alarms = [], sensors = []}) => {
+      return ({
+        alarms: [...sum.alarms, ...(alarms[0].values || [])],
+        sensors: [...sum.sensors, ...(sensors[0].values || [])],
+      })
+    }, { alarms: [], sensors: []})
+    console.log('data', data)
     const { status, percentage } = getStatus(data)
+    console.log('status', status)
+    console.log('percentage', percentage)
+
+
     return (
       <div className="side-content">
         <div className="top">
@@ -82,6 +100,7 @@ class ZoneDetail extends Component {
             onHover={this.onHover}
             highlightedZone={this.state.selectedZone}
             type={this.props.type}
+            reports={this.props.reports}
           />
         </div>
       </div>

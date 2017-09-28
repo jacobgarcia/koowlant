@@ -11,7 +11,11 @@ function CreateZoneBar(props) {
             type="text"
             name="newName"
             value={props.newZoneName}
-            placeholder="Nombre de la zona..."
+            placeholder={`Nombre ${
+              (props.elementSelected === 'zone' && 'de la zona') ||
+              (props.elementSelected === 'site' && 'del sitio') ||
+              (props.elementSelected === 'subzone' && 'de la subzona')
+            }...`}
             onChange={props.onChange}
           />
         </li>
@@ -27,6 +31,7 @@ CreateZoneBar.propTypes = {
   onChange: PropTypes.func.isRequired,
   isValid: PropTypes.bool,
   onSave: PropTypes.func.isRequired,
-  text: PropTypes.string
+  text: PropTypes.string,
+  elementSelected: PropTypes.string
 }
 export default CreateZoneBar

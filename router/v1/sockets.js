@@ -18,30 +18,45 @@ function sockets(io) {
   })
 
   setInterval(() => {
-    io.emit('report', 'everyone')
     io.to('0293j4ji').emit('report',
     {
-      "site": "A4050",
-      "timestamp": 1505495552212, // Unix timestamp
-      "sensors": [{
+      site: 'A4050',
+      zone: {
+        name: 'Centro',
+        _id: '4d128b6ea794fc13a8000001'
+      },
+      subzone: {
+        name: 'Valle de Toluca',
+        _id: '4d1288sh2394fc13a8087301'
+      },
+      timestamp: Date.now(), // Unix timestamp
+      sensors: [{
               key: "ts1",
-              "value": 28.5
+              value: 28.5
       },{
               key: "ts2",
-              "value": 26.5
+              value: 26.5
       },
       {
               key: "ts3",
-              "value": 21.5
+              value: 21.5
       }],
       alarms: [{
-          "sensor": "ts1", // Sensor id
-          "value": 60.5
+          sensor: "ts1", // Sensor id
+          value: 60.5
       }]
     })
     io.to('0293j4ji').emit('report', {
-      site: "A23096",
-      timestamp: 1505495552212, // Unix timestamp
+      site: 'A23096',
+      zone: {
+        name: 'Norte',
+        _id: '4d128b6ea794fc13a8004301'
+      },
+      subzone: {
+        name: 'Nuevo León',
+        _id: '234h293842342ji3423j4'
+      },
+      timestamp: Date.now(), // Unix timestamp
       sensors: [{
               key: "ts1",
               value: 28.5
@@ -62,16 +77,21 @@ function sockets(io) {
     })
   }, 12000)
 
-
-
   setTimeout(() => {
     setInterval(() => {
-      io.emit('report', 'everyone')
       io.to('0293j4ji').emit('report',
       {
-        "site": "A4050",
-        "timestamp": 1505495998211, // Unix timestamp
-        "sensors": [{
+        site: 'A4050',
+        zone: {
+          name: 'Centro',
+          _id: '4d128b6ea794fc13a8000001'
+        },
+        subzone: {
+          name: 'Valle de Toluca',
+          _id: '4d1288sh2394fc13a8087301'
+        },
+        timestamp: Date.now(), // Unix timestamp
+        sensors: [{
                 key: "ts1",
                 "value": 29.5
         },{
@@ -84,8 +104,16 @@ function sockets(io) {
         }]
       })
       io.to('0293j4ji').emit('report', {
-        site: "A23096",
-        timestamp: 1505495998211, // Unix timestamp
+        site: 'A23096',
+        zone: {
+          name: 'Norte',
+          _id: '4d128b6ea794fc13a8004301'
+        },
+        subzone: {
+          name: 'Nuevo León',
+          _id: '234h293842342ji3423j4'
+        },
+        timestamp: Date.now(), // Unix timestamp
         sensors: [{
                 key: "ts1",
                 value: 21.5

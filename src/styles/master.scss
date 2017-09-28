@@ -226,7 +226,7 @@ ul.links {
       background-repeat: no-repeat;
       background-size: 16px;
       &.search { padding-left: 38px; background-image: url('/static/img/icons/search.svg'); background-position: 12px center; }
-      &.create { padding-right: 38px; background-image: url('/static/img/icons/add.svg'); background-position: 62px center;  }
+      &.create { padding-left: 38px; background-image: url('/static/img/icons/add.svg'); background-position: 12px center;  }
       &:first-child {
         border-right: 0;
       }
@@ -455,6 +455,39 @@ nav {
   }
 }
 
+.map-container > .alerts {
+  position: relative;
+  .alert-thumbnail {
+    position: absolute;
+    left: -310px;
+    width: 310px;
+    height: 65px;
+    background: $red;
+    transition: 0.5s;
+    color: #fff;
+    top: 8px;
+    z-index: 2000;
+    overflow: hidden;
+    .location {
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+    .alert-description {
+      font-size: 1rem;
+    }
+    .content {
+      width: 310px;
+      height: 100%;
+      margin: 0;
+      padding: 10px;
+      padding-left: 50px;
+    }
+    &.hidden {
+      width: 0;
+      left: 0;
+    }
+  }
+}
 .map-container > .alerts, .map-container .general-status {
   top: 0;
   background: #f7f7f7;
@@ -571,6 +604,7 @@ nav {
 
 .alerts {
   .general-alerts {
+    flex-shrink: 0;
     background-size: 40px;
     margin-bottom: 20px;
     display: flex;
@@ -716,12 +750,6 @@ nav {
       .mini-zone {
         display: flex;
         flex-direction: row;
-        h3 {
-          max-width: 150px;
-          overflow-y: hidden;
-          text-overflow: ellipsis;
-          position: absolute;
-        }
         .count, .reports-count {
           display: flex;
         }
@@ -1030,6 +1058,17 @@ nav {
   .map-container>.alerts {
     .general-alerts {
       padding-left: 30px;
+    }
+  }
+  .mini-sites-container {
+    &.list {
+      .mini-zone {
+        h3 {
+          max-width: 150px;
+          overflow-y: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
   .map-container>.alerts, .map-container .general-status {

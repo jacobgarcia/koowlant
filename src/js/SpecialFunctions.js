@@ -31,6 +31,56 @@ function getZoneData(zone) {
   }, { alarms: [], sensors: [] })
 }
 
+// Filter reports that belong to zone, subzone or site
+/**
+ * Returns the reports that belong to an element (zone, subzone or site)
+ * @param  {Array} reports Reports to be filtered
+ * @param  {Object} element Object to be matched with
+ * @return {Array}         Filtered reports
+ */
+export const getFilteredReports = (reports, element) => {
+  const filteredReports = reports.filter(({ site }) => {
+    let shouldReturn = false
+
+    if (Array.isArray(element)) {
+      shouldReturn = element.some(({subzones}) => {
+        return subzones.some(({ sites }) => {
+          return Array.isArray(sites)
+          ? sites.some(({ key }) => {
+             return site === key
+          })
+          : false
+        })
+      })
+    } else if (element.subzones) {
+
+      shouldReturn = element.subzones.some(({ sites }) => {
+        return Array.isArray(sites)
+        ? sites.some(({ key }) => {
+           return site === key
+        })
+        : false
+      })
+    } else if (element.sites) {
+      Array.isArray(element.sites) ?
+      shouldReturn = element.sites.some(({ key }) => {
+        return site === key
+      })
+      : null
+    } else if (element.key === site) {
+      shouldReturn = true
+    }
+    return shouldReturn
+  })
+
+  // Sort by timestamp
+  filteredReports.sort(({ timestamp: a }, { timestamp: b }) => {
+    return b - a
+  })
+
+  return filteredReports
+}
+
 export function getData(zone) {
   if (Array.isArray(zone)) {
     // All zones

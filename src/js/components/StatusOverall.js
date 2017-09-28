@@ -13,7 +13,7 @@ function StatusOverall(props) {
     }
   }
 
-  console.log(props.percentage)
+  // console.log(props.percentage)
 
   return (
     <div className="overall">
