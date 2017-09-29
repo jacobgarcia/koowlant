@@ -54,22 +54,21 @@ class ZoneDetail extends Component {
   // }
 
   render() {
-    console.log('Reports', this.props.reports)
+    // console.log('Reports', this.props.reports)
     // console.log('Correct data', this.getCorrectData(this.props))
     let data = getFilteredReports(this.props.reports, this.getCorrectData(this.props))
-    console.log(this.getCorrectData(this.props))
-    console.log('dat', data)
+    // console.log(this.getCorrectData(this.props))
+    // console.log('dat', data)
     data = data.reduce((sum, {alarms = [], sensors = []}) => {
       return ({
         alarms: [...sum.alarms, ...(alarms[0].values || [])],
         sensors: [...sum.sensors, ...(sensors[0].values || [])],
       })
     }, { alarms: [], sensors: []})
-    console.log('data', data)
+    // console.log('data', data)
     const { status, percentage } = getStatus(data)
-    console.log('status', status)
-    console.log('percentage', percentage)
-
+    // console.log('status', status)
+    // console.log('percentage', percentage)
 
     return (
       <div className="side-content">

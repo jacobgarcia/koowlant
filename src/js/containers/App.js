@@ -48,7 +48,7 @@ class App extends Component {
     })
 
     socket.on('report', report => {
-      console.log('Sending report to reducer...')
+      // console.log('Sending report to reducer...')
       props.setReport(report)
     })
   }

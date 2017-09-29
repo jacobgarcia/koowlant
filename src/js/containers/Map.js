@@ -182,6 +182,7 @@ class MapView extends Component {
       newPositions: prevState.newPositions.concat([newPosition])
     }), () => {
       this.isNewElementValid()
+      console.log(this.state.newPositions)
     })
   }
 
