@@ -18,7 +18,7 @@ class Reports extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps() {
     const reports = this.props.reports.reduce((sum, element) => {
       let alarms = element.alarms
       alarms = alarms.map(alarm => ({...alarm, zone: element.zone, subzone: element.subzone, site: element.site}))
@@ -56,7 +56,9 @@ class Reports extends Component {
 
     return (
       <div className={`alerts ${props.isAlertsHidden ? 'hidden' : 'active'}`}>
-        <div className={`alert-thumbnail ${this.state.isAlertHidden ? 'hidden' : 'active'}`}>
+        <div
+          className={`alert-thumbnail ${this.state.isAlertHidden ? 'hidden' : 'active'}`}
+          onClick={props.onHide}>
           <div className="content">
             <p className="alert-description">Batería baja</p>
             {
