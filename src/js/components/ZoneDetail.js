@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 import { StatusOverall, ZonesContainer } from './'
-import { getStatus, getData, getFilteredReports } from '../SpecialFunctions'
+import { getStatus, getData, getFilteredReports, substractReportValues } from '../SpecialFunctions'
 
 class ZoneDetail extends Component {
   constructor(props) {
@@ -59,12 +59,7 @@ class ZoneDetail extends Component {
     let data = getFilteredReports(this.props.reports, this.getCorrectData(this.props))
     // console.log(this.getCorrectData(this.props))
     // console.log('dat', data)
-    data = data.reduce((sum, {alarms = [], sensors = []}) => {
-      return ({
-        alarms: [...sum.alarms, ...(alarms[0].values || [])],
-        sensors: [...sum.sensors, ...(sensors[0].values || [])],
-      })
-    }, { alarms: [], sensors: []})
+    data = substractReportValues(data)
     // console.log('data', data)
     const { status, percentage } = getStatus(data)
     // console.log('status', status)

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Polygon, Tooltip} from 'react-leaflet'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { getData, getStatus } from '../SpecialFunctions'
+import { getStatus, substractReportValues } from '../SpecialFunctions'
 
 const COLORS = {
   alerts: '#ed2a20',
@@ -12,10 +12,11 @@ const COLORS = {
 }
 
 function ZonePolygon(props) {
-  const data = getData(props.zone)
-  const { status } = getStatus(data)
+  const reports = substractReportValues(props.reports)
 
-  const alerts = data.alarms ? data.alarms.length : null
+  const { status } = getStatus(reports || null)
+
+  const alerts = reports.alarms.length
   // const warnings = data.warnings ? data.warnings.length : null
 
   return (
@@ -69,7 +70,8 @@ ZonePolygon.propTypes = {
   onMouseOver: PropTypes.func,
   onMouseOut: PropTypes.func,
   highlightedZone: PropTypes.string,
-  zone: PropTypes.object.isRequired
+  zone: PropTypes.object.isRequired,
+  reports: PropTypes.array
 }
 
 export default ZonePolygon

@@ -13,7 +13,7 @@ $yellow: #FFC511;
 }
 
 html, body {
-  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: 'Raleway', 'Helvetica Neue', Helvetica, sans-serif;
   color: #000;
   font-weight: 400;
   letter-spacing: -.021em;
@@ -176,6 +176,7 @@ p.mini-icon {
 
 ul.links {
   display: inline-block;
+  height: 50px;
   &.nav {
     li {
       padding: 0;
@@ -876,7 +877,7 @@ nav {
     flex-direction: row;
     padding: 10px;
     background: #fff;
-    // box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.07);
     margin: 10px 0;
     justify-content: space-between;
     position: relative;
@@ -885,14 +886,14 @@ nav {
       font-size: 0.75rem;
     }
     &.active .status-color {
-      width: 8px;
+      width: 4px;
     }
     .status-color {
       position: absolute;
       display: block;
       left: 0;
       top: 0;
-      width: 2px;
+      width: 0px;
       min-height: 100%;
       background: transparent;
     }

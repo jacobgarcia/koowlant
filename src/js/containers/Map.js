@@ -79,7 +79,9 @@ class MapView extends Component {
   saveNewZone() {
     if (!this.isNewElementValid()) return
 
-    const { newName, newPositions } = this.state.newName
+    const { newName, newPositions } = this.state
+
+    console.log('setZone()', newName, newPositions)
 
     this.props.setZone(newName, newPositions)
 
@@ -182,7 +184,6 @@ class MapView extends Component {
       newPositions: prevState.newPositions.concat([newPosition])
     }), () => {
       this.isNewElementValid()
-      console.log(this.state.newPositions)
     })
   }
 
@@ -283,15 +284,17 @@ class MapView extends Component {
               animate
               >
               {
-                this.state.selectedZone && this.state.selectedZone.subzones && !this.state.selectedSubzone
-                && this.state.selectedZone.subzones.map(zone =>
-                  <ZonePolygon
-                    key={zone._id}
-                    zone={zone}
-                    highlightedZone={this.state.highlightedZone}
-                    onMouseOver={this.onSiteHover}
-                    onMouseOut={this.onSiteHover}
-                  />
+                (this.state.selectedZone && this.state.selectedZone.subzones && !this.state.selectedSubzone)
+                && this.state.selectedZone.subzones.map(subzone =>
+                  subzone.positions
+                  && <ZonePolygon
+                      key={subzone._id}
+                      zone={subzone}
+                      reports={this.props.reports.filter(({site}) => subzone.sites.find(({key}) => key === site))}
+                      highlightedZone={this.state.highlightedZone}
+                      onMouseOver={this.onSiteHover}
+                      onMouseOut={this.onSiteHover}
+                    />
                 )
               }
               {
@@ -329,12 +332,18 @@ class MapView extends Component {
                     />
               }
               {
-                this.state.selectedZone === null
+                (this.state.selectedZone === null)
                 && this.props.zones.map(zone =>
                   <ZonePolygon
                     key={zone._id}
                     zone={zone}
                     highlightedZone={this.state.highlightedZone}
+                    reports={
+                      this.props.reports.filter(({site}) =>
+                      zone.subzones.some(subzone =>
+                        subzone.sites.find(({key}) => key === site))
+                      )
+                    }
                     onMouseOver={this.onSiteHover}
                     onMouseOut={this.onSiteHover}
                   />

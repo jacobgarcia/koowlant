@@ -305,7 +305,7 @@ class Sites extends Component {
   render() {
     return (
       <div className="sites">
-        <div className="sites-nav">
+        {/* <div className="sites-nav">
           <div className="view-settings">
             <div className="selector">
               <label htmlFor="dinamic">Dinámica</label>
@@ -356,7 +356,7 @@ class Sites extends Component {
               <div className="zone"></div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     )
   }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-
+import { Link } from 'react-router-dom'
 
 class Reports extends Component {
   constructor(props) {
@@ -56,18 +56,19 @@ class Reports extends Component {
 
     return (
       <div className={`alerts ${props.isAlertsHidden ? 'hidden' : 'active'}`}>
-        <div
-          className={`alert-thumbnail ${this.state.isAlertHidden ? 'hidden' : 'active'}`}
-          onClick={props.onHide}>
-          <div className="content">
-            <p className="alert-description">Batería baja</p>
-            {
-              (this.state.alarm && this.state.alarm.zone) &&
-              <p className="location">Zona {this.state.alarm.zone.name} | Subzona {this.state.alarm.subzone.name} | Sitio {this.state.alarm.site}</p>
-            }
+        {/* <Link to={`/zones/${this.state.alarm.zone ? this.state.alarm.zone._id : null}/${this.state.alarm.subzone ? this.state.alarm.subzone._id : null}/${this.state.alarm.site ? this.state.alarm.site._id : null}`}> */}
+          <div
+            className={`alert-thumbnail ${this.state.isAlertHidden ? 'hidden' : 'active'}`}
+            onClick={props.onHide}>
+            <div className="content">
+              <p className="alert-description">Batería baja</p>
+              {
+                (this.state.alarm && this.state.alarm.zone) &&
+                <p className="location">Zona {this.state.alarm.zone.name} | Subzona {this.state.alarm.subzone.name} | Sitio {this.state.alarm.site}</p>
+              }
+            </div>
           </div>
-
-        </div>
+        {/* </Link> */}
         <input
           type="button"
           onClick={props.onHide}
@@ -85,16 +86,19 @@ class Reports extends Component {
                   const date = new Date(report.timestamp)
                   return (
                     report.values.map((value, index2) =>
-                      <div className="mini-alert battery" key={`${index2}${report.timestamp}${index}`}>
-                        <div className="details">
-                          <div><span>Zona {report.zone.name} | Sitio {report.site}</span></div>
-                          <p>Batería baja {value.value}%</p>
+                      <Link to={`/zones/${report.zone ? report.zone._id : null}/${report.subzone ? report.subzone._id : null}`}
+                        key={`${index2}${report.timestamp}${index}`}>
+                        <div className="mini-alert battery">
+                          <div className="details">
+                            <div><span>Zona {report.zone.name} | Sitio {report.site}</span></div>
+                            <p>Batería baja {value.value}%</p>
+                          </div>
+                          <div className="time">
+                            <span>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</span>
+                            <span>{`${date.getHours()}:${date.getMinutes()}`}</span>
+                          </div>
                         </div>
-                        <div className="time">
-                          <span>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</span>
-                          <span>{`${date.getHours()}:${date.getMinutes()}`}</span>
-                        </div>
-                      </div>
+                      </Link>
                     )
                   )
                 })

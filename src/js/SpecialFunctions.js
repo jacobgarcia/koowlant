@@ -16,6 +16,13 @@ export function intToRGB(i) {
     return "00000".substring(0, 6 - c.length) + c;
 }
 
+export function substractReportValues(reports) {
+  return {
+    alarms: (reports && reports[0]) ? reports[0].alarms.reduce((sum, alm) => [...alm.values, ...sum], []) : [],
+    sensors: (reports && reports[0]) ? reports[0].sensors.reduce((sum, sns) => [...sns.values, ...sum], []) : []
+  }
+}
+
 function getSubzoneData(subzone) {
   return subzone.sites
   ? subzone.sites.reduce((array, {alarms = [], sensors = []}) =>

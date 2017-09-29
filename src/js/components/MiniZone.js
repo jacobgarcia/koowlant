@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { getStatus, getSensorChart } from '../SpecialFunctions'
+import { getStatus, getSensorChart, substractReportValues } from '../SpecialFunctions'
 
 const COLORS = {
   alerts: '#ed2a20',
@@ -11,12 +11,12 @@ const COLORS = {
 }
 
 function MiniZone(props) {
-  const reports = {
-    alarms: (props.reports && props.reports[0]) ? props.reports[0].alarms[0].values : [],
-    sensors: (props.reports && props.reports[0]) ? props.reports[0].sensors[0].values : []
-  }
+  const reports = substractReportValues(props.reports)
 
   let { status, percentage } = getStatus(reports || null)
+
+  // console.log('Props reports', props.reports)
+  // console.log('Mini zone', reports, status, percentage)
 
   if (!status && props.type === 'site') {
     status = getSensorChart('TEMPERATURE')
@@ -48,7 +48,8 @@ function MiniZone(props) {
         <div className="reports-count">
           {
             (
-              (props.reports && props.reports.alarms && props.reports.alarms.length > 0) && <p><span className="alerts-icon"/>{props.reports.alarms.length} Alarmas</p>
+              (reports && reports.alarms && reports.alarms.length > 0)
+              && <p><span className="alerts-icon"/>{reports.alarms.length} Alarmas</p>
             )
             || <p className="no-failures"><span className="no-failures-icon" /> Sin fallas</p>
           }
