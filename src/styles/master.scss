@@ -512,6 +512,11 @@ nav {
     width: 100%;
     .side-content {
       width: 100%;
+      .cameras-container video {
+        @media (min-width: 770px) {
+          width: 50% !important;
+        }
+      }
     }
   }
   &.hidden {
@@ -548,9 +553,6 @@ nav {
         // max-width: 500px;
         flex: 1;
         margin-bottom: 20px;
-        @media (min-width: 770px) {
-          width: 50% !important;
-        }
       }
     }
   }
