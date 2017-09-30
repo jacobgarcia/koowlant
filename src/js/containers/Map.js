@@ -105,19 +105,10 @@ class MapView extends Component {
 
   onCreate() {
     // If we are in a selected zone
-    let state
-    if (this.state.selectedZone && !this.state.isCreatingZone) {
-      state = !this.state.isCreatingZone
-      this.setState(prevState => ({
-        promptElement: !state || !prevState.promptElement
-      }))
-
-      if (state) return
-    }
-
     this.setState(prevState => ({
       newPositions: [],
-      isCreatingZone: state || !prevState.isCreatingZone,
+      isCreatingZone: !prevState.isCreatingZone,
+      isCreatingSite: (this.state.selectedSubzone !== null) && !prevState.isCreatingZone,
       isGeneralStatusHidden: true,
       isAlertsHidden: true
     }))
@@ -266,11 +257,30 @@ class MapView extends Component {
           (this.isWindow !== 'zones' || this.isWindow !== 'alerts')
           && <div className={`map-view`}>
             <div className="actions">
+              <div>
+                {
+                  this.state.selectedZone !== null
+                    && <span className="button huge back" onClick={() => {
+                      if (this.state.isCreatingSite || this.state.isCreatingZone) this.onCreate()
+                      if (this.state.selectedSite) this.props.history.push(`/zones/${this.state.selectedZone._id}/${this.state.selectedSubzone._id}`)
+                      else if (this.state.selectedSubzone) this.props.history.push(`/zones/${this.state.selectedZone._id}`)
+                      else if (this.state.selectedZone) this.props.history.push('/')
+                  }}>Regresar <span>{this.state.selectedZone ? (this.state.selectedSubzone ? 'Subzonas' : 'General') : null}</span></span>
+                }
+              </div>
               <ul className="links hiddable">
-                <li className="big search" onClick={this.onSearch}><span className="search">Buscar</span></li>
-                <li className="big create" onClick={this.onCreate}><span className="create">{this.state.selectedZone ? (this.state.selectedSubzone ? 'Sitio' : 'Subzona') : 'Zona'}</span></li>
+                <li className="big search"
+                  onClick={this.onSearch}>
+                  <span className="search">Buscar</span>
+                </li>
+                <li className="big create"
+                  onClick={this.onCreate}>
+                  <span className="create">{this.state.selectedZone ? (this.state.selectedSubzone ? 'Sitio' : 'Subzona') : 'Zona'}</span>
+                </li>
               </ul>
-              <span className="button huge cancel" onClick={this.onCreate}>Cancelar</span>
+              <div>
+                <span className="button huge cancel" onClick={this.onCreate}>Cancelar</span>
+              </div>
             </div>
             <Map
               onClick={this.onMapClick}
@@ -284,6 +294,7 @@ class MapView extends Component {
               animate
               >
               {
+                // Render subzones in a selected zone
                 (this.state.selectedZone && this.state.selectedZone.subzones && !this.state.selectedSubzone)
                 && this.state.selectedZone.subzones.map(subzone =>
                   subzone.positions
@@ -294,36 +305,46 @@ class MapView extends Component {
                       highlightedZone={this.state.highlightedZone}
                       onMouseOver={this.onSiteHover}
                       onMouseOut={this.onSiteHover}
+                      onClick={() => {
+                        if (this.state.isCreatingSite || this.state.isCreatingZone) return
+                        this.props.history.push(`/zones/${this.state.selectedZone._id}/${subzone._id}`)}
+                      }
                     />
                 )
               }
               {
+                // Render sites in a selected subzone
                 this.state.selectedSubzone && this.state.selectedSubzone.sites
                 && this.state.selectedSubzone.sites.map(site =>
                   <SiteMarker
                     key={site._id}
                     position={site.position}
+                    site={site}
                     title={site.name}
+                    highlightedZone={this.state.highlightedZone}
+                    onMouseEvent={this.onSiteHover}
+                    onClick={() => {}}
                   />
                 )
               }
               {
+                // Render gray area when there's a selected subzone
                 this.state.selectedSubzone && this.state.selectedSubzone.positions
                 ? <Polygon
                     positions={[
                       [[-85,-180], [-85,180], [85,180], [85,-180]],
-                      [this.state.selectedSubzone.positions]
+                      [...this.state.selectedSubzone.positions]
                     ]}
                     fillOpacity={0.3}
                     color="#666"
                     weight={0}
-                    onClick={event => event.stopPropagation() }
+                    onClick={() => this.props.history.push('/')}
                   />
                 : (this.state.selectedZone && this.state.selectedZone.positions.length > 1)
                   && <Polygon
                       positions={[
                         [[-85,-180], [-85,180], [85,180], [85,-180]],
-                        [this.state.selectedZone.positions]
+                        [...this.state.selectedZone.positions]
                       ]}
                       fillOpacity={0.3}
                       color="#666"
@@ -332,6 +353,7 @@ class MapView extends Component {
                     />
               }
               {
+                // Render all zones
                 (this.state.selectedZone === null)
                 && this.props.zones.map(zone =>
                   <ZonePolygon
@@ -346,6 +368,10 @@ class MapView extends Component {
                     }
                     onMouseOver={this.onSiteHover}
                     onMouseOut={this.onSiteHover}
+                    onClick={() => {
+                      if (this.state.isCreatingSite || this.state.isCreatingZone) return
+                      this.props.history.push(`/zones/${zone._id}`)}
+                    }
                   />
                 )
               }
@@ -374,7 +400,7 @@ class MapView extends Component {
               onChange={this.onChange}
               isValid={this.state.isNewElementValid}
               onSave={this.saveNewZone}
-              text={this.isCreatingSite ? 'Traza la zona' : 'Localiza el sitio'}
+              text={this.isCreatingSite ? 'Posiciona el sitio' : 'Traza la zona'}
             />
           </div>
         }

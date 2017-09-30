@@ -75,6 +75,7 @@ span.small-icon {
   display: block;
   cursor: pointer;
   background-size: contain;
+  background-repeat: no-repeat;
   &.deactive {
     opacity: 0.6;
   }
@@ -98,7 +99,7 @@ span.small-icon {
   background-position: center;
   background-size: 16px;
 }
-.warnings-icon { background-image: url('/static/img/icons/attention-yellow.png'); }
+.warnings-icon { background-image: url('/static/img/icons/attention-yellow.svg'); }
 .alerts-icon {
   background-image: url('/static/img/icons/attention-red.png');
   animation: grow 2s infinite;
@@ -180,9 +181,10 @@ ul.links {
   &.nav {
     li {
       padding: 0;
+      text-transform: uppercase;
+      font-size: 0.85rem;
       a { padding: 17px 15px; }
     }
-
   }
   li {
     cursor: pointer;
@@ -264,6 +266,10 @@ ul.links {
 }
 .back {
   background-image: url('/static/img/icons/back.png');
+  span {
+    opacity: 0.5;
+    margin-left: 5px;
+  }
 }
 
 @import "./containers/Sites";
@@ -404,6 +410,10 @@ nav {
     right: 0;
     left: 0;
     bottom: 0;
+    .leaflet-marker-icon {
+      -webkit-filter: drop-shadow(-5px -5px 5px rgba(#000, 0.4));
+      filter: drop-shadow(-5px -5px 5px rgba(#000, 0.4));
+    }
 }
 
 .prompt-element {
@@ -443,6 +453,7 @@ nav {
         text-align: center;
       }
     }
+
     .cancel {
       display: flex;
       align-items: flex-end;
@@ -528,10 +539,10 @@ nav {
   &.hidden {
     .close-tab {
       &.sites {
-        background-image: url('/static/img/icons/tower.png');
+        background-image: url('/static/img/icons/tower.svg');
       }
       &.alerts-side {
-        background-image: url('/static/img/icons/alert.png');
+        background-image: url('/static/img/icons/alert.svg');
       }
     }
   }
@@ -685,7 +696,7 @@ nav {
         font-weight: 600;
       }
     }
-    &.battery { background-image: url('/static/img/icons/battery.png'); }
+    &.battery { background-image: url('/static/img/icons/battery.svg'); }
     &.fuel { background-image: url('/static/img/icons/fuel.png'); }
     &.temperature { background-image: url('/static/img/icons/temperature.png'); }
   }
@@ -698,9 +709,6 @@ nav {
   height: 100%;
   overflow-x: hidden;
   &.creating {
-    .close-tab, .map-view .actions {
-      justify-content: flex-end;
-    }
     .close-tab, .map-view .actions .links.hiddable {
       display: none;
     }
@@ -858,6 +866,9 @@ nav {
       width: 100%;
       z-index: 999;
       justify-content: center;
+      li {
+        height: 40px;
+      }
     }
     .actions {
       position: absolute;
@@ -865,10 +876,13 @@ nav {
       top: 25px;
       width: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       .cancel {
         margin-right: 50px;
         display: none;
+      }
+      .back {
+        margin-left: 50px;
       }
     }
   }

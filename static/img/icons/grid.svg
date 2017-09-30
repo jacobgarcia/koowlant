@@ -1,1 +1,19 @@
-<svg viewBox="0 0 19 19" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M9 9H0V0h9v9zM2 2.002v4.996h5V2.002H2zM19 9h-9V0h9v9zm-7-6.998v4.996h5V2.002h-5zM9 19H0v-9h9v9zm-7-6.998v4.996h5v-4.996H2zM19 19h-9v-9h9v9zm-7-6.998v4.996h5v-4.996h-5z"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Square_icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Master-Operator" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Square">
+            <rect id="Rectangle-3-Copy" fill="#040404" x="0" y="0" width="9" height="9" rx="2"></rect>
+            <rect id="Rectangle-3-Copy-3" fill="#040404" x="0" y="10" width="9" height="9" rx="2"></rect>
+            <rect id="Rectangle-3-Copy-2" fill="#040404" x="10" y="0" width="9" height="9" rx="2"></rect>
+            <rect id="Rectangle-3-Copy-4" fill="#040404" x="10" y="10" width="9" height="9" rx="2"></rect>
+            <rect id="Rectangle-3-Copy" fill="#FFFFFF" x="1" y="1" width="7" height="7" rx="1"></rect>
+            <rect id="Rectangle-3-Copy-3" fill="#FFFFFF" x="1" y="11" width="7" height="7" rx="1"></rect>
+            <rect id="Rectangle-3-Copy-2" fill="#FFFFFF" x="11" y="1" width="7" height="7" rx="1"></rect>
+            <rect id="Rectangle-3-Copy-4" fill="#FFFFFF" x="11" y="11" width="7" height="7" rx="1"></rect>
+        </g>
+    </g>
+</svg>

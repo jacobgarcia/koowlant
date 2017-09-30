@@ -28,6 +28,7 @@ function ZonePolygon(props) {
       fillOpacity={props.highlightedZone === props.zone._id ? 0.7 : 0.4}
       onMouseOver={() => props.onMouseOver(props.zone._id)}
       onMouseOut={() => props.onMouseOut(null)}
+      onClick={props.onClick}
     >
       <Tooltip permanent opacity={1} >
         <div className={`tooltip ${props.highlightedZone === props.zone._id ? 'active' : ''}`}>

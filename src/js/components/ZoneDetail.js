@@ -30,12 +30,21 @@ class ZoneDetail extends Component {
     })
   }
 
-  getBackLink(props) {
-    switch (props.type) {
+  getBackLink({type, zone, subzone}) {
+    switch (type) {
       case 'zone': return '/'
-      case 'subzone': return `/zones/${props.zone._id}`
-      case 'site': return `/zones/${props.zone._id}/${props.subzone._id}`
+      case 'subzone': return `/zones/${zone._id}`
+      case 'site': return `/zones/${zone._id}/${subzone._id}`
       default: return '/'
+    }
+  }
+
+  getBackType({type}) {
+    switch (type) {
+      case 'zone': return 'General'
+      case 'subzone': return 'Zonas'
+      case 'site': return 'Subzonas'
+      default: return ''
     }
   }
 
@@ -68,8 +77,16 @@ class ZoneDetail extends Component {
     return (
       <div className="side-content">
         <div className="top">
-          { (this.props.type !== 'general') && <span className="back"><Link to={this.getBackLink(this.props)}>Regresar</Link></span> }
-          { this.props.isWindow !== 'zones' && <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span> }
+          {
+            this.props.type !== 'general'
+            && <span className="back">
+                <Link to={this.getBackLink(this.props)}>Regresar <span>{this.getBackType(this.props)}</span></Link>
+              </span>
+          }
+          {
+            this.props.isWindow !== 'zones'
+            && <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span>
+          }
         </div>
         <StatusOverall
           status={status}

@@ -129,13 +129,6 @@ function sockets(io) {
         },{
                 key: "ts5",
                 "value": 21.5
-        }],
-        alarms: [{
-            sensor: 'ts2', // Sensor id
-            value: 50.5
-        },{
-            sensor: 'ts4', // Sensor id
-            value: 60.5
         }]
       })
       io.to('0293j4ji').emit('report', {
