@@ -25,6 +25,12 @@ app.use(
   '/static',
   express.static(path.resolve('static'))
 )
+
+// TODO: Authentication with token in url
+app.use(
+  '/uploads',
+  express.static(path.resolve('uploads'))
+)
 app.use(
   '/dist',
   express.static('dist')

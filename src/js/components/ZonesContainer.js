@@ -5,6 +5,19 @@ import { Link } from 'react-router-dom'
 import { MiniZone } from './'
 import { getFilteredReports } from '../SpecialFunctions'
 
+function Video(props) {
+  return (
+    <video className="camera-video" controls autoPlay loop>
+      <source src={props.source} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  )
+}
+
+Video.propTypes = {
+  source: PropTypes.string.isRequired
+}
+
 function ZonesContainer(props) {
 
   const getMiniZoneLink = zone => {
@@ -34,46 +47,72 @@ function ZonesContainer(props) {
       {
         props.type === 'site'
         && <div className="sensors-cameras">
-            <span>Sensores</span>
-            <span>Cámaras</span>
+            <span
+              onClick={() => props.changeView('sensors')}
+              className={props.currentView === 'sensors' ? 'selected' : ''}>
+              Sensores
+            </span>
+            <span
+              onClick={() => props.changeView('cameras')}
+              className={props.currentView === 'cameras' ? 'selected' : ''}>
+              Cámaras
+            </span>
           </div>
       }
-      <div className="mini-sites-menu">
-        <div className="view-ordering">
-          <span className="dynamic small-icon" />
-          <span className="static small-icon" />
+      {
+        // Camera sites view
+        (props.site && props.currentView === 'cameras')
+        &&
+        <div className="cameras-container">
+          <Video source="/uploads/video/test-1.mp4" />
+          <Video source="/uploads/video/test-2.mp4" />
+          <Video source="/uploads/video/test-3.mp4" />
+          <Video source="/uploads/video/test-4.mp4" />
         </div>
-        <div className="view-settings">
-          <span
-            className={`list small-icon ${props.viewStyle === 'list' ? '' : 'deactive'}`}
-            onClick={() => props.changeSitesView('list')}
-          />
-          <span
-            className={`grid small-icon ${props.viewStyle === 'grid' ? '' : 'deactive'}`}
-            onClick={() => props.changeSitesView('grid')}
-          />
-        </div>
-      </div>
-      <div className={`mini-sites-container ${props.viewStyle}`}>
-        {
-          Array.isArray(elements)
-          && elements.map((element, index) =>
-            <Link
-              to={getMiniZoneLink(element)}
-              key={index}>
-              <MiniZone
-                onHover={props.onHover}
-                type={props.type}
-                id={element._id}
-                name={element.name}
-                zone={element}
-                active={props.highlightedZone === element._id}
-                reports={getFilteredReports(props.reports, element)}
+      }
+      {
+        (props.currentView === 'sensors' || props.site === null)
+        &&
+        [
+          <div className="mini-sites-menu" key="mini-sites-menu">
+            <div className="view-ordering">
+              <span className="dynamic small-icon" />
+              <span className="static small-icon" />
+            </div>
+            <div className="view-settings">
+              <span
+                className={`list small-icon ${props.viewStyle === 'list' ? '' : 'deactive'}`}
+                onClick={() => props.changeSitesView('list')}
               />
-            </Link>
-          )
-        }
-      </div>
+              <span
+                className={`grid small-icon ${props.viewStyle === 'grid' ? '' : 'deactive'}`}
+                onClick={() => props.changeSitesView('grid')}
+              />
+            </div>
+          </div>,
+          <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
+            {
+              Array.isArray(elements)
+              && elements.map((element, index) =>
+                <Link
+                  to={getMiniZoneLink(element)}
+                  key={index}>
+                  <MiniZone
+                    onHover={props.onHover}
+                    type={props.type}
+                    id={element._id}
+                    name={element.name}
+                    zone={element}
+                    active={props.highlightedZone === element._id}
+                    reports={getFilteredReports(props.reports, element)}
+                  />
+                </Link>
+              )
+            }
+          </div>
+        ]
+      }
+
     </div>
   )
 }
@@ -93,7 +132,9 @@ ZonesContainer.propTypes = {
     PropTypes.array
   ]),
   highlightedZone: PropTypes.string,
-  reports: PropTypes.array
+  reports: PropTypes.array,
+  changeView: PropTypes.function,
+  currentView: PropTypes.string.isRequired
 }
 
 export default ZonesContainer

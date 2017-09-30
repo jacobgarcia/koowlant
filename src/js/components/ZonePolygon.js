@@ -72,7 +72,8 @@ ZonePolygon.propTypes = {
   onMouseOut: PropTypes.func,
   highlightedZone: PropTypes.string,
   zone: PropTypes.object.isRequired,
-  reports: PropTypes.array
+  reports: PropTypes.array,
+  onClick: PropTypes.func
 }
 
 export default ZonePolygon

@@ -12,6 +12,7 @@ const COLORS = {
 
 function SiteMarker(props) {
   console.log(props.highlightedZone)
+  let status
   return (
     <Marker
       position={props.position}
@@ -27,6 +28,7 @@ function SiteMarker(props) {
       })}>
       <Tooltip permanent opacity={1} >
         <div className={`tooltip ${props.highlightedZone === props.site._id ? 'active' : ''}`}>
+          <h3>Sitio {props.site.name || props.site.key}</h3>
           <div className="hidable">
             {
               status
@@ -47,13 +49,6 @@ function SiteMarker(props) {
                 </Pie>
               </PieChart>
             }
-          </div>
-          <div className={`general`}>
-            <div className="icons">
-              {/* { warnings > 0 ? <span className="warnings-icon" /> : null } */}
-              {/* { alerts > 0 ? <span className="alerts-icon" /> : null } */}
-            </div>
-            <h3>{props.site.name}</h3>
           </div>
           {/* <span className="hidable">{getStatus(status).normalPercentage * 100}%</span> */}
         </div>

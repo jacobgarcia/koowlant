@@ -148,7 +148,7 @@ class MapView extends Component {
     } else if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
       this.setState({
         selectedSite,
-        currentZoom: 7.5
+        currentZoom: 10.5
       }, () => this.setState({currentPosition: selectedSite.position}))
     }
   }
@@ -265,7 +265,7 @@ class MapView extends Component {
                       if (this.state.selectedSite) this.props.history.push(`/zones/${this.state.selectedZone._id}/${this.state.selectedSubzone._id}`)
                       else if (this.state.selectedSubzone) this.props.history.push(`/zones/${this.state.selectedZone._id}`)
                       else if (this.state.selectedZone) this.props.history.push('/')
-                  }}>Regresar <span>{this.state.selectedZone ? (this.state.selectedSubzone ? 'Subzonas' : 'General') : null}</span></span>
+                  }}>Regresar <span>{this.state.selectedSubzone ? (this.state.selectedSite ? 'Subzona' : 'Subzonas') : 'General'}</span></span>
                 }
               </div>
               <ul className="links hiddable">

@@ -11,11 +11,13 @@ class ZoneDetail extends Component {
 
     this.state = {
       viewStyle: 'list',
+      currentView: 'sensors',
       selectedZone: null
     }
 
     this.changeSitesView = this.changeSitesView.bind(this)
     this.onHover = this.onHover.bind(this)
+    this.changeView = this.changeView.bind(this)
   }
 
   changeSitesView(viewStyle) {
@@ -58,6 +60,12 @@ class ZoneDetail extends Component {
     }
   }
 
+  changeView(view = 'sensors') {
+    this.setState({
+      currentView: view
+    })
+  }
+
   // componentWillReceiveProps(nextProps) {
   //   console.log('nextProps filtered reports', getFilteredReports(this.nextProps.reports, this.getCorrectData(this.props)))
   // }
@@ -80,7 +88,10 @@ class ZoneDetail extends Component {
           {
             this.props.type !== 'general'
             && <span className="back">
-                <Link to={this.getBackLink(this.props)}>Regresar <span>{this.getBackType(this.props)}</span></Link>
+                <Link to={this.getBackLink(this.props)}>
+                  Regresar
+                  <span>{this.getBackType(this.props)}</span>
+                </Link>
               </span>
           }
           {
@@ -108,6 +119,8 @@ class ZoneDetail extends Component {
             {...this.props}
             changeSitesView={this.changeSitesView}
             viewStyle={this.state.viewStyle}
+            currentView={this.state.currentView}
+            changeView={this.changeView}
             onHover={this.onHover}
             highlightedZone={this.state.selectedZone}
             type={this.props.type}

@@ -535,6 +535,24 @@ nav {
       display: flex;
       justify-content: space-between;
     }
+    .cameras-container {
+      margin-top: 30px;
+      // display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      width: 100%;
+      video {
+        width: 100% !important;
+        height: auto !important;
+        // max-width: 500px;
+        flex: 1;
+        margin-bottom: 20px;
+        @media (min-width: 770px) {
+          width: 50% !important;
+        }
+      }
+    }
   }
   &.hidden {
     .close-tab {
@@ -733,8 +751,9 @@ nav {
       cursor: pointer;
       margin-right: 20px;
       font-weight: 500;
-      opacity: 0.7;
-      &:hover, &.active {
+      opacity: 0.6;
+      font-weight: 600;
+      &:hover, &.selected {
         opacity: 1;
       }
     }

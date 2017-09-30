@@ -8,7 +8,7 @@ function StatusOverall(props) {
     switch (type) {
       case 'zone': return 'Zona ' + props.zone.name
       case 'subzone': return 'Subzona ' + props.zone.name
-      case 'site': return 'Torre ' + (props.site ? props.site.key : '')
+      case 'site': return 'Sitio ' + (props.site ? props.site.key : '')
       default: return 'Estatus General'
     }
   }
