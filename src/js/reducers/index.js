@@ -1348,7 +1348,6 @@ console.log(newState)
 return newState
  */
 
-
 function reports(state = [], action) {
   switch (action.type) {
     case 'SET_REPORT': {

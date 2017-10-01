@@ -17,7 +17,7 @@ class ZoneDetail extends Component {
 
     this.changeSitesView = this.changeSitesView.bind(this)
     this.onHover = this.onHover.bind(this)
-    this.changeView = this.changeView.bind(this)
+    this.onViewChange = this.onViewChange.bind(this)
   }
 
   changeSitesView(viewStyle) {
@@ -29,6 +29,12 @@ class ZoneDetail extends Component {
 
     this.setState({
       selectedZone: elementId
+    })
+  }
+
+  onViewChange(view) {
+    this.setState({
+      currentView: view || 'sensors'
     })
   }
 
@@ -60,27 +66,11 @@ class ZoneDetail extends Component {
     }
   }
 
-  changeView(view) {
-    this.setState({
-      currentView: view || 'sensors'
-    })
-  }
-
-  // componentWillReceiveProps(nextProps) {
-  //   console.log('nextProps filtered reports', getFilteredReports(this.nextProps.reports, this.getCorrectData(this.props)))
-  // }
-
   render() {
-    // console.log('Reports', this.props.reports)
-    // console.log('Correct data', this.getCorrectData(this.props))
     let data = getFilteredReports(this.props.reports, this.getCorrectData(this.props))
-    // console.log(this.getCorrectData(this.props))
-    console.log('\n\nfiltered reports', data)
     data = substractReportValues(data)
-    console.log('last data', data)
+
     const { status, percentage } = getStatus(data)
-    // console.log('status', status)
-    // console.log('percentage', percentage)
 
     return (
       <div className="side-content">
@@ -120,7 +110,7 @@ class ZoneDetail extends Component {
             changeSitesView={this.changeSitesView}
             viewStyle={this.state.viewStyle}
             currentView={this.state.currentView}
-            changeView={this.changeView}
+            onViewChange={this.onViewChange}
             onHover={this.onHover}
             highlightedZone={this.state.selectedZone}
             type={this.props.type}

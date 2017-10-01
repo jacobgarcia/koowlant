@@ -19,7 +19,6 @@ Video.propTypes = {
 }
 
 function ZonesContainer(props) {
-
   const getMiniZoneLink = zone => {
     switch (props.type) {
       case 'general': return `/zones/${zone._id}`
@@ -48,12 +47,12 @@ function ZonesContainer(props) {
         props.type === 'site'
         && <div className="sensors-cameras">
             <span
-              onClick={() => props.changeView('sensors')}
+              onClick={() => props.onViewChange('sensors')}
               className={props.currentView === 'sensors' ? 'selected' : ''}>
               Sensores
             </span>
             <span
-              onClick={() => props.changeView('cameras')}
+              onClick={() => props.onViewChange('cameras')}
               className={props.currentView === 'cameras' ? 'selected' : ''}>
               Cámaras
             </span>
@@ -133,8 +132,12 @@ ZonesContainer.propTypes = {
   ]),
   highlightedZone: PropTypes.string,
   reports: PropTypes.array,
-  changeView: PropTypes.function,
+  onViewChange: PropTypes.func,
   currentView: PropTypes.string.isRequired
+}
+
+ZonesContainer.defaultProps = {
+  onViewChange: () => {}
 }
 
 export default ZonesContainer

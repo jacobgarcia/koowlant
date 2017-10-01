@@ -13,8 +13,6 @@ function StatusOverall(props) {
     }
   }
 
-  // console.log(props.percentage)
-
   return (
     <div className="overall">
       <h3>{getTitle(props.type, props)}</h3>

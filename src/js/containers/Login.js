@@ -75,11 +75,6 @@ class Login extends Component {
     })
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   console.log('auth', nextProps.auth.authenticated)
-  //   console.log(nextProps.match)
-  // }
-
   render() {
     return (
       <div className="login">

@@ -38,17 +38,14 @@ class App extends Component {
   initSocket(props) {
 
     socket.connect(status => {
-      // console.log(status)
     })
 
     socket.on('connect', () => {
-      // console.log('Conecting to room...')
       socket.emit('join', '0293j4ji')
       socket.emit('hello', 'Hey there!')
     })
 
     socket.on('report', report => {
-      // console.log('Sending report to reducer...')
       props.setReport(report)
     })
   }

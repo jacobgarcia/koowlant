@@ -11,15 +11,9 @@ const COLORS = {
 }
 
 function MiniZone(props) {
-  console.log(props.reports)
   const reports = substractReportValues(props.reports)
 
-  console.log('MiniZone reports', reports)
-
   let { status, percentage } = getStatus(reports || null)
-
-  // console.log('Props reports', props.reports)
-  // console.log('Mini zone', reports, status, percentage)
 
   if (!status && props.type === 'site') {
     status = getSensorChart('TEMPERATURE')

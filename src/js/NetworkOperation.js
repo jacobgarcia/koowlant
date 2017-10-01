@@ -2,7 +2,6 @@ import axios from 'axios'
 
 class NetworkOperation {
   static login(email, password) {
-    console.log(`${window.baseUrl}/authenticate`)
     return axios.post(`${window.baseUrl}/authenticate`, {email, password})
   }
 
