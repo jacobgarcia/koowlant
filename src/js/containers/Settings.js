@@ -11,7 +11,7 @@ class Settings extends Component {
 
     this.state = {
       fullName: props.credentials.user.name + ' ' + props.credentials.user.surname,
-      email: props.credentials.email,
+      email: props.credentials.email || '',
       password: ''
     }
 

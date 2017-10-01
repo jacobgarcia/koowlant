@@ -118,7 +118,7 @@ function ZonesContainer(props) {
 }
 
 ZonesContainer.propTypes = {
-  type: PropTypes.string,
+  type: PropTypes.string.isRequired,
   zones: PropTypes.array,
   subzones: PropTypes.array,
   viewStyle: PropTypes.string.isRequired,

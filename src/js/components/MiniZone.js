@@ -11,7 +11,10 @@ const COLORS = {
 }
 
 function MiniZone(props) {
+  console.log(props.reports)
   const reports = substractReportValues(props.reports)
+
+  console.log('MiniZone reports', reports)
 
   let { status, percentage } = getStatus(reports || null)
 
@@ -49,7 +52,7 @@ function MiniZone(props) {
           {
             (
               (reports && reports.alarms && reports.alarms.length > 0)
-              && <p><span className="alerts-icon"/>{reports.alarms.length} Alarmas</p>
+              && <p className="reports-count-value"><span className="alerts-icon"/>{reports.alarms.length} Alarmas</p>
             )
             || <p className="no-failures"><span className="no-failures-icon" /> Sin fallas</p>
           }

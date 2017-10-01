@@ -12,40 +12,37 @@ const config = require(path.resolve('config/config'))
 router.post('/authenticate', (req, res) => {
   const { email } = req.body
 
-  let user
-
   User.findOne({ email })
-  .then(foundUser => {
-    if (foundUser === null) {
-      winston.info('Failed to authenticate user')
+  .then(user => {
+    if (user === null) {
+      winston.info('Failed to authenticate user email')
       return res.status(401).json({ message: 'Authentication failed. Wrong user or password.' })
     }
 
-    user = foundUser
-
     return bcrypt.compare(req.body.password + config.secret, user.password)
-  })
-  .then(success => {
-    if (success === false) {
-      winston.info('Failed to authenticate user')
-      return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
-    }
-
-    const token = jwt.sign({
-      _id: user._id,
-      acc: user.accessLevel,
-      cmp: user.company
-    }, config.secret, { expiresIn: 604800 })
-
-    return res.status(200).json({
-      token,
-      user: {
-        _id: user._id,
-        username: user.username,
-        name: user.name,
-        surname: user.surname,
-        accessLevel: user.accessLevel,
+    .then(success => {
+      if (success === false) {
+        winston.info('Failed to authenticate user password')
+        return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
       }
+
+      const token = jwt.sign({
+        _id: user._id,
+        acc: user.accessLevel,
+        cmp: user.company
+      }, config.secret)
+
+      user = user.toObject()
+
+      return res.status(200).json({
+        token,
+        user: {
+          _id: user._id,
+          name: user.name || 'User',
+          surname: user.surname,
+          accessLevel: user.accessLevel
+        }
+      })
     })
   })
   .catch(error => {

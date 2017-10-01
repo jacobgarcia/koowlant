@@ -11,13 +11,13 @@ const COLORS = {
 }
 
 function SiteMarker(props) {
-  console.log(props.highlightedZone)
   let status
   return (
     <Marker
       position={props.position}
-      onMouseOver={() => props.onMouseEvent(props.site._id)}
+      onMouseOver={() => props.onMouseEvent(props.site ? props.site._id : null)}
       onMouseOut={() => props.onMouseEvent(null)}
+      onClick={props.onClick}
       icon={leafletIcon({
         iconUrl: '/static/img/icons/marker.svg',
         iconSize: [40, 40], // size of the icon
@@ -27,7 +27,7 @@ function SiteMarker(props) {
         // popupAnchor: [-3, -76]
       })}>
       <Tooltip permanent opacity={1} >
-        <div className={`tooltip ${props.highlightedZone === props.site._id ? 'active' : ''}`}>
+        <div className={`tooltip ${(props.highlightedZone === props.site._id && !props.deactivated) ? 'active' : ''}`}>
           <h3>Sitio {props.site.name || props.site.key}</h3>
           <div className="hidable">
             {
@@ -59,8 +59,15 @@ function SiteMarker(props) {
 
 SiteMarker.propTypes = {
   position: PropTypes.array,
-  title: PropTypes.string,
-  site: PropTypes.object
+  deactivated: PropTypes.bool,
+  site: PropTypes.object,
+  onMouseEvent: PropTypes.func,
+  highlightedZone: PropTypes.string,
+  onClick: PropTypes.func
+}
+
+SiteMarker.defaultProps = {
+  onMouseEvent: () => {}
 }
 
 export default SiteMarker

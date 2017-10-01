@@ -36,6 +36,7 @@ class MapView extends Component {
       sitesViewOrdering: 'static', // TODO load from localStorage
       isCreatingSite: false,
       isCreatingZone: false,
+      isSearching: false
     }
 
     this.hide = this.hide.bind(this)
@@ -49,6 +50,7 @@ class MapView extends Component {
     this.changeSitesView = this.changeSitesView.bind(this)
     this.onSelectElement = this.onSelectElement.bind(this)
     this.getType = this.getType.bind(this)
+    this.onSearch = this.onSearch.bind(this)
   }
 
   isNewElementValid() {
@@ -81,8 +83,6 @@ class MapView extends Component {
 
     const { newName, newPositions } = this.state
 
-    console.log('setZone()', newName, newPositions)
-
     this.props.setZone(newName, newPositions)
 
     this.setState({
@@ -100,7 +100,9 @@ class MapView extends Component {
   }
 
   onSearch() {
-    // console.log('Searching...')
+    this.setState(prevState => ({
+      isSearching: !prevState.isSearching,
+    }))
   }
 
   onCreate() {
@@ -216,7 +218,12 @@ class MapView extends Component {
   render() {
     return (
       <div className={`map-container ${this.state.isCreatingZone ? 'creating' : ''} ${(this.state.isGeneralStatusHidden && this.state.isAlertsHidden) ? 'awake' : 'sleeping'}`}>
-        <Search />
+        <Search
+          isVisible={this.state.isSearching}
+          zones={this.props.zones}
+          onClose={this.onSearch}
+          reports={this.props.reports}
+        />
         { this.state.promptElement
           && <div className="prompt-element">
             <div className="content">
@@ -301,7 +308,7 @@ class MapView extends Component {
                   && <ZonePolygon
                       key={subzone._id}
                       zone={subzone}
-                      reports={this.props.reports.filter(({site}) => subzone.sites.find(({key}) => key === site))}
+                      reports={this.props.reports.filter(({site}) => subzone.sites.find(({key}) => key === site.key))}
                       highlightedZone={this.state.highlightedZone}
                       onMouseOver={this.onSiteHover}
                       onMouseOut={this.onSiteHover}
@@ -323,7 +330,7 @@ class MapView extends Component {
                     title={site.name}
                     highlightedZone={this.state.highlightedZone}
                     onMouseEvent={this.onSiteHover}
-                    onClick={() => {}}
+                    onClick={() => this.props.history.push(this.props.location.pathname + '/' + site._id)}
                   />
                 )
               }
@@ -363,7 +370,7 @@ class MapView extends Component {
                     reports={
                       this.props.reports.filter(({site}) =>
                       zone.subzones.some(subzone =>
-                        subzone.sites.find(({key}) => key === site))
+                        subzone.sites.find(({key}) => key === site.key))
                       )
                     }
                     onMouseOver={this.onSiteHover}
@@ -381,10 +388,12 @@ class MapView extends Component {
                   && <SiteMarker
                       position={this.state.newPositions[0]}
                       title={this.state.newName}
+                      site={{name: this.state.newName}}
+                      deactivated
                     />
                 ) : (
                   <Polygon
-                    color="#aaa"
+                    color="red"
                     positions={this.state.newPositions}
                   />
                 )

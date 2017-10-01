@@ -17,4 +17,8 @@ router.use(require(path.resolve('router/v1/companies')))
 // TODO: Send user invitee (mail)
 // TODO: Accept user invitee
 
+router.use((error, req, res, next) => {
+  res.status(500).json({ error })
+})
+
 module.exports = router

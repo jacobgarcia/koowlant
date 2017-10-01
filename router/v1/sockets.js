@@ -20,7 +20,10 @@ function sockets(io) {
   setInterval(() => {
     io.to('0293j4ji').emit('report',
     {
-      site: 'A4050',
+      site: {
+        key: 'A4050',
+        _id: '4d1288s8sh94fc9sj1h37301'
+      },
       zone: {
         name: 'Centro',
         _id: '4d128b6ea794fc13a8000001'
@@ -47,7 +50,10 @@ function sockets(io) {
       }]
     })
     io.to('0293j4ji').emit('report', {
-      site: 'A23094',
+      site: {
+        _id: '4d123234s8shubdiu9sj1afad1',
+        key: 'A23094'
+      },
       zone: {
         name: 'Norte',
         _id: '4d128b6ea794fc13a8000001'
@@ -81,7 +87,10 @@ function sockets(io) {
     setInterval(() => {
       io.to('0293j4ji').emit('report',
       {
-        site: 'A4050',
+        site: {
+          key: 'A4050',
+          _id: '4d1288s8sh94fc9sj1h37301'
+        },
         zone: {
           name: 'Centro',
           _id: '4d128b6ea794fc13a8000001'
@@ -93,18 +102,21 @@ function sockets(io) {
         timestamp: Date.now(), // Unix timestamp
         sensors: [{
                 key: "ts1",
-                "value": 29.5
+                "value": 21.8
         },{
                 key: "ts2",
-                "value": 25.5
+                "value": 28.8
         },
         {
                 key: "ts3",
-                "value": 23.5
+                "value": 23.8
         }]
       })
       io.to('0293j4ji').emit('report', {
-        site: 'A23094',
+        site: {
+          _id: '4d123234s8shubdiu9sj1afad1',
+          key: 'A23094'
+        },
         zone: {
           name: 'Centro',
           _id: '4d128b6ea794fc13a8000001'
@@ -132,7 +144,10 @@ function sockets(io) {
         }]
       })
       io.to('0293j4ji').emit('report', {
-        site: 'A23095',
+        site: {
+          _id: '4d128g435g435534541h37301',
+          key: 'A23095'
+        },
         zone: {
           name: 'Centro',
           _id: '4d128b6ea794fc13a8000001'
@@ -160,7 +175,10 @@ function sockets(io) {
         }]
       })
       io.to('0293j4ji').emit('report', {
-        site: 'A23099',
+        site: {
+          _id: '4d128g435g435534541h37302',
+          key: 'A23099'
+        },
         zone: {
           name: 'Centro',
           _id: '4d128b6ea794fc13a8000001'

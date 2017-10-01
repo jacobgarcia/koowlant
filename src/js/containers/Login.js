@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import { setCredentials } from '../actions'
+import NetworkOperation from '../NetworkOperation'
 
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -16,7 +17,8 @@ class Login extends Component {
 
     this.state = {
       user: '',
-      password: ''
+      password: '',
+      loginFailed: false
     }
 
     this.onSubmit = this.onSubmit.bind(this)
@@ -26,23 +28,37 @@ class Login extends Component {
   onSubmit(event) {
     event.preventDefault()
 
-    // Dumb login
-    const user = {
-      name: 'John',
-      surname: 'Appleseed',
-      token: 'e293je823',
-      permissions: 0,
-      isValidEmail: false
+    if (!this.state.isValidEmail) return
+
+    const { user, password } = this.state
+
+    if (this.state.loginFailed) {
+      this.setState({
+        loginFailed: false
+      })
     }
 
-    const token = 'kasjndjaksndin39'
+    // Dumb login
+    NetworkOperation.login(user, password)
+    .then(response => {
+      const { token, user } = response.data
 
-    this.props.setCredentials(user, token)
+      this.props.setCredentials(user, token)
 
-    // Get response
-    localStorage.setItem('token', token)
+      // Get response
+      localStorage.setItem('token', token)
 
-    this.props.history.push('/')
+      this.props.history.push('/')
+    })
+    .catch(() => {
+
+      this.setState({
+        loginFailed: true
+      })
+
+    })
+
+
   }
 
   onChange(event) {
@@ -88,11 +104,15 @@ class Login extends Component {
             type="submit"
             value="Iniciar sesión"
             className={
-              this.state.user && this.state.password && this.state.isValidEmail
+              this.state.password && this.state.isValidEmail
               ? 'active'
-              : ''
+              : 'invalid'
             }
           />
+          {
+            this.state.loginFailed
+            && <div className="small-error">Correo electrónico o contraseña incorrectos</div>
+          }
           <Link to="/restore-password">Recuperar contraseña</Link>
         </form>
       </div>

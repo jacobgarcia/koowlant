@@ -21,7 +21,7 @@ class Reports extends Component {
   componentWillReceiveProps() {
     const reports = this.props.reports.reduce((sum, element) => {
       let alarms = element.alarms
-      alarms = alarms.map(alarm => ({...alarm, zone: element.zone, subzone: element.subzone, site: element.site}))
+      alarms = alarms.map(alarm => ({...alarm, zone: element.zone, subzone: element.subzone, site: element.site.key}))
       return [...alarms, ...sum]
     }, [])
     .filter(report => report.values.length > 0)
@@ -64,7 +64,7 @@ class Reports extends Component {
               <p className="alert-description">Batería baja</p>
               {
                 (this.state.alarm && this.state.alarm.zone) &&
-                <p className="location">Zona {this.state.alarm.zone.name} | Subzona {this.state.alarm.subzone.name} | Sitio {this.state.alarm.site}</p>
+                <p className="location">Zona {this.state.alarm.zone.name} | Subzona {this.state.alarm.subzone.name} | Sitio {this.state.alarm.site.key}</p>
               }
             </div>
           </div>
@@ -72,7 +72,7 @@ class Reports extends Component {
         <input
           type="button"
           onClick={props.onHide}
-          className="close-tab alerts-side"
+          className={`close-tab alerts-side ${notChecked > 0 ? 'active' : ''}`}
         />
         <div className="side-content">
           { props.isWindow === 'zones' ? null : <span className="pop-window">Hacer ventana</span> }
@@ -90,7 +90,7 @@ class Reports extends Component {
                         key={`${index2}${report.timestamp}${index}`}>
                         <div className="mini-alert battery">
                           <div className="details">
-                            <div><span>Zona {report.zone.name} | Sitio {report.site}</span></div>
+                            <div><span>Zona {report.zone.name} | Sitio {report.site.key}</span></div>
                             <p>Batería baja {value.value}%</p>
                           </div>
                           <div className="time">
