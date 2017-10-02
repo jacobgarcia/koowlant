@@ -21,7 +21,7 @@ class Reports extends Component {
   componentWillReceiveProps() {
     const reports = this.props.reports.reduce((sum, element) => {
       let alarms = element.alarms
-      alarms = alarms.map(alarm => ({...alarm, zone: element.zone, subzone: element.subzone, site: element.site.key}))
+      alarms = alarms.map(alarm => ({...alarm, zone: element.zone, subzone: element.subzone, site: element.site}))
       return [...alarms, ...sum]
     }, [])
     .filter(report => report.values.length > 0)
@@ -86,7 +86,7 @@ class Reports extends Component {
                   const date = new Date(report.timestamp)
                   return (
                     report.values.map((value, index2) =>
-                      <Link to={`/zones/${report.zone ? report.zone._id : null}/${report.subzone ? report.subzone._id : null}`}
+                      <Link to={`/zones/${report.zone ? report.zone._id : null}/${report.subzone ? report.subzone._id : null}/${report.site ? report.site._id : null}`}
                         key={`${index2}${report.timestamp}${index}`}>
                         <div className="mini-alert battery">
                           <div className="details">

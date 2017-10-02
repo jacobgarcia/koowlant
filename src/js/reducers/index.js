@@ -1333,21 +1333,6 @@ const dummyReports = [
   }
 ]
 
-/*
-let foundIndex = state.findIndex(({ site }) => site === action.report.site)
-let newState = state
-console.log(foundIndex)
-foundIndex > -1
-? newState[foundIndex] = {
-  key: newState[foundIndex].key,
-  alerts: [...newState[foundIndex].alerts, ...action.report.alerts],
-  sensors: [...newState[foundIndex].sensors, ...action.report.sensors],
-}
-: newState.push(action.report)
-console.log(newState)
-return newState
- */
-
 function reports(state = [], action) {
   switch (action.type) {
     case 'SET_REPORT': {
@@ -1382,7 +1367,6 @@ function reports(state = [], action) {
           values: [...(action.report.sensors || [])]
         }]
       })
-      console.log(newState)
       return [...newState]
     }
     default:

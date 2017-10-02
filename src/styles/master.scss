@@ -594,7 +594,7 @@ nav {
     &.alerts-side {
       transform: rotate(180deg) translateX(-1px);
       border: 1px solid $light-gray;
-      border-left: none;
+      border-right: none;
       background-image: url('/static/img/icons/large-back.png');
     }
   }

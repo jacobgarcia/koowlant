@@ -118,12 +118,16 @@ class MapView extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {zoneId, subzoneId, siteId} = nextProps.match.params
+    console.log({nextProps})
 
     const selectedZone = this.props.zones.filter(zone => zone._id === zoneId).pop()
     const selectedSubzone = selectedZone ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
     const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
 
+    console.log({selectedZone, selectedSubzone, selectedSite})
+
     if (!selectedZone) {
+      console.log('Selecting state... 1')
       this.setState({
         selectedZone: null,
         selectedSubzone: null,
@@ -131,6 +135,7 @@ class MapView extends Component {
         currentPosition: [23.2096057, -101.6139503]
       })
     } else if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
+      console.log('Selecting state... 2')
       this.setState({
         selectedZone,
         currentZoom: 5.5,
@@ -139,6 +144,7 @@ class MapView extends Component {
         selectedSite: null
       })
     } else if (selectedSubzone && !selectedSite && (!this.state.selectedSubzone || (this.state.selectedSubzone))) {
+      console.log('Selecting state... 3')
       this.setState({
         selectedSubzone,
         selectedSite: null,
@@ -148,7 +154,10 @@ class MapView extends Component {
         && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
       })
     } else if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
+      console.log('Selecting state... 4')
       this.setState({
+        selectedZone,
+        selectedSubzone,
         selectedSite,
         currentZoom: 10.5
       }, () => this.setState({currentPosition: selectedSite.position}))

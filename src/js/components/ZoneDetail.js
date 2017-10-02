@@ -42,7 +42,7 @@ class ZoneDetail extends Component {
     switch (type) {
       case 'zone': return '/'
       case 'subzone': return `/zones/${zone._id}`
-      case 'site': return `/zones/${zone._id}/${subzone._id}`
+      case 'site': return `/zones/${zone._id}/${subzone && subzone._id}`
       default: return '/'
     }
   }
