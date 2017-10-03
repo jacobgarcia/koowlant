@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import qs from 'query-string'
 import { Map, TileLayer, Polygon } from 'react-leaflet'
 
-import { setZone } from '../actions'
+import { setZone, setSubzone, setSite } from '../actions'
 import { CreateZoneBar, ZoneDetail, Reports, ZonePolygon, SiteMarker, Search } from '../components'
 import { getAreaCenter } from '../SpecialFunctions'
 
@@ -17,7 +17,7 @@ class MapView extends Component {
     const {zoneId, subzoneId, siteId} = props.match.params
 
     const selectedZone = props.zones.filter(zone => zone._id === zoneId).pop()
-    const selectedSubzone = selectedZone ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
+    const selectedSubzone = (selectedZone && selectedZone.subzones) ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
     const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
 
     this.state = {
@@ -26,7 +26,6 @@ class MapView extends Component {
       currentZoom: 5, // TODO load from localStorage
       currentPosition: [23.2096057, -101.6139503], // TODO load from localStorage
       highlightedZone: null,
-      zones: props.zones,
       selectedZone,
       selectedSubzone,
       selectedSite,
@@ -59,9 +58,9 @@ class MapView extends Component {
 
     let isNewElementValid = false
     if (this.state.isCreatingSite) {
-      isNewElementValid = newName.split('').length > 2 && newPositions.length === 1
+      isNewElementValid = newName.split('').length > 0 && newPositions.length === 1
     } else {
-      isNewElementValid = newName.split('').length > 2 && newPositions.length > 2
+      isNewElementValid = newName.split('').length > 0 && newPositions.length > 2
     }
 
     this.setState({
@@ -81,9 +80,29 @@ class MapView extends Component {
   saveNewZone() {
     if (!this.isNewElementValid()) return
 
-    const { newName, newPositions } = this.state
+    const {
+      newName,
+      newPositions,
+      selectedZone,
+      selectedSubzone
+    } = this.state
 
-    this.props.setZone(newName, newPositions)
+    if (selectedSubzone && selectedZone) {
+      this.props.setSite(
+        selectedZone._id,
+        selectedSubzone._id,
+        name,
+        newPositions[0] // Add the first position
+      )
+    } else if (selectedZone) {
+      this.props.setSubzone(
+        selectedZone._id,
+        newName,
+        newPositions
+      )
+    } else {
+      this.props.setZone(newName, newPositions)
+    }
 
     this.setState({
       newPositions: [],
@@ -118,16 +137,12 @@ class MapView extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {zoneId, subzoneId, siteId} = nextProps.match.params
-    console.log({nextProps})
 
     const selectedZone = this.props.zones.filter(zone => zone._id === zoneId).pop()
-    const selectedSubzone = selectedZone ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
+    const selectedSubzone = (selectedZone && selectedZone.subzones) ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
     const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
 
-    console.log({selectedZone, selectedSubzone, selectedSite})
-
     if (!selectedZone) {
-      console.log('Selecting state... 1')
       this.setState({
         selectedZone: null,
         selectedSubzone: null,
@@ -135,7 +150,6 @@ class MapView extends Component {
         currentPosition: [23.2096057, -101.6139503]
       })
     } else if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
-      console.log('Selecting state... 2')
       this.setState({
         selectedZone,
         currentZoom: 5.5,
@@ -144,7 +158,6 @@ class MapView extends Component {
         selectedSite: null
       })
     } else if (selectedSubzone && !selectedSite && (!this.state.selectedSubzone || (this.state.selectedSubzone))) {
-      console.log('Selecting state... 3')
       this.setState({
         selectedSubzone,
         selectedSite: null,
@@ -154,7 +167,6 @@ class MapView extends Component {
         && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
       })
     } else if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
-      console.log('Selecting state... 4')
       this.setState({
         selectedZone,
         selectedSubzone,
@@ -337,9 +349,16 @@ class MapView extends Component {
                     position={site.position}
                     site={site}
                     title={site.name}
+                    reports={this.props.reports.filter(({site: reportSite}) => {
+                      return reportSite.key === site.key
+                    })}
                     highlightedZone={this.state.highlightedZone}
                     onMouseEvent={this.onSiteHover}
-                    onClick={() => this.props.history.push(this.props.location.pathname + '/' + site._id)}
+                    onClick={() => {
+                      this.state.selectedSite === null // Check if we have already a selected site to show status
+                      ? this.props.history.push(this.props.location.pathname + '/' + site._id)
+                      : this.setState({ isGeneralStatusHidden: false })
+                    }}
                   />
                 )
               }
@@ -378,7 +397,9 @@ class MapView extends Component {
                     highlightedZone={this.state.highlightedZone}
                     reports={
                       this.props.reports.filter(({site}) =>
+                      zone.subzones &&
                       zone.subzones.some(subzone =>
+                        subzone.sites &&
                         subzone.sites.find(({key}) => key === site.key))
                       )
                     }
@@ -418,7 +439,7 @@ class MapView extends Component {
               onChange={this.onChange}
               isValid={this.state.isNewElementValid}
               onSave={this.saveNewZone}
-              text={this.isCreatingSite ? 'Posiciona el sitio' : 'Traza la zona'}
+              text={this.state.isCreatingSite ? 'Posiciona el sitio' : 'Traza la zona'}
             />
           </div>
         }
@@ -447,6 +468,12 @@ function mapDispatchToProps(dispatch) {
   return {
     setZone: (name, positions) => {
       dispatch(setZone(name, positions))
+    },
+    setSubzone: (zoneId, name, positions) => {
+      dispatch(setSubzone(zoneId, name, positions))
+    },
+    setSite: (zoneId, subzoneId, name, position) => {
+      dispatch(setSite(zoneId, subzoneId, name, position))
     }
   }
 }

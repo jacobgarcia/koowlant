@@ -56,7 +56,31 @@ function ZonesContainer(props) {
               className={props.currentView === 'cameras' ? 'selected' : ''}>
               Cámaras
             </span>
+            <span
+              onClick={() => props.onViewChange('info')}
+              className={props.currentView === 'info' ? 'selected' : ''}>
+              Información
+            </span>
           </div>
+      }
+      {
+        (props.site && props.currentView === 'info')
+        &&
+        <div className="info-container">
+          <h3>Información</h3>
+          <div>
+            <label htmlFor="address">Dirección</label>
+            <input type="text" id="address" placholder="Dirección"/>
+          </div>
+          <div>
+            <label htmlFor="name">Nombre</label>
+            <input type="text" id="name" placholder="Nombre"/>
+          </div>
+          <div>
+            <label htmlFor="key">Key</label>
+            <input type="text" id="key" placholder="Key" readOnly/>
+          </div>
+        </div>
       }
       {
         // Camera sites view

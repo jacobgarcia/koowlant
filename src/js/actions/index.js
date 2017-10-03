@@ -40,8 +40,19 @@ export function setZone(name, positions) {
 export function setSubzone(zoneId, name, positions) {
   return {
     type: 'SET_SUBZONE',
+    zoneId,
     name,
     positions
+  }
+}
+
+export function setSite(zoneId, subzoneId, name, position) {
+  return {
+    type: 'SET_SITE',
+    zoneId,
+    subzoneId,
+    name,
+    position
   }
 }
 
@@ -56,15 +67,5 @@ export function dismissReport(reportId) {
   return {
     type: 'DISMISS_REPORT',
     report: reportId
-  }
-}
-
-export function setSite({zoneId, subzoneId}, name, position) {
-  return {
-    type: 'SET_SITE',
-    zoneId,
-    subzoneId,
-    name,
-    position
   }
 }

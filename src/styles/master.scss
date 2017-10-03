@@ -540,9 +540,13 @@ nav {
       display: flex;
       justify-content: space-between;
     }
+    .info-container {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+    }
     .cameras-container {
       margin-top: 30px;
-      // display: flex;
       flex-direction: column;
       justify-content: space-between;
       flex-wrap: wrap;
