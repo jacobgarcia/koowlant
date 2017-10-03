@@ -608,39 +608,116 @@ nav {
   max-width: 1000px;
   margin: 20px auto 0;
   .header {
-    margin: 10px 0;
+    margin: 30px 0 10px;
     display: flex;
     justify-content: space-between;
   }
+  .subzones-header, .zones-header {
+    flex-grow: 1;
+    justify-content: space-between;
+  }
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 0 10px;
+    color: $gray;
+    span {
+      flex-basis: 200px;
+    }
+    > span, > div > span {
+      flex-basis: 120px;
+    }
+    div {
+      display: flex;
+    }
+    .permits {
+      flex-basis: 80px;
+    }
+  }
+  .zone-container, .subzone-container {
+    display: flex;
+  }
+  .subzones, .subzone-admins {
+    flex-grow: 1;
+  }
   .zone-container {
-    .zone {
-      margin: 10px 0;
-      .zone-name {
-        color: $text-gray
-      }
-      .admin {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        margin: 10px 0;
-        p, div {
-          flex-grow: 1;
-        }
-        .permits, .names {
-          display: flex;
-        }
-        .chat {
-          display: flex;
-          align-items: center;
-          p { margin-left: 5px; }
-        }
-        .name {
-          font-weight: 500;
-          color: #000;
-        }
+    border-top: 1px solid #111;
+    > h4 {
+      flex-basis: 120px;
+      margin-top: 20px;
+    }
+    .subzone-container:last-child {
+      border: none;
+    }
+    .subzone-container {
+      padding: 20px 0;
+      border-bottom: 1px solid #111;
+      h4 {
+        flex-basis: 120px;
       }
     }
   }
+  .admin {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    input {
+      display: none;
+    }
+    input:checked + label {
+      background: #46E0B4;
+    }
+    .permits-wrapper {
+      flex-basis: 80px;
+    }
+    .permits {
+      transition: 0.5s;
+      cursor: pointer;
+      width: 15px;
+      height: 15px;
+      border: 1px solid #000;
+      background: #fff;
+      border-radius: 50%;
+      display: block;
+    }
+    > span, > div {
+      flex-basis: 200px;
+    }
+  }
+  .admin:last-child {
+    margin-bottom: 0;
+  }
+  // .zone-container {
+  //   .zone {
+  //     margin: 10px 0;
+  //     .zone-name {
+  //       color: $text-gray
+  //     }
+  //     .admin {
+  //       display: flex;
+  //       justify-content: space-between;
+  //       flex-wrap: wrap;
+  //       margin: 10px 0;
+  //       p, div {
+  //         flex-grow: 1;
+  //       }
+  //       .permits, .names {
+  //         display: flex;
+  //       }
+  //       .chat {
+  //         display: flex;
+  //         align-items: center;
+  //         p { margin-left: 5px; }
+  //       }
+  //       .name {
+  //         font-weight: 500;
+  //         color: #000;
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 .alerts {
