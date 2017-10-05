@@ -7,8 +7,10 @@ class GuestClass {
 }
 
 const schema = new Schema({
+  fullName: String,
   email: String,
   company: String, // Company id
+  password: String,
   token: String
 })
 

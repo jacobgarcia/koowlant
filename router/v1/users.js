@@ -13,53 +13,53 @@ const config = require(path.resolve('config/config'))
 
 mongoose.connect(config.database)
 
-// invitation email configuration
-  nev.configure({
-    verificationURL: 'http://localhost:8080/authenticate/${URL}',
+nev.configure({
+  verificationURL: 'http://localhost:8080/authenticate/${URL}',
 
-    // mongo configuration
-    persistentUserModel: User,
-    tempUserModel: Guest,
-    expirationTime: 86400, //24 hour expiration
-    URLFieldName: 'token',
+  // mongo configuration
+  persistentUserModel: User,
+  tempUserModel: Guest,
+  expirationTime: 86400, //24 hour expiration
+  URLFieldName: 'token',
 
-    transportOptions: {
-      service: 'Gmail',
-      auth: {
-          user: 'fatalraincloud@gmail.com',
-          pass: 'mysupersecrerpassword'
-      }
-    },
-    verifyMailOptions: {
-        from: 'Do Not Reply <fatalraincloud@gmail.com>',
-        subject: 'Confirm your account',
-        html: '<p>Please verify your account by clicking <a href="${URL}">this link</a>. If you are unable to do so, copy and ' +
-                'paste the following link into your browser:</p><p>${URL}</p>',
-        text: 'Please verify your account by clicking the following link, or by copying and pasting it into your browser: ${URL}'
-    },
-    shouldSendConfirmation: true,
-    confirmMailOptions: {
-        from: 'Do Not Reply <fatalraincloud@gmail.com>',
-        subject: 'Successfully verified!',
-        html: '<p>Your account has been successfully verified.</p>',
-        text: 'Your account has been successfully verified.'
-    },
+  transportOptions: {
+    service: 'Gmail',
+    auth: {
+        user: 'fatalraincloud@gmail.com',
+        pass: '98JARPIHn4eb'
+    }
+  },
+  verifyMailOptions: {
+      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      subject: 'Confirm your account',
+      html: '<p>Please verify your account by clicking <a href="${URL}">this link</a>. If you are unable to do so, copy and ' +
+              'paste the following link into your browser:</p><p>${URL}</p>',
+      text: 'Please verify your account by clicking the following link, or by copying and pasting it into your browser: ${URL}'
+  },
+  shouldSendConfirmation: true,
+  confirmMailOptions: {
+      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      subject: 'Successfully verified!',
+      html: '<p>Your account has been successfully verified.</p>',
+      text: 'Your account has been successfully verified.'
+  },
 
-    hashingFunction: null
-  }, (error, options) => {
+  hashingFunction: null
+}, (error, options) => {
 
-  })
-
-
+})
 router.route('/users/invite')
 .post((req, res) => {
-  const email = req.body.email
+  const { email, company } = req.body
+
   const guest = new User({
-    email
+    email,
+    company
   })
 
   nev.createTempUser(guest, (err, existingPersistentUser, newTempUser) => {
     if (err) {
+      console.log(err);
       winston.error({err})
       return res.status(500).json({ err })
     }

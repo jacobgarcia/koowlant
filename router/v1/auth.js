@@ -3,16 +3,57 @@ const express = require('express')
 const winston = require('winston')
 const router = new express.Router()
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt-nodejs')
 const path = require('path')
+const mongoose = require('mongoose')
+const nev = require('email-verification')(mongoose)
 
 const User = require(path.resolve('models/User'))
 const Guest = require(path.resolve('models/Guest'))
+
 const config = require(path.resolve('config/config'))
+
+nev.configure({
+  verificationURL: 'http://localhost:8080/authenticate/${URL}',
+
+  // mongo configuration
+  persistentUserModel: User,
+  tempUserModel: Guest,
+  expirationTime: 86400, //24 hour expiration
+  URLFieldName: 'token',
+
+  transportOptions: {
+    service: 'Gmail',
+    auth: {
+        user: 'fatalraincloud@gmail.com',
+        pass: '98JARPIHn4eb'
+    }
+  },
+  verifyMailOptions: {
+      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      subject: 'Confirm your account',
+      html: '<p>Please verify your account by clicking <a href="${URL}">this link</a>. If you are unable to do so, copy and ' +
+              'paste the following link into your browser:</p><p>${URL}</p>',
+      text: 'Please verify your account by clicking the following link, or by copying and pasting it into your browser: ${URL}'
+  },
+  shouldSendConfirmation: true,
+  confirmMailOptions: {
+      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      subject: 'Successfully verified!',
+      html: '<p>Your account has been successfully verified.</p>',
+      text: 'Your account has been successfully verified.'
+  },
+
+  hashingFunction: null
+}, (error, options) => {
+
+})
 
 router.post('/signup/:token', (req, res) => {
   const token = req.params.token
+  const { email, password, fullName } = req.body
 
+  if (!token) return res.status(401).json({ message: 'No invitation token provided'})
   Guest.findOne({ token })
   .exec((error, guest) => {
     if (error) {
@@ -20,7 +61,34 @@ router.post('/signup/:token', (req, res) => {
       return res.status(500).json({ error })
     }
     else if (!guest) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
-  })
+    else if (guest.email != email) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
+    else {
+      guest.fullName = fullName
+
+      guest.password = bcrypt.hashSync(password)
+
+      guest.save((error, guest) => {
+        nev.confirmTempUser(token, (error, user) => {
+            if (error) {
+              winston.error(error)
+              return res.status(500).json({error})
+            }
+            else if (user) {
+              nev.sendConfirmationEmail(user.email, (error, info) => {
+                if (error) {
+                  winston.error(error)
+                  return res.status(404).json({ message: 'Sending confirmation email FAILED'})
+                }
+                return res.status(200).json({ message: 'Sent confirmation email!', info })
+              })
+            }
+            else return res.status(500).json({ message: 'Could not send create user information' })
+        })
+    })
+  }
+})
+
+
 })
 router.post('/authenticate', (req, res) => {
   const { email } = req.body
