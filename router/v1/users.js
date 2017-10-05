@@ -21,7 +21,7 @@ mongoose.connect(config.database)
     persistentUserModel: User,
     tempUserModel: Guest,
     expirationTime: 86400, //24 hour expiration
-    URLFieldName: 'GENERATED_VERIFYING_URL',
+    URLFieldName: 'token',
 
     transportOptions: {
       service: 'Gmail',

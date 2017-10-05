@@ -7,10 +7,20 @@ const bcrypt = require('bcrypt')
 const path = require('path')
 
 const User = require(path.resolve('models/User'))
+const Guest = require(path.resolve('models/Guest'))
 const config = require(path.resolve('config/config'))
 
 router.post('/signup/:token', (req, res) => {
+  const token = req.params.token
 
+  Guest.findOne({ token })
+  .exec((error, guest) => {
+    if (error) {
+      winston.error({error})
+      return res.status(500).json({ error })
+    }
+    else if (!guest) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
+  })
 })
 router.post('/authenticate', (req, res) => {
   const { email } = req.body
