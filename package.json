@@ -21,6 +21,7 @@
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
+    "email-verification": "^0.4.6",
     "express": "^4.16.1",
     "helmet": "^3.8.2",
     "jsonwebtoken": "^8.0.1",
