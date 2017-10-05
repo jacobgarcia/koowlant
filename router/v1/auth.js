@@ -9,6 +9,9 @@ const path = require('path')
 const User = require(path.resolve('models/User'))
 const config = require(path.resolve('config/config'))
 
+router.post('/signup/:token', (req, res) => {
+
+})
 router.post('/authenticate', (req, res) => {
   const { email } = req.body
 

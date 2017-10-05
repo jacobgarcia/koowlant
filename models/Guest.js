@@ -9,12 +9,7 @@ class GuestClass {
 const schema = new Schema({
   email: String,
   company: String, // Company id
-  GENERATED_VERIFYING_URL: String,
-  createdAt: {
-      type: Date,
-      expires: 86400,
-      default: Date.now
-  }
+  GENERATED_VERIFYING_URL: String
 })
 
 schema.loadClass(GuestClass)
