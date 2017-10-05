@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 
 import Login from './containers/Login'
-// import ProtectedRoute from './ProtectedRoute'
+import Signup from './containers/Signup'
 import App from './containers/App'
 
 import appReducer from './reducers'
@@ -22,6 +22,7 @@ function Routes() {
         <div id="app">
           <Switch>
             <Route path="/login" component={Login}/>
+            <Route path="/signup" component={Signup}/>
             <Route path="/" component={App} />
           </Switch>
         </div>
