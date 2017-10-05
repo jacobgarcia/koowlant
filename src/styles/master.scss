@@ -1176,6 +1176,10 @@ nav {
 
 
 .login {
+  .content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
   .iso {
     display: block;
     margin: 0 auto;
@@ -1183,7 +1187,10 @@ nav {
     height: 75px;
     margin-top: 50px;
   }
-
+  label {
+    font-weight: 600;
+    margin: 20px 0 6px;
+  }
   .logo {
     display: block;
     width: 160px;
@@ -1198,7 +1205,7 @@ nav {
     max-width: 300px;
   }
   input {
-    margin-top: 20px;
+    margin-bottom: 20px;
   }
   input[type="text"], input[type="password"], input[type="submit"] {
     border: 1px solid $gray;
