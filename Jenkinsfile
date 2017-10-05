@@ -3,7 +3,8 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'gulp build'
+        sh '''yarn
+'''
       }
     }
   }
