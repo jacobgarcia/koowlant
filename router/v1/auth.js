@@ -20,7 +20,7 @@ nev.configure({
   persistentUserModel: User,
   tempUserModel: Guest,
   expirationTime: 86400, //24 hour expiration
-  URLFieldName: 'token',
+  URLFieldName: 'invitation_token',
 
   transportOptions: {
     service: 'Gmail',
@@ -49,12 +49,12 @@ nev.configure({
 
 })
 
-router.post('/signup/:token', (req, res) => {
-  const token = req.params.token
+router.post('/signup/:invitation_token', (req, res) => {
+  const invitation_token = req.params.invitation_token
   const { email, password, fullName } = req.body
 
-  if (!token) return res.status(401).json({ message: 'No invitation token provided'})
-  Guest.findOne({ token })
+  if (!invitation_token) return res.status(401).json({ message: 'No invitation token provided'})
+  Guest.findOne({ invitation_token })
   .exec((error, guest) => {
     if (error) {
       winston.error({error})
@@ -68,7 +68,7 @@ router.post('/signup/:token', (req, res) => {
       guest.password = bcrypt.hashSync(password)
 
       guest.save((error, guest) => {
-        nev.confirmTempUser(token, (error, user) => {
+        nev.confirmTempUser(invitation_token, (error, user) => {
             if (error) {
               winston.error(error)
               return res.status(500).json({error})
@@ -79,7 +79,25 @@ router.post('/signup/:token', (req, res) => {
                   winston.error(error)
                   return res.status(404).json({ message: 'Sending confirmation email FAILED'})
                 }
-                return res.status(200).json({ message: 'Sent confirmation email!', info })
+
+                const token = jwt.sign({
+                  _id: user._id,
+                  acc: user.accessLevel,
+                  cmp: user.company
+                }, config.secret)
+
+                user = user.toObject()
+
+                return res.status(200).json({
+                   token,
+                   user: {
+                     _id: user._id,
+                     name: user.name || 'User',
+                     surname: user.surname,
+                     accessLevel: user.accessLevel
+                   },
+                   info
+                 })
               })
             }
             else return res.status(500).json({ message: 'Could not send create user information' })

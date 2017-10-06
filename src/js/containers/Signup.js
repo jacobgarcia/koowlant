@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import qs from 'query-string'
+import NetworkOperation from '../NetworkOperation'
 
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -18,7 +19,7 @@ class Signup extends Component {
       passswordRepeat: '',
       passwordValid: false,
       signupFailed: false,
-      invitation: props.match.params.token
+      invitation: props.match.params.invitation_token
     }
 
     this.onChange = this.onChange.bind(this)
@@ -74,7 +75,7 @@ class Signup extends Component {
       this.props.history.push('/')
     })
     .catch(() => {
-
+      // TODO: Check status and based on that return information to user
       this.setState({
         signupFailed: true
       })

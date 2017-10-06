@@ -20,7 +20,7 @@ nev.configure({
   persistentUserModel: User,
   tempUserModel: Guest,
   expirationTime: 86400, //24 hour expiration
-  URLFieldName: 'token',
+  URLFieldName: 'invitation_token',
 
   transportOptions: {
     service: 'Gmail',
