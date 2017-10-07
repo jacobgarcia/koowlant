@@ -610,7 +610,7 @@ nav {
     &.alerts-side {
       transform: rotate(180deg) translateX(-1px);
       border: 1px solid $light-gray;
-      border-left: none;
+      border-right: none;
       background-image: url('/static/img/icons/large-back.png');
     }
   }
@@ -1262,8 +1262,11 @@ nav {
    nav {
      padding: 0 10px;
    }
-   ul.links.nav li a {
-     padding: 19px 7px;
+   ul.links.nav li {
+     a {
+       padding: 19px 5px;
+     }
+     font-size: 0.8rem;
    }
  }
 

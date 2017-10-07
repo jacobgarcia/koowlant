@@ -67,8 +67,7 @@ class ZoneDetail extends Component {
   }
 
   render() {
-    let data = getFilteredReports(this.props.reports, this.getCorrectData(this.props))
-    data = substractReportValues(data)
+    const data = substractReportValues(this.props.reports)
 
     const { status, percentage } = getStatus(data)
 
@@ -106,7 +105,6 @@ class ZoneDetail extends Component {
               </div>
           }
           <ZonesContainer
-            {...this.props}
             changeSitesView={this.changeSitesView}
             viewStyle={this.state.viewStyle}
             currentView={this.state.currentView}
@@ -115,6 +113,9 @@ class ZoneDetail extends Component {
             highlightedZone={this.state.selectedZone}
             type={this.props.type}
             reports={this.props.reports}
+            zone={this.props.zone}
+            subzone={this.props.subzone}
+            site={this.props.site}
           />
         </div>
       </div>
@@ -132,7 +133,8 @@ ZoneDetail.propTypes = {
   type: PropTypes.string,
   isWindow: PropTypes.bool,
   onPopWindow: PropTypes.func,
-  onHover: PropTypes.func
+  onHover: PropTypes.func,
+  reports: PropTypes.array
 }
 
 export default ZoneDetail

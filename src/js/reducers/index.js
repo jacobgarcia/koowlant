@@ -1063,7 +1063,7 @@ function reports(state = [], action) {
   switch (action.type) {
     case 'SET_REPORT': {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
-      const newState = state // Mistake, it only creates a shallow copy
+      const newState = state // BUG: It only creates a shallow copy
 
       foundIndex > -1
       ? newState[foundIndex] = {
@@ -1096,7 +1096,6 @@ function reports(state = [], action) {
           values: [...(action.report.sensors || [])]
         }]
       })
-      // console.log([...newState])
       return [...newState]
     }
     case 'SET_ATTENDED': {
@@ -1173,7 +1172,7 @@ function zones(state = dumbZones, action) {
 function administrators(state = dumbAdministrators, action) {
   switch (action.type) {
     default:
-      return state
+    return state
   }
 }
 

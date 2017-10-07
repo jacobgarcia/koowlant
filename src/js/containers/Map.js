@@ -50,6 +50,7 @@ class MapView extends Component {
     this.onSelectElement = this.onSelectElement.bind(this)
     this.getType = this.getType.bind(this)
     this.onSearch = this.onSearch.bind(this)
+    this.getElementDetails = this.getElementDetails.bind(this)
   }
 
   isNewElementValid() {
@@ -236,6 +237,29 @@ class MapView extends Component {
     }
   }
 
+  getElementDetails() {
+    const {
+      selectedZone,
+      selectedSubzone,
+      selectedSite
+    } = this.state
+
+    if (selectedSite) {
+      return this.props.reports.filter(({site}) => selectedSite.key === site.key)
+    } else if (selectedSubzone) {
+      return this.props.reports.filter(({site}) => selectedSubzone.sites.find(({key}) => key === site.key))
+    } else if (selectedZone) {
+      return this.props.reports.filter(({site}) =>
+      selectedZone.subzones &&
+      selectedZone.subzones.some(subzone =>
+        subzone.sites &&
+        subzone.sites.find(({key}) => key === site.key))
+      )
+    } else {
+      return []
+    }
+  }
+
   render() {
     return (
       <div className={`map-container ${this.state.isCreatingZone ? 'creating' : ''} ${(this.state.isGeneralStatusHidden && this.state.isAlertsHidden) ? 'awake' : 'sleeping'}`}>
@@ -276,7 +300,7 @@ class MapView extends Component {
               subzone={this.state.selectedSubzone}
               site={this.state.selectedSite}
               onHover={this.onSiteHover}
-              reports={this.props.reports}
+              reports={this.getElementDetails()}
               type={this.getType(this.props.match.params)}
             />
         }
@@ -364,7 +388,7 @@ class MapView extends Component {
               }
               {
                 // Render gray area when there's a selected subzone
-                this.state.selectedSubzone && this.state.selectedSubzone.positions
+                (this.state.selectedSubzone && this.state.selectedSubzone.positions)
                 ? <Polygon
                     positions={[
                       [[-85,-180], [-85,180], [85,180], [85,-180]],
@@ -483,7 +507,9 @@ MapView.propTypes = {
   zones: PropTypes.array,
   setZone: PropTypes.func,
   location: PropTypes.object,
-  reports: PropTypes.array
+  reports: PropTypes.array,
+  setSite: PropTypes.func,
+  setSubzone: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapView)

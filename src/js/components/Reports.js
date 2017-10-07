@@ -8,11 +8,6 @@ import { setAlarmAttended } from '../actions'
 class Reports extends Component {
   constructor(props) {
     super(props)
-    // let currentAlarm
-
-    // if (alarms.length > 0) {
-    //   currentAlarm = alarms[alarms.length - 1]
-    // }
 
     this.state = {
       reports: [],
