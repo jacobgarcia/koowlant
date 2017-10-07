@@ -28,6 +28,13 @@ export function setCredentials(user, token) {
   }
 }
 
+export function setAlarmAttended(alarm) {
+  return {
+    type: 'SET_ATTENDED',
+    alarm
+  }
+}
+
 // Zones
 export function setZone(name, positions) {
   return {

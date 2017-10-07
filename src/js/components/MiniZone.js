@@ -81,6 +81,7 @@ function MiniZone(props) {
                   animationEase="ease"
                   animationDuration={500}
                   animationBegin={0}
+                  strokeWidth={0}
                 >
                 { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
                 </Pie>

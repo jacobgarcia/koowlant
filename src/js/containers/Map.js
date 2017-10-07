@@ -349,10 +349,10 @@ class MapView extends Component {
                     position={site.position}
                     site={site}
                     title={site.name}
-                    reports={this.props.reports.filter(({site: reportSite}) => {
-                      return reportSite.key === site.key
-                    })}
-                    highlightedZone={this.state.highlightedZone}
+                    reports={this.props.reports.filter(({site: reportSite}) =>
+                      reportSite.key === site.key
+                    )}
+                    isHighlighted={this.state.highlightedZone === site._id}
                     onMouseEvent={this.onSiteHover}
                     onClick={() => {
                       this.state.selectedSite === null // Check if we have already a selected site to show status
