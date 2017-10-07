@@ -19,7 +19,8 @@ class Signup extends Component {
       passswordRepeat: '',
       passwordValid: false,
       signupFailed: false,
-      invitation: props.match.params.invitation_token
+      invitation: props.match.params.invitation_token,
+      props
     }
 
     this.onChange = this.onChange.bind(this)
@@ -72,14 +73,13 @@ class Signup extends Component {
       // Get response
       localStorage.setItem('token', token)
 
-      this.props.history.push('/')
+      this.state.props.history.push('/')
     })
     .catch(() => {
       // TODO: Check status and based on that return information to user
       this.setState({
         signupFailed: true
       })
-
     })
 
 
