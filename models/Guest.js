@@ -11,7 +11,8 @@ const schema = new Schema({
   email: String,
   company: String, // Company id
   password: String,
-  invitation_token: String
+  invitation_token: String,
+  host: String // Email
 })
 
 schema.loadClass(GuestClass)

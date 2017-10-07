@@ -8,7 +8,7 @@ const Site = require(path.resolve('models/Site'))
 const Zone = require(path.resolve('models/Zone'))
 const Subzone = require(path.resolve('models/Subzone'))
 
-// TODO: Save sites and stream change
+//  Save sites and stream change
 router.route('/companies/:company/:subzone/sites')
 .post((req, res) => {
     const { key, position, sensors, alarms } = req.body
@@ -34,7 +34,7 @@ router.route('/companies/:company/:subzone/sites')
     })
 })
 
-// TODO: Save subzone and stream change
+//  Save subzone and stream change
 router.route('/companies/:company/:zone/subzones')
 .post((req, res) => {
     const { name, positions, sites } = req.body
@@ -60,7 +60,7 @@ router.route('/companies/:company/:zone/subzones')
     })
 })
 
-// TODO: Save zone and stream change
+//  Save zone and stream change
 router.route('/companies/:company/zones')
 .post((req, res) => {
     const { name, positions, subzones } = req.body
@@ -81,7 +81,7 @@ router.route('/companies/:company/zones')
     })
 })
 
-// TODO: Save sensors and alarms, add to history and stream change
+// Save sensors and alarms, add to history and stream change
 router.route('/companies/:company/:site/reports')
 .put((req, res) => {
     const { sensors, alarms } = req.body
