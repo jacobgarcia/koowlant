@@ -14,13 +14,13 @@ const config = require(path.resolve('config/config'))
 mongoose.connect(config.database)
 
 nev.configure({
-  verificationURL: 'http://localhost:8080/authenticate/${URL}',
+  verificationURL: 'http://localhost:8080/signup/${URL}',
 
   // mongo configuration
   persistentUserModel: User,
   tempUserModel: Guest,
   expirationTime: 86400, //24 hour expiration
-  URLFieldName: 'token',
+  URLFieldName: 'invitation_token',
 
   transportOptions: {
     service: 'Gmail',

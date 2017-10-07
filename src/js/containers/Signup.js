@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import qs from 'query-string'
+import NetworkOperation from '../NetworkOperation'
+
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email)
+}
 
 class Signup extends Component {
   constructor(props) {
@@ -8,10 +14,13 @@ class Signup extends Component {
 
     this.state = {
       name: '',
-      email: 'email@dominio.com',
+      email: '',
       password: '',
       passswordRepeat: '',
-      passwordValid: false
+      passwordValid: false,
+      signupFailed: false,
+      invitation: props.match.params.invitation_token,
+      props
     }
 
     this.onChange = this.onChange.bind(this)
@@ -24,6 +33,12 @@ class Signup extends Component {
       [name]: value
     })
     if (name === 'password') this.validatePassword(value)
+
+    if (name === 'email') {
+      this.setState({
+        isValidEmail: validateEmail(value)
+      })
+    }
   }
 
   componentWillMount() {
@@ -40,7 +55,34 @@ class Signup extends Component {
     this.state.passswordRepeat &&
     this.state.isValidEmail)) return
 
-    // TODO: Submit user to API
+    // Submit user to API
+    const { email, password, fullName } = this.state
+
+    if (this.state.signupFailed) {
+      this.setState({
+        signupFailed: false
+      })
+    }
+
+    NetworkOperation.signup(this.state.invitation, email, password, fullName)
+    .then(response => {
+      const { token, user } = response.data
+
+      this.props.setCredentials(user, token)
+
+      // Get response
+      localStorage.setItem('token', token)
+
+      this.state.props.history.push('/')
+    })
+    .catch(() => {
+      // TODO: Check status and based on that return information to user
+      this.setState({
+        signupFailed: true
+      })
+    })
+
+
   }
 
   validatePassword(password = '') {
@@ -71,20 +113,17 @@ class Signup extends Component {
     return (
       <div className="login">
         <img src="/static/img/iso.svg" alt="" className="iso"/>
+        <img src="/static/img/logo.svg" alt="" className="logo"/>
         <div className="content">
-          <h1>Completa tu registro</h1>
           <form onSubmit={this.onSubmit}>
-            <label htmlFor="name">Nombre completo</label>
             <input
               id="name"
               type="text"
               onChange={this.onChange}
               value={this.state.name}
-              name="text"
+              name="name"
               placeholder="Nombre completo"
-              readOnly
             />
-            <label htmlFor="email">Correo electrónico</label>
             <input
               id="email"
               type="text"
@@ -93,7 +132,6 @@ class Signup extends Component {
               name="email"
               placeholder="Correo electrónico"
             />
-            <label htmlFor="password">Contraseña</label>
             <input
               id="password"
               type="password"
@@ -107,15 +145,19 @@ class Signup extends Component {
               onChange={this.onChange}
               value={this.state.passswordRepeat}
               name="passswordRepeat"
-              placeholder="Repetir contraseña"
+              placeholder="Confirmar Contraseña"
             />
             {
-              (this.state.password !== this.state.passswordRepeat && this.state.passswordRepeat !== '')
-              ?
+              (this.state.password !== this.state.passswordRepeat && this.state.passswordRepeat !== '') ?
               <span>Las contraseñas no coinciden</span>
-              : <div>
+              : undefined
+            }
+            {
+              (this.state.password !== '') ?
+              <div>
                   {this.getPasswordMissings()}
-                </div>
+              </div>
+              : undefined
             }
             <input
               type="submit"

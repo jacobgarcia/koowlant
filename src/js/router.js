@@ -22,7 +22,7 @@ function Routes() {
         <div id="app">
           <Switch>
             <Route path="/login" component={Login}/>
-            <Route path="/signup" component={Signup}/>
+            <Route path="/signup/:invitation_token" component={Signup}/>
             <Route path="/" component={App} />
           </Switch>
         </div>
