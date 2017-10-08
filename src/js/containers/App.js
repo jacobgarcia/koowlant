@@ -42,7 +42,10 @@ class App extends Component {
 
     socket.on('connect', () => {
       socket.emit('join', '0293j4ji')
-      socket.emit('hello', 'Hey there!')
+    })
+
+    socket.on('hey', (message) => {
+      console.log(message)
     })
 
     socket.on('report', report => {

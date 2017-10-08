@@ -11,8 +11,8 @@ function sockets(io) {
       socket.join(companyId)
     })
 
-    socket.on('hello', message => {
-      winston.debug('Hello message: ' + message)
+    socket.on('hey', message => {
+      winston.info('Hello message: ' + message)
 
     })
   })
@@ -207,6 +207,8 @@ function sockets(io) {
       })
     }, 12000)
   }, 6000)
+
+  global.io = io
 }
 
 module.exports = sockets
