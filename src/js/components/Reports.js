@@ -2,14 +2,12 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import { connect } from 'react-redux'
+import { setAlarmAttended } from '../actions'
+
 class Reports extends Component {
   constructor(props) {
     super(props)
-    // let currentAlarm
-
-    // if (alarms.length > 0) {
-    //   currentAlarm = alarms[alarms.length - 1]
-    // }
 
     this.state = {
       reports: [],
@@ -19,20 +17,19 @@ class Reports extends Component {
   }
 
   componentWillReceiveProps() {
-    const reports = this.props.reports.reduce((sum, element) => {
-      let alarms = element.alarms
-      alarms = alarms.map(alarm => ({...alarm, zone: element.zone, subzone: element.subzone, site: element.site}))
+    const reports = this.props.reports.reduce((sum, report) => {
+      const alarms = report.alarms.map(alarm => ({...alarm, zone: report.zone, subzone: report.subzone, site: report.site}))
       return [...alarms, ...sum]
     }, [])
-    .filter(report => report.values.length > 0)
-    .sort((a, b) => b.timestamp - a.timestamp)
+    .filter(alarm => alarm.values.length > 0)
+    .sort((alertA, alertB) => alertB.timestamp - alertA.timestamp)
 
     if (this.state.reports.length !== reports.length) {
       this.showAlarm(reports[0])
-      this.setState({
-        reports
-      })
     }
+    this.setState({
+      reports
+    })
   }
 
   showAlarm(alarm) {
@@ -86,9 +83,11 @@ class Reports extends Component {
                   const date = new Date(report.timestamp)
                   return (
                     report.values.map((value, index2) =>
-                      <Link to={`/zones/${report.zone ? report.zone._id : null}/${report.subzone ? report.subzone._id : null}/${report.site ? report.site._id : null}`}
+                      <Link
+                        onClick={() => props.setAlarmAttended(report)}
+                        to={`/zones/${report.zone ? report.zone._id : null}/${report.subzone ? report.subzone._id : null}/${report.site ? report.site._id : null}`}
                         key={`${index2}${report.timestamp}${index}`}>
-                        <div className="mini-alert battery">
+                        <div className={`mini-alert battery ${report.attended ? 'attended' : 'not-attended'}`}>
                           <div className="details">
                             <div><span>Zona {report.zone.name} | Sitio {report.site.key}</span></div>
                             <p>Batería baja {value.value}%</p>
@@ -117,4 +116,12 @@ Reports.propTypes = {
   reports: PropTypes.array
 }
 
-export default Reports
+function mapDispatchToProps(dispatch) {
+  return {
+    setAlarmAttended: report => {
+      dispatch(setAlarmAttended(report))
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Reports)

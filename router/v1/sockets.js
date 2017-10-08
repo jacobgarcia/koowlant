@@ -1,5 +1,6 @@
 /* eslint-env node */
 const winston = require('winston')
+const mongoose = require('mongoose')
 
 function sockets(io) {
   io.on('connection', socket => {
@@ -32,6 +33,7 @@ function sockets(io) {
         name: 'C-Sur',
         _id: '4d1288sh2394fc13a8087301'
       },
+      _id: mongoose.Types.ObjectId(),
       timestamp: Date.now(), // Unix timestamp
       sensors: [{
               key: "ts1",
@@ -62,6 +64,7 @@ function sockets(io) {
         name: 'C-Sur',
         _id: '4d1288sh2394fc13a8087301'
       },
+      _id: mongoose.Types.ObjectId(),
       timestamp: Date.now(), // Unix timestamp
       sensors: [{
               key: "ts1",
@@ -100,6 +103,7 @@ function sockets(io) {
           _id: '4d1288sh2394fc13a8087301'
         },
         timestamp: Date.now(), // Unix timestamp
+        _id: mongoose.Types.ObjectId(),
         sensors: [{
                 key: "ts1",
                 "value": 21.8
@@ -126,6 +130,7 @@ function sockets(io) {
           _id: '4d1288sh2394fc13a8087301'
         },
         timestamp: Date.now(), // Unix timestamp
+        _id: mongoose.Types.ObjectId(),
         sensors: [{
                 key: "ts1",
                 value: 21.5
@@ -157,6 +162,7 @@ function sockets(io) {
           _id: '4d1223423494fc13a8087301'
         },
         timestamp: Date.now(), // Unix timestamp
+        _id: mongoose.Types.ObjectId(),
         sensors: [{
                 key: "ts1",
                 value: 21.5
@@ -188,6 +194,7 @@ function sockets(io) {
           _id: '4d1223423494fc13a8087301'
         },
         timestamp: Date.now(), // Unix timestamp
+        _id: mongoose.Types.ObjectId(),
         sensors: [{
                 key: "ts1",
                 value: 21.5

@@ -1063,16 +1063,18 @@ function reports(state = [], action) {
   switch (action.type) {
     case 'SET_REPORT': {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
-      const newState = state
+      const newState = state // BUG: It only creates a shallow copy
+
       foundIndex > -1
       ? newState[foundIndex] = {
         site: newState[foundIndex].site,
         zone: action.report.zone,
         subzone: action.report.subzone,
+        _id: action.report._id,
         alarms: [{
           timestamp: action.report.timestamp,
           values: [...(action.report.alarms || [])],
-          attended: false
+          attended: false,
         }, ...(newState[foundIndex].alarms || [])],
         sensors: [{
           timestamp: action.report.timestamp,
@@ -1083,10 +1085,11 @@ function reports(state = [], action) {
         site: action.report.site,
         zone: action.report.zone,
         subzone: action.report.subzone,
+        _id: action.report._id,
         alarms: [{
           timestamp: action.report.timestamp,
           values: [...(action.report.alarms || [])],
-          attended: false
+          attended: false,
         }],
         sensors: [{
           timestamp: action.report.timestamp,
@@ -1094,6 +1097,20 @@ function reports(state = [], action) {
         }]
       })
       return [...newState]
+    }
+    case 'SET_ATTENDED': {
+      return state.map(report =>
+        report.site._id === action.alarm.site._id
+        ? {
+          ...report,
+          alarms: report.alarms.map(siteAlarm =>
+            siteAlarm.timestamp === action.alarm.timestamp
+            ? {...siteAlarm, attended: true}
+            : {...siteAlarm}
+          )
+        }
+        : report
+      )
     }
     default:
       return state
@@ -1155,7 +1172,7 @@ function zones(state = dumbZones, action) {
 function administrators(state = dumbAdministrators, action) {
   switch (action.type) {
     default:
-      return state
+    return state
   }
 }
 
