@@ -78,63 +78,75 @@ class Search extends Component {
             <span className="button" onClick={this.props.onClose}>Cerrar</span>
           </div>
           <div className="results">
-            <div className="sites-container">
-              <p>Sitios</p>
-              {
-                this.state.filteredSites.map(sites =>
-                  <Link
-                    to="/"
-                    key={sites._id}>
-                    <MiniZone
-                      onHover={() => {}}
-                      type="subzone"
-                      id={sites._id}
-                      name={sites.name}
-                      zone={sites}
-                      reports={getFilteredReports(this.props.reports, sites)}
-                    />
-                  </Link>
-                )
-              }
-            </div>
-            <div className="subzones-container">
-              <p>Subzonas</p>
-              {
-                this.state.filteredSubzones.map(subzone =>
-                  <Link
-                    to="/"
-                    key={subzone._id}>
-                    <MiniZone
-                      onHover={() => {}}
-                      type="zone"
-                      id={subzone._id}
-                      name={subzone.name}
-                      zone={subzone}
-                      reports={getFilteredReports(this.props.reports, subzone)}
-                    />
-                  </Link>
-                )
-              }
-            </div>
-            <div className="zones-container">
-              <p>Zonas</p>
-              {
-                this.state.filteredZones.map(zone =>
-                  <Link
-                    to="/"
-                    key={zone._id}>
-                    <MiniZone
-                      onHover={() => {}}
-                      type="general"
-                      id={zone._id}
-                      name={zone.name}
-                      zone={zone}
-                      reports={getFilteredReports(this.props.reports, zone)}
-                    />
-                  </Link>
-                )
-              }
-            </div>
+            {
+              this.state.filteredSites.length > 0
+              &&
+              <div className="sites-container">
+                <p>Sitios</p>
+                {
+                  this.state.filteredSites.map(sites =>
+                    <Link
+                      to="/"
+                      key={sites._id}>
+                      <MiniZone
+                        onHover={() => {}}
+                        type="subzone"
+                        id={sites._id}
+                        name={sites.name}
+                        zone={sites}
+                        reports={getFilteredReports(this.props.reports, sites)}
+                      />
+                    </Link>
+                  )
+                }
+              </div>
+            }
+            {
+              this.state.filteredSubzones.length > 0
+              &&
+              <div className="subzones-container">
+                <p>Subzonas</p>
+                {
+                  this.state.filteredSubzones.map(subzone =>
+                    <Link
+                      to="/"
+                      key={subzone._id}>
+                      <MiniZone
+                        onHover={() => {}}
+                        type="zone"
+                        id={subzone._id}
+                        name={subzone.name}
+                        zone={subzone}
+                        reports={getFilteredReports(this.props.reports, subzone)}
+                      />
+                    </Link>
+                  )
+                }
+              </div>
+            }
+            {
+              this.state.filteredZones.length > 0
+              &&
+              <div className="zones-container">
+                <p>Zonas</p>
+                {
+                  this.state.filteredZones.map(zone =>
+                    <Link
+                      to="/"
+                      key={zone._id}>
+                      <MiniZone
+                        onHover={() => {}}
+                        type="general"
+                        id={zone._id}
+                        name={zone.name}
+                        zone={zone}
+                        reports={getFilteredReports(this.props.reports, zone)}
+                      />
+                    </Link>
+                  )
+                }
+              </div>
+            }
           </div>
           </div>
       </div>
@@ -145,7 +157,8 @@ class Search extends Component {
 Search.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   zones: PropTypes.array,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  reports: PropTypes.array
 }
 
 export default Search
