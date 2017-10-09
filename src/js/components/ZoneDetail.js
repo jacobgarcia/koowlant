@@ -12,7 +12,10 @@ class ZoneDetail extends Component {
     this.state = {
       viewStyle: 'list',
       currentView: 'sensors',
-      selectedZone: null
+      selectedZone: null,
+      reports: [],
+      status: null,
+      percentage: null
     }
 
     this.changeSitesView = this.changeSitesView.bind(this)
@@ -66,10 +69,27 @@ class ZoneDetail extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const reports = substractReportValues(nextProps.reports)
+    const { status, percentage } = getStatus(reports || null)
+
+    this.setState({
+      reports,
+      status,
+      percentage
+    })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.percentage !== nextState.percentage) return true
+    if (this.props.type !== nextProps.type) return true
+    return false
+  }
+
   render() {
     const data = substractReportValues(this.props.reports)
 
-    const { status, percentage } = getStatus(data)
+    const { status, percentage } = this.state
 
     return (
       <div className="side-content">

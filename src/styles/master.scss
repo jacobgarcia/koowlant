@@ -274,6 +274,7 @@ ul.links {
 .pop-window {
   display: inline-block;
   margin-left: auto;
+  background-size: contain;
   background-image: url('/static/img/icons/window.svg');
 }
 .back {

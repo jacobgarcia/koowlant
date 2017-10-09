@@ -256,7 +256,7 @@ class MapView extends Component {
         subzone.sites.find(({key}) => key === site.key))
       )
     } else {
-      return []
+      return this.props.reports
     }
   }
 
@@ -294,15 +294,15 @@ class MapView extends Component {
         {
           this.isWindow !== 'alerts'
           && <ZoneDetail
-              onPopWindow={() => this.popWindow('zones')}
-              isWindow={this.isWindow}
-              zone={this.state.selectedZone || this.props.zones}
-              subzone={this.state.selectedSubzone}
-              site={this.state.selectedSite}
-              onHover={this.onSiteHover}
-              reports={this.getElementDetails()}
-              type={this.getType(this.props.match.params)}
-            />
+                onPopWindow={() => this.popWindow('zones')}
+                isWindow={this.isWindow}
+                zone={this.state.selectedZone || this.props.zones}
+                subzone={this.state.selectedSubzone}
+                site={this.state.selectedSite}
+                onHover={this.onSiteHover}
+                reports={this.getElementDetails()}
+                type={this.getType(this.props.match.params)}
+              />
         }
         </div>
         {
