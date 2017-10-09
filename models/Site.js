@@ -13,7 +13,6 @@ const History = new Schema({
     }],
     alarms: [{
       sensor: String, // Sensor id
-      timestamp: { type: Number, default: Date.now() }, // Unix timestamp. Time of the alert event
       value: Number,
       dissmissed: Boolean
     }],
@@ -22,6 +21,7 @@ const History = new Schema({
 
 const schema = new Schema({
   key: { type: String, unique: true, required: true },
+  name: String,
   position: [Number], // Lat, lng
   sensors: [{
     name: String,
@@ -29,10 +29,12 @@ const schema = new Schema({
   }],
   alarms: [{
     sensor: String, // Sensor id
-    timestamp: { type: Number, default: Date.now() }, // Unix timestamp
     value: Number
   }],
-  history: [History]
+  timestamp: { type: Number, default: Date.now() }, // Last updated
+  history: [History],
+  subzone: { type: Schema.Types.ObjectId, ref: 'Subzone' },
+  zone: { type: Schema.Types.ObjectId, ref: 'Zone' }
 })
 
 schema.loadClass(SiteClass)

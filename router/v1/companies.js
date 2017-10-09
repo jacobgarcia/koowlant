@@ -8,19 +8,25 @@ const Site = require(path.resolve('models/Site'))
 const Zone = require(path.resolve('models/Zone'))
 const Subzone = require(path.resolve('models/Subzone'))
 
-// TODO: Save sites and stream change
+// Save sites and stream change
 router.route('/companies/:company/:subzone/sites')
 .post((req, res) => {
-    const { key, position, sensors, alarms } = req.body
+    const { key, name, position, sensors, alarms, parentSubzone } = req.body
     const { company, subzone } = req.params
     // Create site using the information in the request body
     new Site({
       key,
+      name,
       position,
       sensors,
-      alarms
+      alarms,
+      parentSubzone
     })
     .save((error, site) => {
+      if (error) {
+        winston.error({error})
+        return res.status(500).json({ error })
+      }
       // Add the new site to the specified subzone
       Subzone.findOneAndUpdate({ '_id': subzone }, { $push: { sites: site } }, { new: true })
       .exec((error, subzone) => {
@@ -34,7 +40,7 @@ router.route('/companies/:company/:subzone/sites')
     })
 })
 
-// TODO: Save subzone and stream change
+//  Save subzone and stream change
 router.route('/companies/:company/:zone/subzones')
 .post((req, res) => {
     const { name, positions, sites } = req.body
@@ -47,6 +53,10 @@ router.route('/companies/:company/:zone/subzones')
       sites
     })
     .save((error, subzone) => {
+      if (error) {
+        winston.error({error})
+        return res.status(500).json({ error })
+      }
       // Add the new site to the specified zone
       Zone.findOneAndUpdate({ '_id': zone }, { $push: { subzones: subzone } }, { new: true })
       .exec((error, zone) => {
@@ -54,13 +64,14 @@ router.route('/companies/:company/:zone/subzones')
           winston.error({error})
           return res.status(500).json({ error })
         }
+        if (!zone) return res.status(404).json({ message: 'No zone found'})
 
         res.status(200).json({ subzone })
       })
     })
 })
 
-// TODO: Save zone and stream change
+//  Save zone and stream change
 router.route('/companies/:company/zones')
 .post((req, res) => {
     const { name, positions, subzones } = req.body
@@ -81,26 +92,44 @@ router.route('/companies/:company/zones')
     })
 })
 
-// TODO: Save sensors and alarms, add to history and stream change
+// Save sensors and alarms, add to history and stream change
 router.route('/companies/:company/:site/reports')
 .put((req, res) => {
     const { sensors, alarms } = req.body
     const { company, site } = req.params
 
+    //global.io.emit('hey', 'hola')
     Site.findOne({ '_id': site })
     .exec((error, site) => {
-      Site.findOneAndUpdate({ '_id': site }, { $push: { history: { sensors: site.sensors, alarms: site.alarms} } }, { new: true })
-      .exec((error, updatedSite) => {
+      if (!site) return res.status(404).json({ message: 'No site found'})
+      Site.findOneAndUpdate({ '_id': site }, { $push: { history: { sensors: site.sensors, alarms: site.alarms, timestamp: site.timestamp} } }, { new: true })
+      .populate('zone', 'name')
+      .populate('subzone', 'name')
+      .exec((error, populatedSite) => {
         site.sensors = sensors
         site.alarms = alarms
+        site.timestamp = Date.now()
 
         site.save((error, updatedSite) => {
+
           if (error) {
             winston.error({error})
             return res.status(500).json({ error })
           }
 
-          return res.status(200).json({ updatedSite })
+          let report = {
+            site: {
+              _id: updatedSite._id,
+              key: updatedSite.key
+            },
+            zone: populatedSite.zone,
+            subzone: populatedSite.subzone,
+            timestamp: updatedSite.timestamp,
+            sensors: updatedSite.sensors,
+            alarms: updatedSite.alarms
+          }
+
+          res.status(200).json( report )
         })
       })
 
