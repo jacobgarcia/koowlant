@@ -2,7 +2,7 @@
 const express = require('express')
 const path = require('path')
 const winston = require('winston')
-const router = express.Router()
+const router = new express.Router()
 const mongoose = require('mongoose')
 const nev = require('email-verification')(mongoose)
 

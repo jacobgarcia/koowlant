@@ -37,7 +37,7 @@ function sockets(io) {
       timestamp: Date.now(), // Unix timestamp
       sensors: [{
               key: "ts1",
-              value: 28.5
+              value: 90.5
       },{
               key: "ts2",
               value: 26.5
