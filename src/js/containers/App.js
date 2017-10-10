@@ -44,9 +44,9 @@ class App extends Component {
       socket.emit('join', '0293j4ji')
     })
 
-    socket.on('hey', (message) => {
-      console.log(message)
-    })
+    // socket.on('hey', (message) => {
+    //   console.log(message)
+    // })
 
     socket.on('report', report => {
       props.setReport(report)

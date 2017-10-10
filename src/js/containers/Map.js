@@ -379,8 +379,10 @@ class MapView extends Component {
                     isHighlighted={this.state.highlightedZone === site._id}
                     onMouseEvent={this.onSiteHover}
                     onClick={() => {
-                      this.state.selectedSite === null // Check if we have already a selected site to show status
+                      (this.state.selectedSite === null) // Check if we have already a selected site to show status
                       ? this.props.history.push(this.props.location.pathname + '/' + site._id)
+                      : this.state.selectedSite._id !== site._id
+                      ? this.props.history.push(this.props.location.pathname.split('/').splice(5).join('') + site._id)
                       : this.setState({ isGeneralStatusHidden: false })
                     }}
                   />

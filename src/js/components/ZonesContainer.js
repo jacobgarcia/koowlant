@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { PieChart, Pie, Cell } from 'recharts'
 
 import { Link } from 'react-router-dom'
 import { MiniZone } from './'
@@ -14,32 +15,38 @@ function Video(props) {
   )
 }
 
+const COLORS = {
+  alerts: '#ed2a20',
+  warnings: '#FFC511',
+  normal: '#50E3C2'
+}
+
 Video.propTypes = {
   source: PropTypes.string.isRequired
 }
 
+const getMiniZoneLink = (zone, props) => {
+  switch (props.type) {
+    case 'general': return `/zones/${zone._id}`
+    case 'zone': return `/zones/${props.zone._id}/${zone._id}`
+    case 'subzone': return `/zones/${props.zone._id}/${props.subzone._id}/${zone._id}`
+    case 'site': return 'Torre ' + name
+    default: return `/`
+  }
+}
+
+const getElements = (type, props) => {
+  switch (type) {
+    case 'general': return props.zone
+    case 'zone': return props.zone.subzones
+    case 'subzone': return props.subzone.sites
+    case 'site': return props.site.sensors
+    default: return []
+  }
+}
+
 function ZonesContainer(props) {
-  const getMiniZoneLink = zone => {
-    switch (props.type) {
-      case 'general': return `/zones/${zone._id}`
-      case 'zone': return `/zones/${props.zone._id}/${zone._id}`
-      case 'subzone': return `/zones/${props.zone._id}/${props.subzone._id}/${zone._id}`
-      case 'site': return 'Torre ' + name
-      default: return `/`
-    }
-  }
-
-  const getElements = type => {
-    switch (type) {
-      case 'general': return props.zone
-      case 'zone': return props.zone.subzones
-      case 'subzone': return props.subzone.sites
-      case 'site': return props.site.sensors
-      default: return []
-    }
-  }
-
-  const elements = getElements(props.type)
+  const elements = getElements(props.type, props)
 
   return (
     <div>
@@ -99,8 +106,8 @@ function ZonesContainer(props) {
         [
           <div className="mini-sites-menu" key="mini-sites-menu">
             <div className="view-ordering">
-              <span className="dynamic small-icon" />
-              <span className="static small-icon" />
+              <span className="dynamic small-icon" onClick={() => props.onViewChange('STATIC')}/>
+              <span className="static small-icon" onClick={() => props.onViewChange('DYNAMIC')}/>
             </div>
             <div className="view-settings">
               <span
@@ -118,7 +125,7 @@ function ZonesContainer(props) {
               Array.isArray(elements)
               && elements.map((element, index) =>
                 <Link
-                  to={getMiniZoneLink(element)}
+                  to={getMiniZoneLink(element, props)}
                   key={index}>
                   <MiniZone
                     onHover={props.onHover}
@@ -135,7 +142,40 @@ function ZonesContainer(props) {
           </div>
         ]
       }
-
+      {
+        (props.currentView === 'sensors' && props.site)
+        &&
+        <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
+          {
+            props.sensors.map(sensor =>
+                <div key={sensor.key} className="graph">
+                  <h3>{sensor.key}</h3>
+                  <PieChart width={70} height={70}>
+                    <Pie
+                      dataKey="value"
+                      data={[{ name: 'val', value: sensor.value},{ name: 'rest', value: 100 - sensor.value }]}
+                      outerRadius={35}
+                      innerRadius={28}
+                      startAngle={-90}
+                      endAngle={450}
+                      fill=""
+                      animationEase="ease"
+                      animationDuration={500}
+                      animationBegin={0}
+                      strokeWidth={0}
+                    >
+                    <Cell fill={'#ed2a20'} />
+                    <Cell fill={'#50E3C2'} />
+                    </Pie>
+                  </PieChart>
+                  {
+                    <span className="percentage">{sensor.value}%</span>
+                  }
+                </div>
+            )
+          }
+        </div>
+      }
     </div>
   )
 }
@@ -157,7 +197,8 @@ ZonesContainer.propTypes = {
   highlightedZone: PropTypes.string,
   reports: PropTypes.array,
   onViewChange: PropTypes.func,
-  currentView: PropTypes.string.isRequired
+  currentView: PropTypes.string.isRequired,
+  sensors: PropTypes.array
 }
 
 ZonesContainer.defaultProps = {

@@ -100,7 +100,7 @@ class Signup extends Component {
   }
 
   getPasswordMissings() {
-    let elements = []
+    const elements = []
     if (!this.state.hasUppercase) elements.push(<span key="upper">La contraseña debe tener una o más letras en mayúsculas</span>)
     if (!this.state.hasLowercase) elements.push(<span key="lower">La contraseña debe tener una o más letras en minúsculas</span>)
     if (!this.state.hasNumber) elements.push(<span key="number">La contraseña debe tener una o más números</span>)
@@ -148,16 +148,16 @@ class Signup extends Component {
               placeholder="Confirmar Contraseña"
             />
             {
-              (this.state.password !== this.state.passswordRepeat && this.state.passswordRepeat !== '') ?
+              (this.state.password !== this.state.passswordRepeat && this.state.passswordRepeat !== '')
+              &&
               <span>Las contraseñas no coinciden</span>
-              : undefined
             }
             {
-              (this.state.password !== '') ?
+              (this.state.password !== '')
+              &&
               <div>
                   {this.getPasswordMissings()}
               </div>
-              : undefined
             }
             <input
               type="submit"
@@ -179,6 +179,12 @@ class Signup extends Component {
       </div>
     )
   }
+}
+
+Signup.propTypes = {
+  setCredentials: PropTypes.func,
+  location: PropTypes.object,
+  match: PropTypes.object
 }
 
 export default Signup

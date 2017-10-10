@@ -3,13 +3,14 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 import { StatusOverall, ZonesContainer } from './'
-import { getStatus, getFilteredReports, substractReportValues } from '../SpecialFunctions'
+import { getStatus, substractReportValues } from '../SpecialFunctions'
 
 class ZoneDetail extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      viewSort: 'STATIC',
       viewStyle: 'list',
       currentView: 'sensors',
       selectedZone: null,
@@ -21,6 +22,7 @@ class ZoneDetail extends Component {
     this.changeSitesView = this.changeSitesView.bind(this)
     this.onHover = this.onHover.bind(this)
     this.onViewChange = this.onViewChange.bind(this)
+    this.onViewSortChange = this.onViewSortChange.bind(this)
   }
 
   changeSitesView(viewStyle) {
@@ -32,6 +34,12 @@ class ZoneDetail extends Component {
 
     this.setState({
       selectedZone: elementId
+    })
+  }
+
+  onViewSortChange(style) {
+    this.setState({
+      viewSort: style || 'STATIC'
     })
   }
 
@@ -81,8 +89,15 @@ class ZoneDetail extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    const { _id: currentId } = this.props.site || this.props.subzone || this.props.zone
+    const { _id: nextId } = nextProps.site || nextProps.subzone || nextProps.zone
+
+    if (currentId !== nextId) return true
     if (this.state.percentage !== nextState.percentage) return true
     if (this.props.type !== nextProps.type) return true
+    if (this.state.viewStyle !== nextState.viewStyle) return true
+    if (this.state.currentView !== nextState.currentView) return true
+    if (this.state.reports && (JSON.stringify(this.state.reports.sensors.values()) !== JSON.stringify(nextState.reports.sensors.values()))) return true
     return false
   }
 
@@ -117,18 +132,19 @@ class ZoneDetail extends Component {
           type={this.props.type}
         />
         <div>
-          {
+          {/* {
             this.isSite
             && <div>
                 Sensores
                 Cámaras
               </div>
-          }
+          } */}
           <ZonesContainer
             changeSitesView={this.changeSitesView}
             viewStyle={this.state.viewStyle}
             currentView={this.state.currentView}
             onViewChange={this.onViewChange}
+            onViewSortChange={this.onViewSortChange}
             onHover={this.onHover}
             highlightedZone={this.state.selectedZone}
             type={this.props.type}
@@ -136,6 +152,8 @@ class ZoneDetail extends Component {
             zone={this.props.zone}
             subzone={this.props.subzone}
             site={this.props.site}
+            sensors={data.sensors}
+            viewSort={this.state.viewSort}
           />
         </div>
       </div>
