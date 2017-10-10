@@ -87,6 +87,10 @@ function ZonesContainer(props) {
             <label htmlFor="key">Key</label>
             <input type="text" id="key" placholder="Key" readOnly/>
           </div>
+          <div>
+            <label htmlFor="notes">Notas adicionales</label>
+            <textarea name="" id="" cols="30" rows="10"></textarea>
+          </div>
         </div>
       }
       {

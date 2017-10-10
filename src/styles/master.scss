@@ -557,6 +557,23 @@ nav {
       margin-top: 30px;
       display: flex;
       flex-direction: column;
+      > div {
+        display: flex;
+        flex-direction: column;
+        label {
+          font-weight: 600;
+          margin-top: 15px;
+          margin-bottom: 5px;
+        }
+        input {
+          background: none;
+        }
+        textarea {
+          background: none;
+          border: 1px solid $light-gray;
+
+        }
+      }
     }
     .cameras-container {
       margin-top: 30px;
