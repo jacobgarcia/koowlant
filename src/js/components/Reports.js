@@ -75,7 +75,7 @@ class Reports extends Component {
           { props.isWindow === 'zones' ? null : <span className="pop-window">Hacer ventana</span> }
           <div className="general-alerts">
             <h2>Alertas</h2>
-            <span>{notChecked} sin revisar</span>
+            {notChecked > 0 && <span>{notChecked} sin revisar</span>}
           </div>
           <div className="mini-alerts-container">
               {
