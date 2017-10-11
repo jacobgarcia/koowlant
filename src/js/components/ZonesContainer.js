@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell } from 'recharts'
 
 import { Link } from 'react-router-dom'
 import { MiniZone } from './'
-import { getFilteredReports } from '../SpecialFunctions'
+import { substractReportValues, getStatus, getFilteredReports } from '../SpecialFunctions'
 
 function Video(props) {
   return (
@@ -108,10 +108,11 @@ function ZonesContainer(props) {
         (props.currentView === 'sensors' || props.site === null)
         &&
         [
+          // VIEW SETTINGS BAR
           <div className="mini-sites-menu" key="mini-sites-menu">
             <div className="view-ordering">
-              <span className="dynamic small-icon" onClick={() => props.onViewChange('STATIC')}/>
-              <span className="static small-icon" onClick={() => props.onViewChange('DYNAMIC')}/>
+              <span className={`dynamic small-icon ${props.viewSort !== 'DYNAMIC' && 'deactive'}`} onClick={() => props.onViewSortChange('DYNAMIC')}/>
+              <span className={`static small-icon ${props.viewSort !== 'STATIC' && 'deactive'}`} onClick={() => props.onViewSortChange('STATIC')}/>
             </div>
             <div className="view-settings">
               <span
@@ -124,24 +125,34 @@ function ZonesContainer(props) {
               />
             </div>
           </div>,
+          // MINI ZONES
           <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
             {
               Array.isArray(elements)
-              && elements.map((element, index) =>
-                <Link
-                  to={getMiniZoneLink(element, props)}
-                  key={index}>
-                  <MiniZone
-                    onHover={props.onHover}
-                    type={props.type}
-                    id={element._id}
-                    name={element.name}
-                    zone={element}
-                    active={props.highlightedZone === element._id}
-                    reports={getFilteredReports(props.reports, element)}
-                  />
-                </Link>
-              )
+              && elements.map((element, index) => {
+                let reports = getFilteredReports(props.reports, element)
+                reports = substractReportValues(reports)
+                const { status, percentage } = getStatus(reports || null)
+
+                return (
+                  <Link
+                    to={getMiniZoneLink(element, props)}
+                    key={index}
+                    style={{order: props.viewSort === 'DYNAMIC' ? Math.round(percentage) : 0 }}>
+                    <MiniZone
+                      onHover={props.onHover}
+                      type={props.type}
+                      id={element._id}
+                      name={element.name}
+                      zone={element}
+                      active={props.highlightedZone === element._id}
+                      reports={reports}
+                      status={status}
+                      percentage={percentage}
+                    />
+                  </Link>
+                )
+              })
             }
           </div>
         ]
@@ -202,7 +213,8 @@ ZonesContainer.propTypes = {
   reports: PropTypes.array,
   onViewChange: PropTypes.func,
   currentView: PropTypes.string.isRequired,
-  sensors: PropTypes.array
+  sensors: PropTypes.array,
+  viewSort: PropTypes.string
 }
 
 ZonesContainer.defaultProps = {
