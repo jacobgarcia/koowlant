@@ -21,7 +21,7 @@ export function intToRGB(i) {
  * @param  {Array} reports Filtered reports
  * @return {Object}        Joined reports
  */
-export function substractReportValues(reports) {
+export function substractReportValues(reports = []) {
   const alarms = []
   const sensors = []
 
