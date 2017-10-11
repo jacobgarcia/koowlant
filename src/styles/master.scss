@@ -80,9 +80,18 @@ span.small-icon {
     opacity: 0.5;
   }
   &.list { background-image: url('/static/img/icons/list.svg'); }
-  &.dynamic { background-image: url('/static/img/icons/dynamic.svg'); opacity: 0.4; }
+  &.dynamic { background-image: url('/static/img/icons/dynamic.svg'); }
   &.static { background-image: url('/static/img/icons/static.svg'); }
   &.grid { background-image: url('/static/img/icons/grid.svg'); }
+}
+
+h3 {
+  span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: $gray;
+    margin-left: 10px;
+  }
 }
 
 @keyframes grow {
@@ -107,40 +116,77 @@ span.small-icon {
 .no-failures-icon {
   background-image: url('/static/img/icons/alerts-inactive.svg');
 }
-.site.tooltip {
-  &.active {
-    height: 138px;
-    min-width: 135px;
-    font-size: 0.55rem;
-  }
-}
 text {
   transform: translateY(45px);
   font-weight: 600;
   margin-top: 50px;
 }
+.site.tooltip {
+  &.active {
+    .content {
+      transform: translateY(-69px);
+      height: 138px;
+      min-width: 135px;
+      font-size: 0.55rem;
+    }
+  }
+}
+.map-view .leaflet-tooltip {
+  height: 0;
+  width: 0;
+  box-shadow: none;
+  background-color: transparent;
+  border: none;
+  &::before {
+    display: none;
+  }
+}
 .tooltip {
-  min-width: 85px;
-  height: 20px;
   text-align: center;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  height: 50px;
+  height: 50px;
+  .content {
+    border-radius: 4px;
+    padding: 7px 5px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-width: 95px;
+    height: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    margin: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    transform: translateY(-16px);
+    &::before {
+      position: absolute;
+      pointer-events: none;
+      border: 6px solid transparent;
+      background: transparent;
+      content: "";
+      top: 50%;
+      margin-top: -6px;
+      right: 0;
+      margin-right: -12px;
+      border-left-color: #fff
+    }
+  }
+  &.active {
+    .content {
+      height: 96px;
+      transform: translateY(-48px);
+      .general { flex-direction: column; }
+      .hidable { display: block; }
+    }
+  }
   .hidable {
     display: none;
   }
-  &.active {
-    min-width: 85px;
-    height: 85px;
-    .general {
-      flex-direction: column;
-    }
-    .hidable {
-      display: block;
-    }
-  }
+
   .general {
     position: absolute;
     display: flex;
@@ -1034,14 +1080,7 @@ nav {
       transform: translateX(-500px);
     }
     .overall {
-      // padding-left: 45px;
-      // background: url('/static/img/icons/tower.png') no-repeat left top;
       background-size: 40px;
-      span {
-        font-size: 0.85rem;
-        font-weight: 500;
-        color: $gray;
-      }
       h3 {
         margin-right: 10px;
         margin-bottom: 10px;
@@ -1108,11 +1147,12 @@ nav {
       display: flex;
       justify-content: space-between;
       > div {
-        width: 240px;
+        width: 0px;
         display: flex;
         height: 33px;
         align-content: flex-end;
         justify-content: flex-end;
+        position: relative;
       }
       .cancel {
         margin-right: 50px;
@@ -1121,6 +1161,9 @@ nav {
       .back {
         margin-left: 50px;
         margin-bottom: 0;
+        position: absolute;
+        left: 0px;
+        width: 180px;
       }
     }
   }
@@ -1289,6 +1332,11 @@ nav {
  }
 
 @media (max-width: 770px) {
+  .map-container .map-view .actions div:first-child > span {
+    position: fixed;
+    bottom: 20px;
+    margin-left: 20px;
+  }
   nav {
     span.sandwitch {
       display: block;
@@ -1296,6 +1344,9 @@ nav {
     .date, .time {
       display: none;
     }
+  }
+  ul.links .create {
+    display: none;
   }
   ul.links.nav {
     position: absolute;
