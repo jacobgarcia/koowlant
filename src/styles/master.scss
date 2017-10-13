@@ -538,6 +538,9 @@ nav {
     top: 10px;
     z-index: 2000;
     overflow: hidden;
+    background-size: 15px;
+    background-position: 15px center;
+    background-repeat: no-repeat;
     .location {
       font-size: 0.7rem;
       font-weight: 600;
@@ -844,17 +847,15 @@ nav {
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
     border-radius: 2px;
     margin: 5px 0;
-    padding: 10px;
+    padding: 10px 25px 10px 35px;
     background: #fff;
-    background-size: 30px;
-    padding-left: 50px;
+    background-size: 15px;
     background-repeat: no-repeat;
     background-position: 7px center;
     display: flex;
     justify-content: space-between;
     cursor: pointer;
     border-left: 5px solid #fff;
-    padding-right: 25px;
     position: relative;
     &:hover {
       border-left: 5px solid $red;
@@ -897,9 +898,9 @@ nav {
         font-weight: 600;
       }
     }
-    &.battery { background-image: url('/static/img/icons/battery.svg'); }
-    &.fuel { background-image: url('/static/img/icons/fuel.png'); }
-    &.temperature { background-image: url('/static/img/icons/temperature.png'); }
+    &.battery { background-image: url('/static/img/icons/battery-filled.svg'); }
+    &.fuel { background-image: url('/static/img/icons/fuel-filled.png'); }
+    &.temperature { background-image: url('/static/img/icons/temperature-filled.png'); }
   }
 }
 

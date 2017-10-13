@@ -56,6 +56,7 @@ class Reports extends Component {
         {/* <Link to={`/zones/${this.state.alarm.zone ? this.state.alarm.zone._id : null}/${this.state.alarm.subzone ? this.state.alarm.subzone._id : null}/${this.state.alarm.site ? this.state.alarm.site._id : null}`}> */}
           <div
             className={`alert-thumbnail ${this.state.isAlertHidden ? 'hidden' : 'active'}`}
+            style={{backgroundImage: `url(/static/img/icons/battery.svg)`}}
             onClick={props.onHide}>
             <div className="content">
               <p className="alert-description">Batería baja</p>
