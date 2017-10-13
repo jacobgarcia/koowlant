@@ -118,11 +118,10 @@ router.post('/authenticate', (req, res) => {
       return res.status(401).json({ message: 'Authentication failed. Wrong user or password.' })
     }
 
-     if (!bcrypt.compareSync(req.body.password, user.password)) {
+     if (!bcrypt.compareSync(req.body.password + config.secret, user.password)) {
        winston.info('Failed to authenticate user password')
        return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
-     }
-     else {
+     } else {
        const token = jwt.sign({
          _id: user._id,
          acc: user.accessLevel,
