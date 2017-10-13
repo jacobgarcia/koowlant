@@ -45,6 +45,21 @@ const getElements = (type, props) => {
   }
 }
 
+function getSensorName(code) {
+  if (code.length < 3) return null
+  let name = ''
+  switch (code.charAt(0)) {
+    case 't':
+    name += 'Temperatura'
+    break
+    default:
+    name += 'Sensor'
+    break
+  }
+  name += ` ${code.charAt(2)}`
+  return name
+}
+
 function ZonesContainer(props) {
   const elements = getElements(props.type, props)
 
@@ -163,8 +178,8 @@ function ZonesContainer(props) {
         <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
           {
             props.sensors.map(sensor =>
-                <div key={sensor.key} className="graph">
-                  <h3>{sensor.key}</h3>
+                <div key={sensor.key} className="sensor graph" style={props.viewSort === 'DYNAMIC' ? {order: Math.round(sensor.value * -1)} : {}}>
+                  <h3>{getSensorName(sensor.key)}</h3>
                   <PieChart width={70} height={70}>
                     <Pie
                       dataKey="value"
