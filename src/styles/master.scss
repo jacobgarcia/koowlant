@@ -553,7 +553,7 @@ nav {
       height: 100%;
       margin: 0;
       padding: 10px;
-      padding-left: 50px;
+      padding-left: 45px
     }
     &.hidden {
       width: 0;
@@ -874,7 +874,7 @@ nav {
       }
     }
     &.attended {
-      background: #fff;
+      background-color: #fff;
     }
     .time {
       font-size: 0.9rem;
