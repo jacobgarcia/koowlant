@@ -31,28 +31,13 @@ function authenticate({setCredentials}) {
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isLoading: true
-    }
-
-    console.log('App contructor')
-  }
-  componentWillMount() {
-    this.initSocket(this.props)
-  }
-
   componentDidMount() {
-    this.setState({
-      isLoading: false
-    })
+    this.initSocket(this.props)
   }
 
   initSocket(props) {
 
-    socket.connect(status => {
+    socket.connect(() => {
     })
 
     socket.on('connect', () => {
