@@ -21,38 +21,6 @@ function sockets(io) {
   })
 
   setInterval(() => {
-    io.to('0293j4ji').emit('report',
-    {
-      site: {
-        key: 'A4050',
-        _id: '4d1288s8sh94fc9sj1h37301'
-      },
-      zone: {
-        name: 'Centro',
-        _id: '4d128b6ea794fc13a8000001'
-      },
-      subzone: {
-        name: 'C-Sur',
-        _id: '4d1288sh2394fc13a8087301'
-      },
-      _id: mongoose.Types.ObjectId(),
-      timestamp: Date.now(), // Unix timestamp
-      sensors: [{
-              key: "ts1",
-              value: 90.5
-      },{
-              key: "ts2",
-              value: 26.5
-      },
-      {
-              key: "ts3",
-              value: 21.5
-      }],
-      alarms: [{
-          sensor: 'ts1', // Sensor id
-          value: 60.5
-      }]
-    })
     io.to('0293j4ji').emit('report', {
       site: {
         _id: '4d128g435g435534541h37301',
@@ -276,10 +244,6 @@ function sockets(io) {
         },{
                 key: "ts5",
                 "value": 68.5
-        }],
-        alarms: [{
-            sensor: 'ts5', // Sensor id
-            value: 68.5
         }]
       })
     }, 120 * speed)

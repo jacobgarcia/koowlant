@@ -9,10 +9,10 @@ const Zone = require(path.resolve('models/Zone'))
 const Subzone = require(path.resolve('models/Subzone'))
 
 // Save sites and stream change
-router.route('/companies/:company/:subzone/sites')
+router.route('/companies/:company/:zone/:subzone/sites')
 .post((req, res) => {
-    const { key, name, position, sensors, alarms, parentSubzone } = req.body
-    const { company, subzone } = req.params
+    const { key, name, position, sensors, alarms } = req.body
+    const { company, zone, subzone } = req.params
     // Create site using the information in the request body
     new Site({
       key,
@@ -20,7 +20,8 @@ router.route('/companies/:company/:subzone/sites')
       position,
       sensors,
       alarms,
-      parentSubzone
+      subzone,
+      zone
     })
     .save((error, site) => {
       if (error) {
@@ -98,7 +99,6 @@ router.route('/companies/:company/:site/reports')
     const { sensors, alarms } = req.body
     const { company, site } = req.params
 
-    //global.io.emit('hey', 'hola')
     Site.findOne({ '_id': site })
     .exec((error, site) => {
       if (!site) return res.status(404).json({ message: 'No site found'})
@@ -129,7 +129,8 @@ router.route('/companies/:company/:site/reports')
             alarms: updatedSite.alarms
           }
 
-          res.status(200).json( report )
+          global.io.to('0293j4ji').emit('report', report)
+          return res.status(200).json( report )
         })
       })
 
