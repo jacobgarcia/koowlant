@@ -13,13 +13,9 @@ const COLORS = {
 }
 
 function SiteMarker(props) {
-  let status
-
   const reports = substractReportValues(props.reports)
   const alerts = reports.alarms.length
-  status = getStatus(reports).status
-
-  
+  const status = getStatus(reports).status
 
   return (
     <Marker
@@ -38,101 +34,104 @@ function SiteMarker(props) {
       })}>
       <Tooltip permanent opacity={1}>
         <div className={`tooltip site ${(props.isHighlighted && !props.deactivated) ? 'active' : ''}`}>
-          {
-            props.isHighlighted === false
-            &&
-            <div className={`general`}>
-              <div className="icons">
-                {/* { warnings > 0 ? <span className="warnings-icon" /> : null } */}
-                { alerts > 0 ? <span className="alerts-icon" /> : null }
-              </div>
-              <h3>{props.site.name || props.site.key}</h3>
-            </div>
-          }
-          <div className="hidable">
+          <div className="content">
             {
-              status
-              && <PieChart width={135} height={138}>
-                <Pie
-                  dataKey="value"
-                  data={status}
-                  outerRadius={21}
-                  innerRadius={17}
-                  startAngle={-45}
-                  endAngle={225}
-                  fill=""
-                  animationEase="ease"
-                  animationDuration={501}
-                  animationBegin={0}
-                  paddingAngle={0}
-                  cx={28}
-                  cy={21}
-                  strokeWidth={0}
-                  title="Temperatura"
-                >
-                  <Label value="Temperatura I" position="insideBottom" offset={54} />
-                  { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
-                </Pie>
-                <Pie
-                  dataKey="value"
-                  data={status}
-                  outerRadius={21}
-                  innerRadius={17}
-                  startAngle={-45}
-                  endAngle={225}
-                  fill=""
-                  animationEase="ease"
-                  animationDuration={501}
-                  animationBegin={0}
-                  paddingAngle={0}
-                  cx={100}
-                  cy={21}
-                  strokeWidth={0}
-                >
-                  <Label value="Temperatura II" position="insideBottom" offset={54} />
-                  { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
-                </Pie>
-                <Pie
-                  dataKey="value"
-                  data={status}
-                  outerRadius={21}
-                  innerRadius={17}
-                  startAngle={-45}
-                  endAngle={225}
-                  fill=""
-                  animationEase="ease"
-                  animationDuration={501}
-                  animationBegin={0}
-                  paddingAngle={0}
-                  cx={28}
-                  cy={92}
-                  strokeWidth={0}
-                >
-                  <Label value="Batería I" position="insideBottom" offset={54} />
-                  { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
-                </Pie>
-                <Pie
-                  dataKey="value"
-                  data={status}
-                  outerRadius={21}
-                  innerRadius={17}
-                  startAngle={-45}
-                  endAngle={225}
-                  fill=""
-                  animationEase="ease"
-                  animationDuration={501}
-                  animationBegin={0}
-                  paddingAngle={0}
-                  cx={100}
-                  cy={92}
-                  strokeWidth={0}
-                >
-                  <Label value="Combustible I" position="insideBottom" offset={54} />
-                  { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
-                </Pie>
-              </PieChart>
+              props.isHighlighted === false
+              &&
+              <div className={`general`}>
+                <div className="icons">
+                  {/* { warnings > 0 ? <span className="warnings-icon" /> : null } */}
+                  { alerts > 0 ? <span className="alerts-icon" /> : null }
+                </div>
+                <h3>{props.site.name || props.site.key}</h3>
+              </div>
             }
+            <div className="hidable">
+              {
+                status
+                && <PieChart width={135} height={138}>
+                  <Pie
+                    dataKey="value"
+                    data={status}
+                    outerRadius={21}
+                    innerRadius={17}
+                    startAngle={-45}
+                    endAngle={225}
+                    fill=""
+                    animationEase="ease"
+                    animationDuration={501}
+                    animationBegin={0}
+                    paddingAngle={0}
+                    cx={28}
+                    cy={21}
+                    strokeWidth={0}
+                    title="Temperatura"
+                  >
+                    <Label value="Temperatura I" position="insideBottom" offset={54} />
+                    { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                  </Pie>
+                  <Pie
+                    dataKey="value"
+                    data={status}
+                    outerRadius={21}
+                    innerRadius={17}
+                    startAngle={-45}
+                    endAngle={225}
+                    fill=""
+                    animationEase="ease"
+                    animationDuration={501}
+                    animationBegin={0}
+                    paddingAngle={0}
+                    cx={100}
+                    cy={21}
+                    strokeWidth={0}
+                  >
+                    <Label value="Temperatura II" position="insideBottom" offset={54} />
+                    { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                  </Pie>
+                  <Pie
+                    dataKey="value"
+                    data={status}
+                    outerRadius={21}
+                    innerRadius={17}
+                    startAngle={-45}
+                    endAngle={225}
+                    fill=""
+                    animationEase="ease"
+                    animationDuration={501}
+                    animationBegin={0}
+                    paddingAngle={0}
+                    cx={28}
+                    cy={92}
+                    strokeWidth={0}
+                  >
+                    <Label value="Batería I" position="insideBottom" offset={54} />
+                    { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                  </Pie>
+                  <Pie
+                    dataKey="value"
+                    data={status}
+                    outerRadius={21}
+                    innerRadius={17}
+                    startAngle={-45}
+                    endAngle={225}
+                    fill=""
+                    animationEase="ease"
+                    animationDuration={501}
+                    animationBegin={0}
+                    paddingAngle={0}
+                    cx={100}
+                    cy={92}
+                    strokeWidth={0}
+                  >
+                    <Label value="Combustible I" position="insideBottom" offset={54} />
+                    { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                  </Pie>
+                </PieChart>
+              }
+            </div>
           </div>
+
           {/* <span className="hidable">{getStatus(status).normalPercentage * 100}%</span> */}
         </div>
       </Tooltip>

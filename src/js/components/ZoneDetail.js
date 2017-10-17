@@ -97,7 +97,8 @@ class ZoneDetail extends Component {
     if (this.props.type !== nextProps.type) return true
     if (this.state.viewStyle !== nextState.viewStyle) return true
     if (this.state.currentView !== nextState.currentView) return true
-    if (this.state.reports && (JSON.stringify(this.state.reports.sensors.values()) !== JSON.stringify(nextState.reports.sensors.values()))) return true
+    if (this.state.viewSort !== nextState.viewSort) return true
+    if (this.state.reports && this.state.reports.sensors && (JSON.stringify(Object.values(this.state.reports.sensors)) !== JSON.stringify(Object.values(nextState.reports.sensors)))) return true
     return false
   }
 
@@ -169,7 +170,7 @@ ZoneDetail.propTypes = {
     PropTypes.array
   ]),
   type: PropTypes.string,
-  isWindow: PropTypes.bool,
+  // isWindow: PropTypes.bool,
   onPopWindow: PropTypes.func,
   onHover: PropTypes.func,
   reports: PropTypes.array

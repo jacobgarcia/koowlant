@@ -203,8 +203,9 @@ class MapView extends Component {
   }
 
   popWindow(section) {
+    console.log(window)
     window.open(
-      `${window.host}?isWindow=${section}`, 'Telco', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=493'
+      `${window.location}?isWindow=${section}`, 'Telco', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=493,toolbar=no'
     )
   }
 

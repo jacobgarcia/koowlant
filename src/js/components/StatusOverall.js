@@ -10,14 +10,14 @@ class StatusOverall extends PureComponent {
       switch (type) {
         case 'zone': return 'Zona ' + props.zone.name
         case 'subzone': return 'Subzona ' + props.zone.name
-        case 'site': return 'Sitio ' + (props.site ? props.site.key : '')
+        case 'site': return 'Sitio ' + (props.site ? props.site.name || props.site.key : '')
         default: return 'Estatus General'
       }
     }
 
     return (
       <div className="overall">
-        <h3>{getTitle(props.type, props)}</h3>
+        <h3>{getTitle(props.type, props)}<span>{props.site && (props.site.key || props.site._id)}</span></h3>
         <div className="sites-status">
           <StatusBar status={props.status}/>
 

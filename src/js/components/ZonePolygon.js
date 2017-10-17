@@ -29,36 +29,38 @@ function ZonePolygon(props) {
       onMouseOver={() => props.onMouseOver(props.zone._id)}
       onMouseOut={() => props.onMouseOut(null)}
       onClick={props.onClick}
-    >
+      >
       <Tooltip permanent opacity={1} >
         <div className={`tooltip ${props.highlightedZone === props.zone._id ? 'active' : ''}`}>
-          <div className="hidable">
-            {
-              status
-              && <PieChart width={85} height={85}>
-                <Pie
-                  dataKey="value"
-                  data={status}
-                  outerRadius={42}
-                  innerRadius={34}
-                  startAngle={90}
-                  endAngle={-270}
-                  fill=""
-                  animationEase="ease"
-                  animationDuration={501}
-                  animationBegin={0}
-                >
-                { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
-                </Pie>
-              </PieChart>
-            }
-          </div>
-          <div className={`general`}>
-            <div className="icons">
-              {/* { warnings > 0 ? <span className="warnings-icon" /> : null } */}
-              { alerts > 0 ? <span className="alerts-icon" /> : null }
+          <div className="content">
+            <div className="hidable">
+              {
+                status
+                && <PieChart width={85} height={85}>
+                  <Pie
+                    dataKey="value"
+                    data={status}
+                    outerRadius={42}
+                    innerRadius={34}
+                    startAngle={90}
+                    endAngle={-270}
+                    fill=""
+                    animationEase="ease"
+                    animationDuration={501}
+                    animationBegin={0}
+                  >
+                  { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                  </Pie>
+                </PieChart>
+              }
             </div>
-            <h3>{props.zone.name}</h3>
+            <div className={`general`}>
+              <div className="icons">
+                {/* { warnings > 0 ? <span className="warnings-icon" /> : null } */}
+                { alerts > 0 ? <span className="alerts-icon" /> : null }
+              </div>
+              <h3>{props.zone.name}</h3>
+            </div>
           </div>
           {/* <span className="hidable">{getStatus(status).normalPercentage * 100}%</span> */}
         </div>

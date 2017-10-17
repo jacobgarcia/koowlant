@@ -1,8 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 12 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
-    <g id="Pin_green">
-        <path id="Oval.-Copy" d="M6,20C7.482,14.759 8.526,11.491 9.134,11.117C10.853,10.062 12,8.165 12,6C12,2.686 9.314,0 6,0C2.686,0 0,2.686 0,6C0,8.18 1.163,10.089 2.902,11.14C3.505,11.504 4.538,14.765 6,20Z" style="fill:white;"/>
-        <circle id="Oval.-Copy.-2" cx="6" cy="6" r="2" style="fill:rgb(80,227,194);"/>
-    </g>
-</svg>
+<svg viewBox="0 0 12 20" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414"><path d="M6 20c1.482-5.241 2.526-8.509 3.134-8.883a6 6 0 1 0-6.232.023C3.505 11.504 4.538 14.765 6 20z" fill="#fff"/><circle cx="6" cy="6" r="2" fill="#50e3c2"/></svg>

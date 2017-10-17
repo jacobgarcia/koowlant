@@ -11,60 +11,41 @@ const COLORS = {
 }
 
 class MiniZone extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      reports: [],
-      status: null,
-      percentage: null
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const reports = substractReportValues(nextProps.reports)
-    const { status, percentage } = getStatus(reports || null)
-
-    this.setState({
-      reports,
-      status,
-      percentage
-    })
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.percentage !== nextState.percentage) return true
+  shouldComponentUpdate(nextProps) {
+    if (this.props.percentage !== nextProps.percentage) return true
+    if (this.props.type !== nextProps.type) return true
     return false
   }
 
   render() {
     const props = this.props
-
-    let { status } = this.state
-    const { reports, percentage } = this.state
-
-    if (!status && props.type === 'site') {
-      status = getSensorChart('TEMPERATURE')
-    }
+    // const {  } =this.props
+    const { status, reports, percentage } = this.props
 
     let numberSites = props.zone.subzones ? (props.zone.subzones.reduce((sum, subzone) => sum + (subzone.sites ? subzone.sites.length : 0), 0)) : 0
     numberSites += props.zone.sites ? props.zone.sites.length : 0
 
-    const getTitle = (type, {name, _id, key}) => {
+    const getTitle = (type, {name = '[sin nombre]', _id, key}) => {
       switch (type) {
         case 'general': return 'Zona ' + name
         case 'zone': return 'Subzona ' + name
-        case 'subzone': return 'Sitio ' + (name || _id) + ' ' + (key || null)
+        case 'subzone': return 'Sitio ' + name
         case 'site': return 'Sensor ' + (key || _id)
         default: return 'Indefinido'
       }
     }
 
     return (
-      <div className={`mini-zone ${props.active ? 'active' : ''}`} onMouseEnter={() => props.onHover(props.id)} onMouseLeave={() => props.onHover(null)}>
+      <div
+        className={`mini-zone ${props.active ? 'active' : ''}`}
+        onMouseEnter={() => props.onHover(props.id)}
+        onMouseLeave={() => props.onHover(null)}
+        style={{order: props.viewSort === 'DYNAMIC' ? percentage : 0}}
+        >
         <div className="status-text">
           <div className="status-color" style={{ background: COLORS.normal }}></div>
-          <h3>{getTitle(props.type, props.zone)} </h3>
+
+          <h3>{getTitle(props.type, props)}<span>{props.type === 'subzone' && (props.zone.key || props._id)}</span></h3>
           <div className="count">
             { props.zone.sites ? <p className="sites">{numberSites} Sitios</p> : null }
             { props.zone.subzones ? <p className="subzones">{props.zone.subzones.length} Subzonas</p> : null }
@@ -133,11 +114,17 @@ MiniZone.propTypes = {
   subzones: PropTypes.array,
   sites: PropTypes.array,
   admins: PropTypes.array,
-  reports: PropTypes.array,
+  // reports: PropTypes.array,
   onHover: PropTypes.func,
   active: PropTypes.bool,
   zone: PropTypes.object,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
+  percentage: PropTypes.number,
+  status: PropTypes.array
+}
+
+MiniZone.defaultProps = {
+  onHover: () => {}
 }
 
 export default MiniZone
