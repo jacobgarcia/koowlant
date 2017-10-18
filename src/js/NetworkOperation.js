@@ -9,6 +9,10 @@ class NetworkOperation {
     return axios.post(`${window.baseUrl}/signup/` + token, {email, password, fullName})
   }
 
+  static invite(email, company, host) {
+    return axios.post(`${window.baseUrl}/users/invite`, { email, company, host })
+  }
+
   static setSite(company, subzone, key, position, sensors, alarms) {
     return axios.post(`${window.baseUrl}/companies/` + company + '/' + subzone + '/sites', { key, position, sensors, alarms })
   }

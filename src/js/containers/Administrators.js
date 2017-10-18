@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
+import NetworkOperation from '../NetworkOperation'
+
 class Administrators extends Component {
   constructor(props) {
     super(props)
@@ -46,6 +48,18 @@ class Administrators extends Component {
     const { email, selectedSubzone, selectedZone, grantedPermits, monitoringCameras, monitoringSensors } = this.state
     console.log(email, selectedSubzone, selectedZone, grantedPermits, monitoringCameras, monitoringSensors)
 
+    NetworkOperation.invite(email, this.props.credentials.user.company, this.props.credentials.user.email)
+    .then(response => {
+      const { zones } = response.data
+      // set each zone
+      zones.forEach((zone) => {
+        this.props.setZone(zone._id, zone.name, zone.positions)
+      })
+    })
+    .catch((error) => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
     // After network operation
     this.setState({
       isAddingAdmin: false
@@ -269,14 +283,16 @@ class Administrators extends Component {
   }
 }
 
-function mapStateToProps({ administrators, zones }) {
+function mapStateToProps({ credentials, administrators, zones }) {
   return {
+    credentials,
     administrators,
     zones
   }
 }
 
 Administrators.propTypes = {
+  credentials: PropTypes.object,
   administrators: PropTypes.array,
   zones: PropTypes.array
 }

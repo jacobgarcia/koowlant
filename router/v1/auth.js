@@ -25,12 +25,12 @@ nev.configure({
   transportOptions: {
     service: 'Gmail',
     auth: {
-        user: 'ingenieria@connus.mx',
-        pass: 'kawlantcloud'
+        user: 'fatalraincloud@gmail.com',
+        pass: '98JARPIHn4eb'
     }
   },
   verifyMailOptions: {
-      from: 'Do Not Reply <ingenieria@connus.mx>',
+      from: 'Do Not Reply <fatalraincloud@gmail.com>',
       subject: 'Confirm your account',
       html: '<p>Please verify your account by clicking <a href="${URL}">this link</a>. If you are unable to do so, copy and ' +
               'paste the following link into your browser:</p><p>${URL}</p>',
@@ -38,7 +38,7 @@ nev.configure({
   },
   shouldSendConfirmation: true,
   confirmMailOptions: {
-      from: 'Do Not Reply <ingenieria@connus.mx@gmail.com>',
+      from: 'Do Not Reply <fatalraincloud@gmail.com>',
       subject: 'Successfully verified!',
       html: '<p>Your account has been successfully verified.</p>',
       text: 'Your account has been successfully verified.'

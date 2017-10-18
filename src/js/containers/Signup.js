@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import qs from 'query-string'
 import NetworkOperation from '../NetworkOperation'
+
+import { setCredentials } from '../actions'
 
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -19,8 +22,7 @@ class Signup extends Component {
       passswordRepeat: '',
       passwordValid: false,
       signupFailed: false,
-      invitation: props.match.params.invitation_token,
-      props
+      invitation: props.match.params.invitation_token
     }
 
     this.onChange = this.onChange.bind(this)
@@ -39,13 +41,6 @@ class Signup extends Component {
         isValidEmail: validateEmail(value)
       })
     }
-  }
-
-  componentWillMount() {
-    const { token } = qs.parse(this.props.location.search)
-    console.log('Got token', token)
-    // TODO: validate token with API
-    // if it's continue, other display invalid invitation message
   }
 
   onSubmit(event) {
@@ -73,10 +68,11 @@ class Signup extends Component {
       // Get response
       localStorage.setItem('token', token)
 
-      this.state.props.history.push('/')
+      this.props.history.push('/')
     })
-    .catch(() => {
+    .catch((error) => {
       // TODO: Check status and based on that return information to user
+      console.log('Something went wrong: ' + error)
       this.setState({
         signupFailed: true
       })
@@ -165,7 +161,8 @@ class Signup extends Component {
               className={
                 (this.state.password &&
                 this.state.passswordRepeat &&
-                this.state.isValidEmail)
+                this.state.isValidEmail &&
+                this.state.password === this.state.passswordRepeat)
                 ? 'active'
                 : 'invalid'
               }
@@ -181,10 +178,23 @@ class Signup extends Component {
   }
 }
 
+function mapStateToProps({ auth }) {
+  return {
+    auth
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setCredentials: user => {
+      dispatch(setCredentials(user))
+    }
+  }
+}
+
 Signup.propTypes = {
   setCredentials: PropTypes.func,
-  location: PropTypes.object,
   match: PropTypes.object
 }
 
-export default Signup
+export default connect(mapStateToProps, mapDispatchToProps)(Signup)

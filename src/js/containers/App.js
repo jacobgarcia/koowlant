@@ -21,6 +21,7 @@ function authenticate({setCredentials}) {
     surname: 'Appleseed',
     token: 'e293je823',
     email: 'john.a@apple.com',
+    company: 'AT&T',
     permissions: 0
   }
 
