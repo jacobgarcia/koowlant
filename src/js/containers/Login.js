@@ -32,11 +32,11 @@ class Login extends Component {
 
     const { user, password } = this.state
 
-    if (this.state.loginFailed) {
-      this.setState({
-        loginFailed: false
-      })
-    }
+    this.state.loginFailed
+    &&
+    this.setState({
+      loginFailed: false
+    })
 
     // Dumb login
     NetworkOperation.login(user, password)
@@ -63,6 +63,12 @@ class Login extends Component {
 
   onChange(event) {
     const { name, value } = event.target
+
+    this.state.loginFailed
+    &&
+    this.setState({
+      loginFailed: false
+    })
 
     if (name === 'user') {
       this.setState({
