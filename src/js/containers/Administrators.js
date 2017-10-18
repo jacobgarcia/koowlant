@@ -6,22 +6,141 @@ class Administrators extends Component {
   constructor(props) {
     super(props)
 
-    const zoneAdministrators = this.props.administrators
-
     this.state = {
-      zoneAdministrators
+      isAddingAdmin: true,
+      selectedZone: '', // Will contain _id
+      selectedSubzone: '', // Will contain _id
+      monitoringCameras: false,
+      monitoringSensors: false,
+      grantedPermits: false,
+      email: ''
     }
 
+    this.onAddAdministrator = this.onAddAdministrator.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+    this.onPermitsChange = this.onPermitsChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  onAddAdministrator() {
+    this.setState({
+      isAddingAdmin: true
+    })
+  }
+
+  handleChange(event) {
+    const { value, name } = event.target
+    this.setState({
+      [name]: value
+    })
+  }
+
+  onPermitsChange(event) {
+    this.setState({
+      grantedPermits: event.target.checked
+    })
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+    const { email, selectedSubzone, selectedZone, grantedPermits, monitoringCameras, monitoringSensors } = this.state
+    console.log(email, selectedSubzone, selectedZone, grantedPermits, monitoringCameras, monitoringSensors)
+
+    // After network operation
+    this.setState({
+      isAddingAdmin: false
+    })
   }
 
   render() {
     return (
       <div className="administrators">
+        {
+          this.state.isAddingAdmin
+          &&
+          <div className="add-admin">
+            <div className="content">
+              <form onSubmit={this.handleSubmit}>
+                <div className="section">
+                  <h4>Agregar administrador</h4>
+                </div>
+                <div className="section">
+                  <div className="inline space-right">
+                    <label htmlFor="email-add">Email:</label>
+                    <input
+                      type="email"
+                      id="email-add"
+                      placeholder="usuario@dominio.com"
+                      value={this.state.email}
+                      name="email"
+                      onChange={this.handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="inline space-around grow">
+                    <div style={{display: 'flex'}}>
+                      <label htmlFor="zone-add" style={{marginRight: 10}}>Zona: </label>
+                      <select style={{flexGrow: 1}} name="selectedZone" id="zone-add" onChange={this.handleChange} value={this.state.selectedZone} required>
+                        <option />
+                        {
+                          this.props.zones.map(zone =>
+                            <option value={zone._id} key={zone._id}>{zone.name}</option>
+                          )
+                        }
+                      </select>
+                    </div>
+                    <div style={{display: 'flex', marginLeft: 20}}>
+                      <label htmlFor="subzone-add" style={{marginRight: 10}}>Subzona: </label>
+                      <select style={{flexGrow: 1}} name="selectedSubzone" id="subzone-add" onChange={this.handleChange} value={this.state.selectedSubzone} required>
+                        <option />
+                        {
+                          this.state.selectedZone
+                          &&
+                          this.props.zones.filter(({_id}) => _id === this.state.selectedZone).pop().subzones.map(zone =>
+                            <option value={zone._id} key={zone._id}>{zone.name}</option>
+                          )
+                        }
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="section">
+                  <h5>Monitoreo</h5>
+                  <div className="inline space-right">
+                    <span
+                      className={`button ${this.state.monitoringCameras && 'selected'}`}
+                      onClick={() => this.setState(prevState => ({monitoringCameras: !prevState.monitoringCameras}))}>Cámaras</span>
+                    <span
+                      className={`button ${this.state.monitoringSensors && 'selected'}`}
+                      onClick={() => this.setState(prevState => ({monitoringSensors: !prevState.monitoringSensors}))}>Sensores</span>
+                  </div>
+                </div>
+                <div className="section">
+                  <h5>Permisos</h5>
+                  <div className="inline">
+                    <div className="permits-wrapper">
+                      <input
+                        type="checkbox"
+                        id="permits-add"
+                        value={this.state.grantedPermits}
+                        onChange={this.onPermitsChange}
+                      />
+                      <label className="permits" htmlFor="permits-add"/>
+                    </div>
+                    <label htmlFor="permits-add">{this.state.grantedPermits ? 'Con permisos' : 'Sin permisos' }</label>
+                  </div>
+                </div>
+                <input type="submit" className="add" value="Agregar"/>
+              </form>
+
+            </div>
+          </div>
+        }
         <div className="header">
           <h4>11 Administradores</h4>
           <ul className="links">
             <li className="big search">Buscar</li>
-            <li className="big create">Administrador</li>
+            <li className="big create" onClick={this.onAddAdministrator}>Administrador</li>
           </ul>
         </div>
         <div className="table-header">
@@ -149,14 +268,16 @@ class Administrators extends Component {
   }
 }
 
-function mapStateToProps({ administrators }) {
+function mapStateToProps({ administrators, zones }) {
   return {
-    administrators
+    administrators,
+    zones
   }
 }
 
 Administrators.propTypes = {
-  administrators: PropTypes.array
+  administrators: PropTypes.array,
+  zones: PropTypes.array
 }
 
 export default connect(mapStateToProps)(Administrators)
