@@ -7,7 +7,7 @@ class Administrators extends Component {
     super(props)
 
     this.state = {
-      isAddingAdmin: true,
+      isAddingAdmin: false,
       selectedZone: '', // Will contain _id
       selectedSubzone: '', // Will contain _id
       monitoringCameras: false,
@@ -54,15 +54,16 @@ class Administrators extends Component {
 
   render() {
     return (
-      <div className="administrators">
+      <div className="administrators" >
         {
           this.state.isAddingAdmin
           &&
-          <div className="add-admin">
+          <div className="add-admin" onClick={event => event.stopPropagation()}>
             <div className="content">
               <form onSubmit={this.handleSubmit}>
-                <div className="section">
+                <div className="section inline no-space space-between">
                   <h4>Agregar administrador</h4>
+                  <span className="action" onClick={() => this.setState({isAddingAdmin: false})}>Cancelar</span>
                 </div>
                 <div className="section">
                   <div className="inline space-right">
