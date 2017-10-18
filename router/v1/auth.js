@@ -61,7 +61,7 @@ router.post('/signup/:invitation_token', (req, res) => {
       return res.status(500).json({ error })
     }
     else if (!guest) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
-    else if (guest.email != email) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
+    else if (guest.email !== email) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
     else {
       guest.fullName = fullName
 
@@ -121,25 +121,25 @@ router.post('/authenticate', (req, res) => {
      if (!bcrypt.compareSync(req.body.password + config.secret, user.password)) {
        winston.info('Failed to authenticate user password')
        return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
-     } else {
-       const token = jwt.sign({
-         _id: user._id,
-         acc: user.accessLevel,
-         cmp: user.company
-       }, config.secret)
-
-       user = user.toObject()
-
-       return res.status(200).json({
-         token,
-         user: {
-           _id: user._id,
-           name: user.fullName || 'User',
-           surname: user.surname,
-           accessLevel: user.accessLevel
-         }
-       })
      }
+
+     const token = jwt.sign({
+       _id: user._id,
+       acc: user.accessLevel,
+       cmp: user.company
+     }, config.secret)
+
+     user = user.toObject()
+
+     return res.status(200).json({
+       token,
+       user: {
+         _id: user._id,
+         name: user.fullName || 'User',
+         surname: user.surname,
+         accessLevel: user.accessLevel
+       }
+     })
   })
   .catch(error => {
     winston.error({error})

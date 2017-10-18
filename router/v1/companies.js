@@ -29,14 +29,14 @@ router.route('/companies/:company/:zone/:subzone/sites')
         return res.status(500).json({ error })
       }
       // Add the new site to the specified subzone
-      Subzone.findOneAndUpdate({ '_id': subzone }, { $push: { sites: site } }, { new: true })
+      return Subzone.findOneAndUpdate({ '_id': subzone }, { $push: { sites: site } }, { new: true })
       .exec((error, subzone) => {
         if (error) {
           winston.error({error})
           return res.status(500).json({ error })
         }
 
-        res.status(200).json({ site })
+        return res.status(200).json({ site })
       })
     })
 })
@@ -73,10 +73,10 @@ router.route('/companies/:company/:zone/subzones')
 })
 
 //  Save zone and stream change
-router.route('/companies/:company/zones')
+router.route('/companies/:companyId/zones')
 .post((req, res) => {
     const { name, positions, subzones } = req.body
-    const { company } = req.params
+    const { companyId } = req.params
     // Create subzone using the information in the request body
     new Zone({
       name,
@@ -117,7 +117,7 @@ router.route('/companies/:company/:site/reports')
             return res.status(500).json({ error })
           }
 
-          let report = {
+          const report = {
             site: {
               _id: updatedSite._id,
               key: updatedSite.key
@@ -130,7 +130,7 @@ router.route('/companies/:company/:site/reports')
           }
 
           global.io.to('0293j4ji').emit('report', report)
-          return res.status(200).json( report )
+          return res.status(200).json(report)
         })
       })
 

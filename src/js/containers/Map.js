@@ -37,7 +37,9 @@ class MapView extends Component {
       sitesViewOrdering: 'static', // TODO load from localStorage
       isCreatingSite: false,
       isCreatingZone: false,
-      isSearching: false
+      isSearching: false,
+      isEditing: true,
+      mouseLatLng: []
     }
 
     this.hide = this.hide.bind(this)
@@ -395,6 +397,7 @@ class MapView extends Component {
                 this.map = map
               }}
               animate
+              onMouseMove={event => this.state.isEditing && this.setState({ mouseLatLng: [event.latlng.lat,event.latlng.lng]}) }
               >
               {
                 // Render subzones in a selected zone
@@ -407,8 +410,10 @@ class MapView extends Component {
                       reports={this.props.reports.filter(({site}) => subzone.sites.find(({key}) => key === site.key))}
                       highlightedZone={this.state.highlightedZone}
                       onMouseOver={this.onSiteHover}
+                      mouseLatLng={this.state.mouseLatLng}
                       onMouseOut={this.onSiteHover}
                       onClick={() => {
+                        if (this.state.isEditing) return
                         if (this.state.isCreatingSite || this.state.isCreatingZone) return
                         this.props.history.push(`/zones/${this.state.selectedZone._id}/${subzone._id}`)}
                       }
@@ -471,6 +476,7 @@ class MapView extends Component {
                   <ZonePolygon
                     key={zone._id}
                     zone={zone}
+                    mouseLatLng={this.state.mouseLatLng}
                     highlightedZone={this.state.highlightedZone}
                     reports={
                       this.props.reports.filter(({site}) =>
@@ -483,6 +489,7 @@ class MapView extends Component {
                     onMouseOver={this.onSiteHover}
                     onMouseOut={this.onSiteHover}
                     onClick={() => {
+                      if (this.state.isEditing) return
                       if (this.state.isCreatingSite || this.state.isCreatingZone) return
                       this.props.history.push(`/zones/${zone._id}`)}
                     }
