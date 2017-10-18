@@ -9,14 +9,25 @@ class NetworkOperation {
     return axios.post(`${window.baseUrl}/signup/` + token, {email, password, fullName})
   }
 
-  static saveSite(company, subzone, key, position, sensors, alarms) {
+  static setSite(company, subzone, key, position, sensors, alarms) {
     return axios.post(`${window.baseUrl}/companies/` + company + '/' + subzone + '/sites', { key, position, sensors, alarms })
   }
 
-  static saveSubzone(company, zone, name, positions, sites) {
+  static setSubzone(company, zone, name, positions, sites) {
     return axios.post(`${window.baseUrl}/users`)
   }
 
+  static getZones(company) {
+    return axios.get(`${window.baseUrl}/companies/` + company + '/zones')
+  }
+
+  static getSubzones(company) {
+    return axios.get(`${window.baseUrl}/companies/` + company + '/subzones')
+  }
+
+  static getSites(company) {
+    return axios.get(`${window.baseUrl}/companies/` + company + '/sites')
+  }
 }
 
 export default NetworkOperation

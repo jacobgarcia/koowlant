@@ -36,28 +36,32 @@ export function setAlarmAttended(alarm) {
 }
 
 // Zones
-export function setZone(name, positions) {
+export function setZone(id, name, positions) {
   return {
     type: 'SET_ZONE',
+    id,
     name,
     positions
   }
 }
 
-export function setSubzone(zoneId, name, positions) {
+export function setSubzone(zoneId, subzoneId, name, positions) {
   return {
     type: 'SET_SUBZONE',
     zoneId,
+    subzoneId,
     name,
     positions
   }
 }
 
-export function setSite(zoneId, subzoneId, name, position) {
+export function setSite(zoneId, subzoneId, siteId, key, name, position) {
   return {
     type: 'SET_SITE',
     zoneId,
     subzoneId,
+    siteId,
+    key,
     name,
     position
   }

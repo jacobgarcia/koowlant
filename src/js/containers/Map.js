@@ -9,6 +9,8 @@ import { setZone, setSubzone, setSite } from '../actions'
 import { CreateZoneBar, ZoneDetail, Reports, ZonePolygon, SiteMarker, Search } from '../components'
 import { getAreaCenter } from '../SpecialFunctions'
 
+import NetworkOperation from '../NetworkOperation'
+
 class MapView extends Component {
   constructor(props) {
     super(props)
@@ -51,6 +53,54 @@ class MapView extends Component {
     this.getType = this.getType.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.getElementDetails = this.getElementDetails.bind(this)
+  }
+
+  componentDidMount(){
+    // Modify store with database information
+    // Zones
+    NetworkOperation.getZones('att')
+    .then(response => {
+      const { zones } = response.data
+      // set each zone
+      zones.forEach((zone) => {
+        this.props.setZone(zone._id, zone.name, zone.positions)
+      })
+    })
+    .catch((error) => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
+
+    // Subzones
+    NetworkOperation.getSubzones('att')
+    .then(response => {
+      const { subzones } = response.data
+      // set each subzone
+      subzones.forEach((subzone) => {
+
+        this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
+      })
+    })
+    .catch((error) => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
+
+    //Sites
+    NetworkOperation.getSites('att')
+    .then(response => {
+      const { sites } = response.data
+      // set each site
+      sites.forEach((site) => {
+        console.log(site);
+
+        this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
+      })
+    })
+    .catch((error) => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
   }
 
   isNewElementValid() {
@@ -493,14 +543,14 @@ function mapStateToProps({ zones, reports }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setZone: (name, positions) => {
-      dispatch(setZone(name, positions))
+    setZone: (id, name, positions) => {
+      dispatch(setZone(id, name, positions))
     },
-    setSubzone: (zoneId, name, positions) => {
-      dispatch(setSubzone(zoneId, name, positions))
+    setSubzone: (zoneId, subzoneId, name, positions) => {
+      dispatch(setSubzone(zoneId, subzoneId, name, positions))
     },
-    setSite: (zoneId, subzoneId, name, position) => {
-      dispatch(setSite(zoneId, subzoneId, name, position))
+    setSite: (zoneId, subzoneId, siteId, key, name, position) => {
+      dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
     }
   }
 }

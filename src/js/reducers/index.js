@@ -1121,7 +1121,7 @@ function zones(state = dumbZones, action) {
   switch (action.type) {
     case 'SET_ZONE':
       return [...state, {
-        _id: Date.now() + 'kawlant',
+        _id: action.id,
         name: action.name,
         positions: action.positions,
         subzones: [] // IMPORTANT
@@ -1132,7 +1132,7 @@ function zones(state = dumbZones, action) {
         ? {
           ...zone,
           subzones: [...(zone.subzones || []), {
-            _id: Date.now() + 'subzone',
+            _id: action.subzoneId,
             name: action.name,
             positions: action.positions,
             sites: [] // IMPORTANT
@@ -1152,8 +1152,8 @@ function zones(state = dumbZones, action) {
               sites: [
                 ...(subzone.sites || []),
                 {
-                  _id: Date.now() + 'site',
-                  key: 'NEL' + Math.round(Date.now() / 10000000),
+                  _id: action.siteId,
+                  key: action.key,
                   name: action.name,
                   position: action.position
                 }
