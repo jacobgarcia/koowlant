@@ -46,7 +46,6 @@ a {
 
 span.button {
   border: 1px solid #a4a4a4;
-  border-radius: 3px;
   padding: 4px 15px;
   background: #fff;
   cursor: pointer;
@@ -62,6 +61,28 @@ span.button {
   }
   &:hover {
     color: #000;
+  }
+  &.selected {
+    background: #000;
+    color: #fff;
+  }
+}
+
+div.inline {
+  display: flex;
+  align-items: center;
+  &.space-right {
+    > * {
+      margin-right: 15px;
+    }
+  }
+  &.space-around {
+    justify-content: space-around;
+  }
+  &.grow {
+    > * {
+      flex-grow: 1;
+    }
   }
 }
 
@@ -742,14 +763,17 @@ nav {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    > span, > div {
+      flex-basis: 200px;
+    }
+  }
+  .permits-wrapper {
+    flex-basis: 80px;
     input {
       display: none;
     }
     input:checked + label {
       background: #46E0B4;
-    }
-    .permits-wrapper {
-      flex-basis: 80px;
     }
     .permits {
       transition: ease 0.5s;
@@ -761,12 +785,58 @@ nav {
       border-radius: 50%;
       display: block;
     }
-    > span, > div {
-      flex-basis: 200px;
-    }
   }
   .admin:last-child {
     margin-bottom: 0;
+  }
+  .add-admin {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(#fff, 0.4);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .button {
+      display: block;
+    }
+    .inline {
+      margin-top: 10px;
+    }
+    .permits-wrapper {
+      flex-basis: auto;
+      margin-right: 10px;
+    }
+    .content {
+      background: #fff;
+      border: 1px solid #000;
+      width: 100%;
+      max-width: 500px;
+      .section {
+        padding: 20px;
+        border-bottom: 1px solid #000;
+      }
+      .section:last-child {
+        border-bottom: none;
+      }
+      .add {
+        background: #000;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        -webkit-user-select: none;
+        user-select: none;
+        color: #fff;
+      }
+    }
   }
   // .zone-container {
   //   .zone {
