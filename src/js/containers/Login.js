@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 import { setCredentials } from '../actions'
 import NetworkOperation from '../NetworkOperation'
@@ -80,6 +80,15 @@ class Login extends Component {
   }
 
   render() {
+    const token = localStorage.getItem('token')
+    const hasToken = token !== null && token !== '' && token !== 'null'
+
+    if (hasToken) {
+      return (
+        <Redirect to="/" />
+      )
+    }
+
     return (
       <div className="login">
         <img src="/static/img/iso.svg" alt="" className="iso"/>
