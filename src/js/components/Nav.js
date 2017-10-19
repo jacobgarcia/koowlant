@@ -48,7 +48,7 @@ class Nav extends Component {
         <div className="user">
           <img src="/static/uploads/logo.png" alt="" className="logo"/>
           <div className="username">
-            <p>{`${this.props.credentials.user.name} ${this.props.credentials.user.surname}`}</p>
+            <p>{`${this.props.credentials.user.fullName}`}</p>
             <p>{getAdminString(this.props.credentials.user.permissions)}</p>
           </div>
         </div>

@@ -77,7 +77,6 @@ class MapView extends Component {
       const { subzones } = response.data
       // set each subzone
       subzones.forEach((subzone) => {
-
         this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
       })
     })
@@ -92,8 +91,6 @@ class MapView extends Component {
       const { sites } = response.data
       // set each site
       sites.forEach((site) => {
-        console.log(site);
-
         this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
       })
     })

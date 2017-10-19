@@ -51,7 +51,7 @@ class Signup extends Component {
     this.state.isValidEmail)) return
 
     // Submit user to API
-    const { email, password, fullName } = this.state
+    const { email, password, name } = this.state
 
     if (this.state.signupFailed) {
       this.setState({
@@ -59,7 +59,7 @@ class Signup extends Component {
       })
     }
 
-    NetworkOperation.signup(this.state.invitation, email, password, fullName)
+    NetworkOperation.signup(this.state.invitation, email, password, name)
     .then(response => {
       const { token, user } = response.data
 

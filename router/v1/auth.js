@@ -25,12 +25,12 @@ nev.configure({
   transportOptions: {
     service: 'Gmail',
     auth: {
-        user: 'fatalraincloud@gmail.com',
-        pass: '98JARPIHn4eb'
+        user: 'ingeniera@connus.mx',
+        pass: 'kawlantcloud'
     }
   },
   verifyMailOptions: {
-      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      from: 'Do Not Reply <ingeniera@connus.mx>',
       subject: 'Confirm your account',
       html: '<p>Please verify your account by clicking <a href="${URL}">this link</a>. If you are unable to do so, copy and ' +
               'paste the following link into your browser:</p><p>${URL}</p>',
@@ -38,7 +38,7 @@ nev.configure({
   },
   shouldSendConfirmation: true,
   confirmMailOptions: {
-      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      from: 'Do Not Reply <ingeniera@connus.mx>',
       subject: 'Successfully verified!',
       html: '<p>Your account has been successfully verified.</p>',
       text: 'Your account has been successfully verified.'
@@ -109,16 +109,16 @@ router.post('/signup/:invitation_token', (req, res) => {
 
 })
 router.post('/authenticate', (req, res) => {
-  const { email } = req.body
+  const { email, password } = req.body
 
   User.findOne({ email })
   .then(user => {
     if (user === null) {
       winston.info('Failed to authenticate user email')
-      return res.status(401).json({ message: 'Authentication failed. Wrong user or password.' })
+      return res.status(400).json({ message: 'Authentication failed. Malformed Request.' })
     }
 
-     if (!bcrypt.compareSync(req.body.password + config.secret, user.password)) {
+     if (!bcrypt.compareSync(password, user.password)) {
        winston.info('Failed to authenticate user password')
        return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
      } else {

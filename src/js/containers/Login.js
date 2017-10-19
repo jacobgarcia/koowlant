@@ -38,15 +38,13 @@ class Login extends Component {
       loginFailed: false
     })
 
-    // Dumb login
     NetworkOperation.login(user, password)
     .then(response => {
       const { token, user } = response.data
 
-      this.props.setCredentials(user, token)
-
       // Get response
       localStorage.setItem('token', token)
+      this.props.setCredentials(user, token)
 
       this.props.history.push('/')
     })
