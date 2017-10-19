@@ -10,9 +10,9 @@ class Settings extends Component {
     super(props)
 
     this.state = {
-      fullName: props.credentials.user.name + ' ' + props.credentials.user.surname,
-      email: props.credentials.email || '',
-      password: ''
+      fullName: props.credentials.user.fullName,
+      email: props.credentials.user.email || '',
+      password: 'notmypassword'
     }
 
     this.onChange = this.onChange.bind(this)
@@ -43,6 +43,7 @@ class Settings extends Component {
                 value={this.state.fullName}
                 onChange={this.onChange}
                 name="name"
+                disabled
               />
             </div>
             <div>
@@ -52,6 +53,7 @@ class Settings extends Component {
                 value={this.state.email}
                 onChange={this.onChange}
                 name="email"
+                disabled
               />
             </div>
             <div>
@@ -61,6 +63,7 @@ class Settings extends Component {
                 value={this.state.password}
                 onChange={this.onChange}
                 name="password"
+                disabled
               />
             </div>
           </form>
