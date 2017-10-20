@@ -1117,7 +1117,7 @@ function reports(state = [], action) {
   }
 }
 
-function zones(state = dumbZones, action) {
+function zones(state = [], action) {
   switch (action.type) {
     case 'SET_ZONE':
       return [...state, {

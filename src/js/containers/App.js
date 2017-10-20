@@ -92,7 +92,7 @@ class App extends Component {
 
     // TODO: Improve this render method for loading
     if (this.state.isLoading) {
-        return <h2>Loading</h2>;
+        return <h2>Loading</h2>
     }
 
     return (
