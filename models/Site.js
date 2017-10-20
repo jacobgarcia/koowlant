@@ -24,7 +24,7 @@ const schema = new Schema({
   name: String,
   position: [Number], // Lat, lng
   sensors: [{
-    name: String,
+    key: String,
     value: Number
   }],
   alarms: [{
