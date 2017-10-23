@@ -18,39 +18,29 @@ import NetworkOperation from '../NetworkOperation'
 const socket = io() // window.location
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isLoading: false
-    }
-  }
-
   componentWillMount() {
     const token = localStorage.getItem('token')
-    this.setState({
-      isLoading: true
-    })
 
-    if (!token){
-      this.props.history.push('/login')
+    if (!token) {
+      localStorage.removeItem('token')
+      this.props.history.replace('/login')
       return
     }
 
     NetworkOperation.getProfile()
-    .then((response) => {
-      const user = response.data.user
+    .then(({data}) => {
+
+      console.log(data)
+      const user = data.user
 
       localStorage.setItem('user', JSON.stringify(user))
       this.props.setCredentials(user)
-
-      this.setState({
-        isLoading: false
-      })
     })
-    .catch((error) => {
-      // ENHACEMENT handle better this error
-      console.log(error)
+    .catch(error => {
+      // Remove token and replace location to login
+      localStorage.removeItem('token')
+      this.props.history.replace('/login')
+      error.response.status !== 401 && console.log(error)
     })
 
   }
@@ -60,17 +50,12 @@ class App extends Component {
   }
 
   initSocket(props) {
-
     socket.connect(() => {
     })
 
     socket.on('connect', () => {
       socket.emit('join', '0293j4ji')
     })
-
-    // socket.on('hey', (message) => {
-    //   console.log(message)
-    // })
 
     socket.on('report', report => {
       props.setReport(report)
@@ -82,18 +67,13 @@ class App extends Component {
     const token = localStorage.getItem('token')
     const hasToken = token !== null && token !== '' && token !== 'null'
 
-    if (!hasToken) {
+    if (hasToken === false) {
       return (
         <Redirect to="/login" />
       )
     }
 
     const { isWindow } = qs.parse(props.location.search)
-
-    // TODO: Improve this render method for loading
-    if (this.state.isLoading) {
-        return <h2>Loading</h2>
-    }
 
     return (
       <div id="app-content">
@@ -157,7 +137,8 @@ App.propTypes = {
   setCredentials: PropTypes.func,
   location: PropTypes.object,
   appAlert: PropTypes.object,
-  dismissAlert: PropTypes.func
+  dismissAlert: PropTypes.func,
+  history: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -1,5 +1,6 @@
 export function getAdminString(code) {
   switch (code) {
+    case null: return 'Cargando...'
     case 0: return 'Administrador principal'
     default: return 'Usuario'
   }

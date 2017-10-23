@@ -43,6 +43,7 @@ class Login extends Component {
       const { token, user } = response.data
 
       // Get response
+      console.log('Setting token...')
       localStorage.setItem('token', token)
       this.props.setCredentials(user, token)
 

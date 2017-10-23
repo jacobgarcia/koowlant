@@ -61,7 +61,6 @@ router.route('/users/invite')
 
   nev.createTempUser(guest, (err, existingPersistentUser, newTempUser) => {
     if (err) {
-      console.log(err);
       winston.error({err})
       return res.status(500).json({ err })
     }
@@ -82,16 +81,19 @@ router.route('/users/invite')
 
 router.route('/users/self')
 .get((req, res) => {
-  const user = req._user
-
-  User.findOne({ '_id': user._id })
+  // Get user id by its
+  User.findById(req._user._id, '-password')
   .exec((error, user) => {
     if (error) {
       winston.error(error)
       return res.status(500).json({ error })
     }
     if (!user) return res.status(404).json({ error: { message: 'User not found' } })
-    else return res.status(200).json({ user })
+    return res.status(200).json({
+      user: Object.assign({}, user.toObject(), {
+        fullName: user.fullName
+      })
+    })
   })
 })
 

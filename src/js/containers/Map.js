@@ -55,46 +55,46 @@ class MapView extends Component {
     this.getElementDetails = this.getElementDetails.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount() {
     // Modify store with database information
     // Zones
-    NetworkOperation.getZones(this.props.credentials.user.company)
+    NetworkOperation.getZones(this.props.credentials.user ? this.props.credentials.user.company : 'AT&T')
     .then(response => {
       const { zones } = response.data
       // set each zone
-      zones.forEach((zone) => {
+      zones.forEach(zone => {
         this.props.setZone(zone._id, zone.name, zone.positions)
       })
     })
-    .catch((error) => {
+    .catch(error => {
       // Dumb catch
       console.log('Something went wrong:' + error)
     })
 
     // Subzones
-    NetworkOperation.getSubzones(this.props.credentials.user.company)
+    NetworkOperation.getSubzones(this.props.credentials.user ? this.props.credentials.user.company : 'AT&T')
     .then(response => {
       const { subzones } = response.data
       // set each subzone
-      subzones.forEach((subzone) => {
+      subzones.forEach(subzone => {
         this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
       })
     })
-    .catch((error) => {
+    .catch(error => {
       // Dumb catch
       console.log('Something went wrong:' + error)
     })
 
-    //Sites
-    NetworkOperation.getSites(this.props.credentials.user.company)
+    // Sites
+    NetworkOperation.getSites(this.props.credentials.user ? this.props.credentials.user.company : 'AT&T')
     .then(response => {
       const { sites } = response.data
       // set each site
-      sites.forEach((site) => {
+      sites.forEach(site => {
         this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
       })
     })
-    .catch((error) => {
+    .catch(error => {
       // Dumb catch
       console.log('Something went wrong:' + error)
     })
@@ -151,7 +151,7 @@ class MapView extends Component {
 
     if (selectedSubzone && selectedZone) {
       this.props.setSite(
-        selectedZone._id,
+        selectedZone._d,
         selectedSubzone._id,
         name,
         newPositions[0] // Add the first position
@@ -198,8 +198,7 @@ class MapView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {zoneId, subzoneId, siteId} = nextProps.match.params
-
+    const { zoneId, subzoneId, siteId } = nextProps.match.params
     const selectedZone = this.props.zones.filter(zone => zone._id === zoneId).pop()
     const selectedSubzone = (selectedZone && selectedZone.subzones) ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
     const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
