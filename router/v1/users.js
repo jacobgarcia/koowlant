@@ -25,12 +25,12 @@ nev.configure({
   transportOptions: {
     service: 'Gmail',
     auth: {
-        user: 'fatalraincloud@gmail.com',
-        pass: '98JARPIHn4eb'
+        user: 'ingenieria@connus.mx',
+        pass: 'kawlantcloud'
     }
   },
   verifyMailOptions: {
-      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      from: 'Do Not Reply <ingenieria@connus.mx>',
       subject: 'Confirm your account',
       html: '<p>Please verify your account by clicking <a href="${URL}">this link</a>. If you are unable to do so, copy and ' +
               'paste the following link into your browser:</p><p>${URL}</p>',
@@ -38,7 +38,7 @@ nev.configure({
   },
   shouldSendConfirmation: true,
   confirmMailOptions: {
-      from: 'Do Not Reply <fatalraincloud@gmail.com>',
+      from: 'Do Not Reply <ingenieria@connus.mx>',
       subject: 'Successfully verified!',
       html: '<p>Your account has been successfully verified.</p>',
       text: 'Your account has been successfully verified.'
@@ -48,6 +48,7 @@ nev.configure({
 }, (error, options) => {
 
 })
+
 router.route('/users/invite')
 .post((req, res) => {
   const { email, company, host } = req.body
@@ -77,6 +78,21 @@ router.route('/users/invite')
     else return res.status(409).json({error: 'User already invited'})
   })
 
+})
+
+router.route('/users/self')
+.get((req, res) => {
+  const user = req._user
+
+  User.findOne({ '_id': user._id })
+  .exec((error, user) => {
+    if (error) {
+      winston.error(error)
+      return res.status(500).json({ error })
+    }
+    if (!user) return res.status(404).json({ error: { message: 'User not found' } })
+    else return res.status(200).json({ user })
+  })
 })
 
 module.exports = router

@@ -58,7 +58,7 @@ class MapView extends Component {
   componentDidMount() {
     // Modify store with database information
     // Zones
-    NetworkOperation.getZones('att')
+    NetworkOperation.getZones(this.props.credentials.user.company)
     .then(response => {
       const { zones } = response.data
       // set each zone
@@ -72,12 +72,11 @@ class MapView extends Component {
     })
 
     // Subzones
-    NetworkOperation.getSubzones('att')
+    NetworkOperation.getSubzones(this.props.credentials.user.company)
     .then(response => {
       const { subzones } = response.data
       // set each subzone
       subzones.forEach((subzone) => {
-
         this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
       })
     })
@@ -87,13 +86,11 @@ class MapView extends Component {
     })
 
     //Sites
-    NetworkOperation.getSites('att')
+    NetworkOperation.getSites(this.props.credentials.user.company)
     .then(response => {
       const { sites } = response.data
       // set each site
       sites.forEach((site) => {
-        console.log(site);
-
         this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
       })
     })
@@ -534,8 +531,9 @@ class MapView extends Component {
   }
 }
 
-function mapStateToProps({ zones, reports }) {
+function mapStateToProps({ credentials, zones, reports }) {
   return {
+    credentials,
     zones,
     reports
   }
@@ -556,6 +554,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 MapView.propTypes = {
+  credentials: PropTypes.object,
   match: PropTypes.object,
   zones: PropTypes.array,
   setZone: PropTypes.func,

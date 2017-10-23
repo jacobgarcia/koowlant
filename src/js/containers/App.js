@@ -13,24 +13,48 @@ import Settings from './Settings'
 import Nav from '../components/Nav'
 import io from 'socket.io-client'
 
+import NetworkOperation from '../NetworkOperation'
+
 const socket = io() // window.location
 
-function authenticate({setCredentials}) {
-  const user = {
-    name: 'John',
-    surname: 'Appleseed',
-    token: 'e293je823',
-    email: 'john.a@apple.com',
-    permissions: 0
+class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isLoading: false
+    }
   }
 
-  const token = 'kasjndjaksndin39'
-  localStorage.setItem('token', token)
+  componentWillMount() {
+    const token = localStorage.getItem('token')
+    this.setState({
+      isLoading: true
+    })
 
-  setCredentials(user, token)
-}
+    if (!token){
+      this.props.history.push('/login')
+      return
+    }
 
-class App extends Component {
+    NetworkOperation.getProfile()
+    .then((response) => {
+      const user = response.data.user
+
+      localStorage.setItem('user', JSON.stringify(user))
+      this.props.setCredentials(user)
+
+      this.setState({
+        isLoading: false
+      })
+    })
+    .catch((error) => {
+      // ENHACEMENT handle better this error
+      console.log(error)
+    })
+
+  }
+
   componentDidMount() {
     this.initSocket(this.props)
   }
@@ -64,15 +88,16 @@ class App extends Component {
       )
     }
 
-    if (!props.credentials.user) {
-      authenticate(props)
-    }
-
     const { isWindow } = qs.parse(props.location.search)
+
+    // TODO: Improve this render method for loading
+    if (this.state.isLoading) {
+        return <h2>Loading</h2>
+    }
 
     return (
       <div id="app-content">
-        { isWindow ? null : <Nav {...props}/> }
+        { isWindow ? null : <Nav {...this.props}/> }
         {
           props.appAlert && props.appAlert.title
           &&
