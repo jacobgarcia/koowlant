@@ -219,4 +219,40 @@ router.route('/companies/:company/reports')
   })
 })
 
+// Get zones, subzones and sites
+// Get zones. TODO: Retrieve only company zones
+router.route('/companies/:company/exhaustive')
+.get((req, res) => {
+  const company = req.params.company
+
+  Zone.find({})
+  .exec((error, zones) => {
+    if (error) {
+      winston.error({error})
+      return res.status(500).json({ error })
+    }
+    if (!zones) return res.status(404).json({ message: 'No zones found'})
+    else {
+      Subzone.find({})
+      .exec((error, subzones) => {
+        if (error) {
+          winston.error({error})
+          return res.status(500).json({ error })
+        }
+        if (!subzones) return res.status(404).json({ message: 'No subzones found'})
+        else {
+          Site.find({})
+          .exec((error, sites) => {
+            if (error) {
+              winston.error({error})
+              return res.status(500).json({ error })
+            }
+            if (!sites) return res.status(404).json({ message: 'No sites found'})
+            else return res.status(200).json({ zones, subzones, sites })
+          })
+        }
+      })
+    }
+  })
+})
 module.exports = router
