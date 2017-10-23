@@ -58,7 +58,7 @@ class MapView extends Component {
   componentDidMount() {
     // Modify store with database information
     // Zones
-    NetworkOperation.getZones(this.props.credentials.user ? this.props.credentials.user.company : 'AT&T')
+    NetworkOperation.getZones(this.props.credentials.company || '')
     .then(response => {
       const { zones } = response.data
       // set each zone
@@ -72,7 +72,7 @@ class MapView extends Component {
     })
 
     // Subzones
-    NetworkOperation.getSubzones(this.props.credentials.user ? this.props.credentials.user.company : 'AT&T')
+    NetworkOperation.getSubzones(this.props.credentials.company || '')
     .then(response => {
       const { subzones } = response.data
       // set each subzone
@@ -86,7 +86,7 @@ class MapView extends Component {
     })
 
     // Sites
-    NetworkOperation.getSites(this.props.credentials.user ? this.props.credentials.user.company : 'AT&T')
+    NetworkOperation.getSites(this.props.credentials.company || '')
     .then(response => {
       const { sites } = response.data
       // set each site
@@ -100,7 +100,7 @@ class MapView extends Component {
     })
 
     //Reports
-    NetworkOperation.getReports(this.props.credentials.user.company)
+    NetworkOperation.getReports(this.props.credentials.company || '')
     .then(response => {
       const { reports } = response.data
       // set each report

@@ -51,7 +51,7 @@ nev.configure({
 
 router.route('/users/invite')
 .post((req, res) => {
-  const { email, company, host } = req.body
+  const { email, company, host } = req.body
 
   const guest = new User({
     email,
