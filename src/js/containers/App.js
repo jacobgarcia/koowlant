@@ -28,10 +28,10 @@ class App extends Component {
     }
 
     NetworkOperation.getProfile()
-    .then(response => {
+    .then(({data}) => {
 
-      console.log(response)
-      const user = response.data.user
+      console.log(data)
+      const user = data.user
 
       localStorage.setItem('user', JSON.stringify(user))
       this.props.setCredentials(user)

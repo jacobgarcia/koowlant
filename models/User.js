@@ -7,12 +7,17 @@ class UserClass {
 }
 
 const schema = new Schema({
-  fullName: String,
   email: String,
   company: { type: Schema.Types.ObjectId, ref: 'Company' }, // Company id
   password: String,
   host: String,
-  accessLevel: String
+  accessLevel: String,
+  name: String,
+  surname: String
+})
+
+schema.virtual('fullName').get(function() {
+  return this.name + ' ' + this.surname
 })
 
 schema.loadClass(UserClass)

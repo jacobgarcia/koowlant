@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import { getAdminString } from '../Decoder'
 
-class Nav extends Component {
+class Nav extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -49,7 +49,7 @@ class Nav extends Component {
           <img src="/static/uploads/logo.png" alt="" className="logo"/>
           <div className="username">
             <p>{`${this.props.credentials.user ? this.props.credentials.user.fullName : 'Cargando...'}`}</p>
-            <p>{getAdminString(this.props.credentials.user ? this.props.credentials.user.permissions : null)}</p>
+            <p>{getAdminString(this.props.credentials.accessLevel)}</p>
           </div>
         </div>
         <div className="navigation">
