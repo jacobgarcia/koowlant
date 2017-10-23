@@ -82,16 +82,14 @@ router.route('/users/invite')
 
 router.route('/users/self')
 .get((req, res) => {
-  const user = req._user
-
-  User.findOne({ '_id': user._id })
+  User.findById(req._user._id)
   .exec((error, user) => {
     if (error) {
       winston.error(error)
       return res.status(500).json({ error })
     }
     if (!user) return res.status(404).json({ error: { message: 'User not found' } })
-    else return res.status(200).json({ user })
+    return res.status(200).json({ user })
   })
 })
 

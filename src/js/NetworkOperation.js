@@ -1,17 +1,12 @@
 import axios from 'axios'
 
-const token = window.localStorage.getItem('token')
-
 // Authorization header interceptor
-axios.interceptors.request.use((config) => {
+axios.interceptors.request.use(config => {
+  console.log('TOKEN', localStorage.getItem('token'))
   // Get last url route and check if it's different from authenticate to add header
-  if (config.url.split('/').pop() !== 'authenticate')
-    config.headers.Authorization = `Bearer ${token}`
-
+  if (config.url.split('/').pop() !== 'authenticate') config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
   return config
-}, (error) => {
-    return Promise.reject(error)
-})
+}, error => Promise.reject(error))
 
 class NetworkOperation {
   static login(email, password) {
@@ -37,7 +32,7 @@ class NetworkOperation {
   static getProfile() {
     return axios.get(`${window.baseUrl}/users/self`)
   }
-  
+
   static getZones(company) {
     return axios.get(`${window.baseUrl}/companies/` + company + '/zones')
   }

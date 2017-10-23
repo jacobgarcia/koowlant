@@ -48,8 +48,8 @@ class Nav extends Component {
         <div className="user">
           <img src="/static/uploads/logo.png" alt="" className="logo"/>
           <div className="username">
-            <p>{`${this.props.credentials.user.fullName}`}</p>
-            <p>{getAdminString(this.props.credentials.user.permissions)}</p>
+            <p>{`${this.props.credentials.user ? this.props.credentials.user.fullName : 'Cargando...'}`}</p>
+            <p>{getAdminString(this.props.credentials.user ? this.props.credentials.user.permissions : null)}</p>
           </div>
         </div>
         <div className="navigation">
@@ -71,6 +71,15 @@ class Nav extends Component {
 
 Nav.propTypes = {
   credentials: PropTypes.object
+}
+
+Nav.defaultProps = {
+  credentials: {
+    user: {
+      permissions: 0,
+      fullName: 'Cargando...'
+    }
+  }
 }
 
 function mapStateToProps({ credentials }) {
