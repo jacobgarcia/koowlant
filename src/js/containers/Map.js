@@ -72,7 +72,7 @@ class MapView extends Component {
     })
 
     // Subzones
-    NetworkOperation.getSubzones(this.props.credentials.company || '')
+    NetworkOperation.getSubzones(this.props.credentials.company || 'att&t')
     .then(response => {
       const { subzones } = response.data
       // set each subzone
@@ -86,7 +86,7 @@ class MapView extends Component {
     })
 
     // Sites
-    NetworkOperation.getSites(this.props.credentials.company || '')
+    NetworkOperation.getSites(this.props.credentials.company || 'att&t')
     .then(response => {
       const { sites } = response.data
       // set each site
@@ -99,16 +99,16 @@ class MapView extends Component {
       console.log('Something went wrong:' + error)
     })
 
-    //Reports
-    NetworkOperation.getReports(this.props.credentials.company || '')
+    // Reports
+    NetworkOperation.getReports(this.props.credentials.company || 'att&t')
     .then(response => {
       const { reports } = response.data
       // set each report
-      reports.forEach((report) => {
+      reports.forEach(report => {
         this.props.setReport(report)
       })
     })
-    .catch((error) => {
+    .catch(error => {
       // Dumb catch
       console.log('Something went wrong:' + error)
     })
