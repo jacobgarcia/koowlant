@@ -58,7 +58,7 @@ class MapView extends Component {
   componentDidMount() {
     // Modify store with database information
     // Zones
-    NetworkOperation.getZones(this.props.credentials.company || '')
+    NetworkOperation.getZones(this.props.credentials.company || 'att&t')
     .then(response => {
       const { zones } = response.data
       // set each zone
