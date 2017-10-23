@@ -118,7 +118,7 @@ router.post('/authenticate', (req, res) => {
       return res.status(400).json({ message: 'Authentication failed. Malformed Request.' })
     }
 
-    bcrypt.compare(password + config.secret, user.password)
+    bcrypt.compare(password, user.password)
     .then(result => {
       const token = jwt.sign({
         _id: user._id,
