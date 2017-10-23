@@ -14,7 +14,7 @@ const Guest = require(path.resolve('models/Guest'))
 const config = require(path.resolve('config/config'))
 
 nev.configure({
-  verificationURL: 'http://localhost:8080/signup/${URL}',
+  verificationURL: 'https://demo.kawlantid.com/signup/${URL}',
 
   // mongo configuration
   persistentUserModel: User,
