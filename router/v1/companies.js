@@ -2,7 +2,7 @@
 const express = require('express')
 const path = require('path')
 const winston = require('winston')
-const router = express.Router()
+const router = new express.Router()
 
 const Site = require(path.resolve('models/Site'))
 const Zone = require(path.resolve('models/Zone'))
@@ -29,14 +29,14 @@ router.route('/companies/:company/:zone/:subzone/sites')
         return res.status(500).json({ error })
       }
       // Add the new site to the specified subzone
-      Subzone.findOneAndUpdate({ '_id': subzone }, { $push: { sites: site } }, { new: true })
+      return Subzone.findOneAndUpdate({ '_id': subzone }, { $push: { sites: site } }, { new: true })
       .exec((error, subzone) => {
         if (error) {
           winston.error({error})
           return res.status(500).json({ error })
         }
 
-        res.status(200).json({ site })
+        return res.status(200).json({ site })
       })
     })
 })
@@ -67,7 +67,7 @@ router.route('/companies/:company/:zone/subzones')
         }
         if (!zone) return res.status(404).json({ message: 'No zone found'})
 
-        res.status(200).json({ subzone })
+        return res.status(200).json({ subzone })
       })
     })
 })
@@ -130,7 +130,7 @@ router.route('/companies/:company/:site/reports')
           }
 
           global.io.to('0293j4ji').emit('report', report)
-          return res.status(200).json( report )
+          return res.status(200).json(report)
         })
       })
 

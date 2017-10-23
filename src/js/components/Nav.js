@@ -40,7 +40,6 @@ class Nav extends PureComponent {
 
   render() {
     const date = new Date(this.state.time)
-
     const isZone = this.props.location.pathname.includes('zones')
 
     return (
@@ -70,17 +69,10 @@ class Nav extends PureComponent {
 }
 
 Nav.propTypes = {
-  credentials: PropTypes.object
+  credentials: PropTypes.object,
+  location: PropTypes.object
 }
 
-Nav.defaultProps = {
-  credentials: {
-    user: {
-      permissions: 0,
-      fullName: 'Cargando...'
-    }
-  }
-}
 
 function mapStateToProps({ credentials }) {
   return {
