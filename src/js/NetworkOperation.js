@@ -37,7 +37,7 @@ class NetworkOperation {
   static getProfile() {
     return axios.get(`${window.baseUrl}/users/self`)
   }
-  
+
   static getZones(company) {
     return axios.get(`${window.baseUrl}/companies/` + company + '/zones')
   }
@@ -48,6 +48,10 @@ class NetworkOperation {
 
   static getSites(company) {
     return axios.get(`${window.baseUrl}/companies/` + company + '/sites')
+  }
+
+  static getReports(company) {
+    return axios.get(`${window.baseUrl}/companies/` + company + '/reports')
   }
 }
 

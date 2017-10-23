@@ -185,4 +185,38 @@ router.route('/companies/:company/sites')
   })
 })
 
+// Get last report for all sites
+router.route('/companies/:company/reports')
+.get((req, res) => {
+  const company = req.params.company
+
+  Site.find({})
+  .populate('zone', 'name')
+  .populate('subzone', 'name')
+  .exec((error, sites) => {
+    if (error) {
+      winston.error({error})
+      return res.status(500).json({ error })
+    }
+
+    let reports = []
+    sites.forEach((site) => {
+      let report = {
+        site: {
+          _id: site._id,
+          key: site.key
+        },
+        zone: site.zone,
+        subzone: site.subzone,
+        timestamp: site.timestamp,
+        sensors: site.sensors,
+        alarms: site.alarms
+      }
+      reports.push(report)
+    })
+
+    return res.status(200).json({ reports })
+  })
+})
+
 module.exports = router
