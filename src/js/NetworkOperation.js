@@ -44,6 +44,10 @@ class NetworkOperation {
   static getSites(company) {
     return axios.get(`${window.baseUrl}/companies/` + company + '/sites')
   }
+
+  static getReports(company) {
+    return axios.get(`${window.baseUrl}/companies/` + company + '/reports')
+  }
 }
 
 export default NetworkOperation

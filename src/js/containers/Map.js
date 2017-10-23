@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import qs from 'query-string'
 import { Map, TileLayer, Polygon } from 'react-leaflet'
 
-import { setZone, setSubzone, setSite } from '../actions'
+import { setZone, setSubzone, setSite, setReport } from '../actions'
 import { CreateZoneBar, ZoneDetail, Reports, ZonePolygon, SiteMarker, Search } from '../components'
 import { getAreaCenter } from '../SpecialFunctions'
 
@@ -95,6 +95,20 @@ class MapView extends Component {
       })
     })
     .catch(error => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
+
+    //Reports
+    NetworkOperation.getReports(this.props.credentials.user.company)
+    .then(response => {
+      const { reports } = response.data
+      // set each report
+      reports.forEach((report) => {
+        this.props.setReport(report)
+      })
+    })
+    .catch((error) => {
       // Dumb catch
       console.log('Something went wrong:' + error)
     })
@@ -548,6 +562,9 @@ function mapDispatchToProps(dispatch) {
     },
     setSite: (zoneId, subzoneId, siteId, key, name, position) => {
       dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
+    },
+    setReport: report => {
+      dispatch(setReport(report))
     }
   }
 }
@@ -560,7 +577,8 @@ MapView.propTypes = {
   location: PropTypes.object,
   reports: PropTypes.array,
   setSite: PropTypes.func,
-  setSubzone: PropTypes.func
+  setSubzone: PropTypes.func,
+  setReport: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapView)
