@@ -1044,7 +1044,7 @@ function credentials(state = {}, action) {
   }
 }
 
-// Global alerts
+// Global alerts (errors)
 function appAlert(state = {}, action) {
   switch (action.type) {
     case 'DISMISS_ALERT':

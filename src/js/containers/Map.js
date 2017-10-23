@@ -55,7 +55,7 @@ class MapView extends Component {
     this.getElementDetails = this.getElementDetails.bind(this)
   }
 
-  componentDidMount(){
+  componentDidMount() {
     // Modify store with database information
     // Zones
     NetworkOperation.getZones('att')
