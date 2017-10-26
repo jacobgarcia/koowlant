@@ -21,7 +21,7 @@ const videoJsOptions = {
   autoplay: true,
   controls: false,
   sources: [{
-    src: 'rtmp://localhost/live&idiots',
+    src: 'rtmp://demo.kawlantid.com/live&idiots',
     type: 'rtmp/mp4'
   }]
 }
