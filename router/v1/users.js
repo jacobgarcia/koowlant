@@ -14,7 +14,7 @@ const config = require(path.resolve('config/config'))
 mongoose.connect(config.database)
 
 nev.configure({
-  verificationURL: 'http://localhost:8080/signup/${URL}',
+  verificationURL: 'https://demo.kawlantid.com/signup/${URL}',
 
   // mongo configuration
   persistentUserModel: User,

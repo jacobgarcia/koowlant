@@ -10,6 +10,8 @@ const v1 = require(path.resolve('router/v1'))
 
 const PORT = process.env.PORT || 8080
 
+const NodeMediaServer = require('node-media-server')
+
 app.use(helmet())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -53,3 +55,21 @@ const io = require('socket.io').listen(server)
 
 // Connect sockets
 require(path.resolve('router/v1/sockets'))(io)
+
+// RTMP Settings
+const config = {
+  rtmp: {
+    port: 1935,
+    chunk_size: 60000,
+    gop_cache: true,
+    ping: 60,
+    ping_timeout: 30
+  },
+  http: {
+    port: 8000,
+    allow_origin: '*'
+  }
+}
+
+const nms = new NodeMediaServer(config)
+nms.run()

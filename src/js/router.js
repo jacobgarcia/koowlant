@@ -9,11 +9,22 @@ import { createStore } from 'redux'
 
 import Login from './containers/Login'
 import Signup from './containers/Signup'
+import Streaming from './containers/Streaming'
+
 import App from './containers/App'
 
 import appReducer from './reducers'
 
 const store = createStore(appReducer)
+
+const videoJsOptions = {
+  autoplay: true,
+  controls: false,
+  sources: [{
+    src: 'rtmp://demo.kawlantid.com/live&idiots',
+    type: 'rtmp/mp4'
+  }]
+}
 
 function Routes() {
   return (
@@ -21,6 +32,7 @@ function Routes() {
       <Router>
         <div id="app">
           <Switch>
+            <Route path="/streaming" render={() => <Streaming { ...videoJsOptions } />} />
             <Route path="/login" component={Login}/>
             <Route path="/signup/:invitation_token" component={Signup}/>
             <Route path="/" component={App} />

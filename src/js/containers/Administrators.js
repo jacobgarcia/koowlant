@@ -95,7 +95,7 @@ class Administrators extends Component {
                   <div className="inline space-around grow">
                     <div style={{display: 'flex'}}>
                       <label htmlFor="zone-add" style={{marginRight: 10}}>Zona: </label>
-                      <select style={{flexGrow: 1}} name="selectedZone" id="zone-add" onChange={this.handleChange} value={this.state.selectedZone} required>
+                      <select style={{flexGrow: 1}} name="selectedZone" id="zone-add" onChange={this.handleChange} value={this.state.selectedZone}>
                         <option />
                         {
                           this.props.zones.map(zone =>
@@ -106,7 +106,7 @@ class Administrators extends Component {
                     </div>
                     <div style={{display: 'flex', marginLeft: 20}}>
                       <label htmlFor="subzone-add" style={{marginRight: 10}}>Subzona: </label>
-                      <select style={{flexGrow: 1}} name="selectedSubzone" id="subzone-add" onChange={this.handleChange} value={this.state.selectedSubzone} required>
+                      <select style={{flexGrow: 1}} name="selectedSubzone" id="subzone-add" onChange={this.handleChange} value={this.state.selectedSubzone}>
                         <option />
                         {
                           this.state.selectedZone

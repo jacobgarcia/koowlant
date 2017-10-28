@@ -3,7 +3,7 @@ const express = require('express')
 const winston = require('winston')
 const router = new express.Router()
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt-nodejs')
 const path = require('path')
 const mongoose = require('mongoose')
 const nev = require('email-verification')(mongoose)
@@ -14,7 +14,7 @@ const Guest = require(path.resolve('models/Guest'))
 const config = require(path.resolve('config/config'))
 
 nev.configure({
-  verificationURL: 'http://localhost:8080/signup/${URL}',
+  verificationURL: 'https://demo.kawlantid.com/signup/${URL}',
 
   // mongo configuration
   persistentUserModel: User,
@@ -118,30 +118,28 @@ router.post('/authenticate', (req, res) => {
       return res.status(400).json({ message: 'Authentication failed. Malformed Request.' })
     }
 
-    bcrypt.compare(password + config.secret, user.password)
-    .then(result => {
-      const token = jwt.sign({
-        _id: user._id,
-        acc: user.accessLevel,
-        cmp: user.company
-      }, config.secret)
+    if (!bcrypt.compareSync(password, user.password)) {
+           winston.info('Failed to authenticate user password')
+           return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
+         } else {
+           const token = jwt.sign({
+             _id: user._id,
+             acc: user.accessLevel,
+             cmp: user.company
+           }, config.secret)
 
-      user = user.toObject()
+           user = user.toObject()
 
-      return res.status(200).json({
-        token,
-        user: {
-          _id: user._id,
-          name: user.fullName || 'User',
-          surname: user.surname,
-          accessLevel: user.accessLevel
-        }
-      })
-    })
-    .catch(error => {
-      winston.error('Failed to authenticate user password', error)
-      return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
-    })
+           return res.status(200).json({
+             token,
+             user: {
+               _id: user._id,
+               name: user.fullName || 'User',
+               surname: user.surname,
+               accessLevel: user.accessLevel
+             }
+           })
+    }
   })
   .catch(error => {
     winston.error({error})
