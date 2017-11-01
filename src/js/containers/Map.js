@@ -56,6 +56,7 @@ class MapView extends Component {
   }
 
   componentDidMount() {
+    console.log('Component will mount')
     // Modify store with database information
     // Zones
     NetworkOperation.getZones(this.props.credentials.company || 'att&t')
