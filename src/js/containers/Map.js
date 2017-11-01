@@ -164,7 +164,20 @@ class MapView extends Component {
         newPositions
       )
     } else {
-      this.props.setZone(newName, newPositions)
+      // Create zone on database
+      NetworkOperation.getZones(this.props.credentials.company || 'att&t')
+      .then(response => {
+        const { zones } = response.data
+        // set each zone
+        zones.forEach(zone => {
+          this.props.setZone(zone._id, zone.name, zone.positions)
+        })
+      })
+      .catch(error => {
+        // Dumb catch
+        console.log('Something went wrong:' + error)
+      })
+      this.props.setZone('myid', newName, newPositions)
     }
 
     this.setState({

@@ -20,12 +20,16 @@ class NetworkOperation {
     return axios.post(`${window.baseUrl}/users/invite`, { email, company, host })
   }
 
-  static setSite(company, subzone, key, position, sensors, alarms) {
-    return axios.post(`${window.baseUrl}/companies/` + company + '/' + subzone + '/sites', { key, position, sensors, alarms })
+  static setZone(company, name, positions, subzones) {
+    return axios.post(`${window.baseUrl}/companies/` + company + '/zones', {name, positions, subzones})
   }
 
   static setSubzone(company, zone, name, positions, sites) {
-    return axios.post(`${window.baseUrl}/users`)
+    return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/subzones')
+  }
+
+  static setSite(company, subzone, key, position, sensors, alarms) {
+    return axios.post(`${window.baseUrl}/companies/` + company + '/' + subzone + '/sites', { key, position, sensors, alarms })
   }
 
   static getProfile() {
