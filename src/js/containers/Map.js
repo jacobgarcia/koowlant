@@ -1,3 +1,4 @@
+
 /* eslint max-statements: ["error", 20, { "ignoreTopLevelFunctions": true }]*/
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -56,7 +57,6 @@ class MapView extends Component {
   }
 
   componentDidMount() {
-    console.log('Component will mount')
     // Modify store with database information
     // Zones
     NetworkOperation.getZones(this.props.credentials.company || 'att&t')
@@ -165,19 +165,16 @@ class MapView extends Component {
       )
     } else {
       // Create zone on database
-      NetworkOperation.getZones(this.props.credentials.company || 'att&t')
+      NetworkOperation.setZone(this.props.credentials.company || 'att&t', newName, newPositions)
       .then(response => {
-        const { zones } = response.data
-        // set each zone
-        zones.forEach(zone => {
-          this.props.setZone(zone._id, zone.name, zone.positions)
-        })
+        const { zone } = response.data
+        // set the new zone
+        this.props.setZone(zone._id, zone.name, zone.positions)
       })
       .catch(error => {
         // Dumb catch
         console.log('Something went wrong:' + error)
       })
-      this.props.setZone('myid', newName, newPositions)
     }
 
     this.setState({
