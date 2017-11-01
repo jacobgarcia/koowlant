@@ -2,7 +2,6 @@ import axios from 'axios'
 
 // Authorization header interceptor
 axios.interceptors.request.use(config => {
-  console.log('TOKEN', localStorage.getItem('token'))
   // Get last url route and check if it's different from authenticate to add header
   if (config.url.split('/').pop() !== 'authenticate') config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
   return config
@@ -21,12 +20,16 @@ class NetworkOperation {
     return axios.post(`${window.baseUrl}/users/invite`, { email, company, host })
   }
 
-  static setSite(company, subzone, key, position, sensors, alarms) {
-    return axios.post(`${window.baseUrl}/companies/` + company + '/' + subzone + '/sites', { key, position, sensors, alarms })
+  static setZone(company, name, positions, subzones) {
+    return axios.post(`${window.baseUrl}/companies/` + company + '/zones', {name, positions, subzones})
   }
 
   static setSubzone(company, zone, name, positions, sites) {
-    return axios.post(`${window.baseUrl}/users`)
+    return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/subzones')
+  }
+
+  static setSite(company, subzone, key, position, sensors, alarms) {
+    return axios.post(`${window.baseUrl}/companies/` + company + '/' + subzone + '/sites', { key, position, sensors, alarms })
   }
 
   static getProfile() {
