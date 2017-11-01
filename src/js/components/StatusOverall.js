@@ -20,15 +20,15 @@ class StatusOverall extends PureComponent {
         <h3>{getTitle(props.type, props)}<span>{props.site && (props.site.key || props.site._id)}</span></h3>
         <div className="sites-status">
           <StatusBar status={props.status}/>
-
           {
-            props.alarms
-            &&
-            (props.alarms.length > 0)
+            props.hasElements === false
+            ?
+            <p><span>Sin elementos creados</span></p>
+            :
+            (props.alarms && props.alarms.length > 0)
             ? <p><span>{props.percentage || '?'}%</span> de funcionalidad. <span className="alert"></span> {props.alarms && props.alarms.length} Alarmas totales</p>
             : <p><span>{props.percentage || '?'}%</span> de funcionalidad. Ninguna falla presente.</p>
           }
-
         </div>
       </div>
     )
