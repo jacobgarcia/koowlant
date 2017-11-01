@@ -2,7 +2,6 @@ import axios from 'axios'
 
 // Authorization header interceptor
 axios.interceptors.request.use(config => {
-  console.log('TOKEN', localStorage.getItem('token'))
   // Get last url route and check if it's different from authenticate to add header
   if (config.url.split('/').pop() !== 'authenticate') config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
   return config

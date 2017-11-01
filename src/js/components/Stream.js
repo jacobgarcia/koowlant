@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-export default class VideoPlayer extends React.Component {
+class Stream extends Component {
   componentDidMount() {
     // instantiate Video.js
     this.player = videojs(this.videoNode, this.props, function onPlayerReady() {
       console.log('onPlayerReady', this)
-    });
+    })
   }
 
   // destroy player on unmount
@@ -26,3 +26,5 @@ export default class VideoPlayer extends React.Component {
     )
   }
 }
+
+export default Stream
