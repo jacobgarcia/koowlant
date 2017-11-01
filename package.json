@@ -27,15 +27,9 @@
     "helmet": "^3.9.0",
     "jsonwebtoken": "^8.1.0",
     "leaflet": "^1.2.0",
-<<<<<<< HEAD
-    "mongoose": "^4.11.13",
-    "node-media-server": "^1.1.2",
-    "query-string": "^5.0.0",
-=======
     "mongoose": "^4.12.4",
     "node-media-server": "^1.1.2",
     "query-string": "^5.0.1",
->>>>>>> fd77783f607e15786bead53c647bb33a52817eb4
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-leaflet": "^1.7.1",
