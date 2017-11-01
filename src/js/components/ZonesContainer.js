@@ -62,13 +62,15 @@ function getSensorName(code) {
 
 function ZonesContainer(props) {
   const elements = getElements(props.type, props)
+  const url = 'localhost'
   const videoJsOptions = {
     autoplay: true,
     controls: false,
     sources: [{
-      src: 'rtmp://localhost/live&idiots',
+      src: 'rtmp://' + url + '/live&idiots' ,
       type: 'rtmp/mp4'
-    }]
+    }],
+
   }
   return (
 
@@ -121,7 +123,7 @@ function ZonesContainer(props) {
         (props.site && props.currentView === 'cameras')
         &&
         <div className="cameras-container">
-          <Stream { ...videoJsOptions } />
+          <Video source="/uploads/video/test-1.mp4" />
           <Video source="/uploads/video/test-2.mp4" />
           <Video source="/uploads/video/test-3.mp4" />
           <Video source="/uploads/video/test-4.mp4" />
