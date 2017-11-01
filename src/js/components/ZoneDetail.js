@@ -99,11 +99,23 @@ class ZoneDetail extends Component {
     if (this.state.currentView !== nextState.currentView) return true
     if (this.state.viewSort !== nextState.viewSort) return true
     if (this.state.reports && this.state.reports.sensors && (JSON.stringify(Object.values(this.state.reports.sensors)) !== JSON.stringify(Object.values(nextState.reports.sensors)))) return true
+    if (this.getElements(this.props.type, nextProps).length != this.getElements(nextProps.type, nextProps).length) return true
     return false
+  }
+
+  getElements(type, props) {
+    switch (type) {
+      case 'general': return props.zone
+      case 'zone': return props.zone.subzones
+      case 'subzone': return props.subzone.sites
+      case 'site': return props.site.sensors
+      default: return []
+    }
   }
 
   render() {
     const data = substractReportValues(this.props.reports)
+    const elements = this.getElements(this.props.type, this.props)
 
     const { status, percentage } = this.state
 
@@ -131,8 +143,8 @@ class ZoneDetail extends Component {
           zone={this.props.subzone || this.props.zone}
           site={this.props.site}
           type={this.props.type}
+          hasElements={elements.length > 0}
         />
-        <div>
           {/* {
             this.isSite
             && <div>
@@ -140,23 +152,30 @@ class ZoneDetail extends Component {
                 Cámaras
               </div>
           } */}
-          <ZonesContainer
-            changeSitesView={this.changeSitesView}
-            viewStyle={this.state.viewStyle}
-            currentView={this.state.currentView}
-            onViewChange={this.onViewChange}
-            onViewSortChange={this.onViewSortChange}
-            onHover={this.onHover}
-            highlightedZone={this.state.selectedZone}
-            type={this.props.type}
-            reports={this.props.reports}
-            zone={this.props.zone}
-            subzone={this.props.subzone}
-            site={this.props.site}
-            sensors={data.sensors}
-            viewSort={this.state.viewSort}
-          />
-        </div>
+          {
+            elements.length === 0
+            ? <div className="no-content">
+              <div className="kawlant-logo"></div>
+              <span>Sin elementos</span>
+            </div>
+            : <ZonesContainer
+                changeSitesView={this.changeSitesView}
+                viewStyle={this.state.viewStyle}
+                currentView={this.state.currentView}
+                onViewChange={this.onViewChange}
+                onViewSortChange={this.onViewSortChange}
+                onHover={this.onHover}
+                highlightedZone={this.state.selectedZone}
+                type={this.props.type}
+                reports={this.props.reports}
+                zone={this.props.zone}
+                subzone={this.props.subzone}
+                site={this.props.site}
+                sensors={data.sensors}
+                viewSort={this.state.viewSort}
+                elements={elements}
+              />
+          }
       </div>
     )
   }
