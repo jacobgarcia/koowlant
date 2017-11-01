@@ -118,7 +118,8 @@ router.post('/authenticate', (req, res) => {
       return res.status(400).json({ message: 'Authentication failed. Malformed Request.' })
     }
 
-    if (!bcrypt.compareSync(password, user.password)) {
+    // Config.secret as salt
+    if (!bcrypt.compareSync(password + config.secret, user.password)) {
            winston.info('Failed to authenticate user password')
            return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
          } else {
