@@ -42,14 +42,23 @@ app.use(
  app.use('/v1', v1)
 
 // Send index to all other routes
-app.get('*', (req, res) => {
+app.get('*', (req, res) =>
   res.sendFile(path.resolve('src/index.html'))
-})
+)
 
 // Start server
 const server = app.listen(PORT, () =>
   winston.info(`Telco server is listening on port: ${PORT}!`)
 )
+
+// If we're in dev enable CORS
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept')
+    next()
+  })
+}
 
 const io = require('socket.io').listen(server)
 
