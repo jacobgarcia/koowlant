@@ -46,7 +46,6 @@ class Administrators extends Component {
   handleSubmit(event) {
     event.preventDefault()
     const { email, selectedSubzone, selectedZone, grantedPermits, monitoringCameras, monitoringSensors } = this.state
-    console.log(email, selectedSubzone, selectedZone, grantedPermits, monitoringCameras, monitoringSensors)
 
     NetworkOperation.invite(email, this.props.credentials.user.company, this.props.credentials.user.email)
     .then(response => {
