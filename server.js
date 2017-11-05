@@ -41,10 +41,9 @@ app.use(
 
 // If we're in dev enable CORS
 if (process.env.NODE_ENV === 'development') {
-  winston.debug('DEVELOPMENT')
+  winston.info('DEVELOPMENT')
   app.use(cors())
 }
-
 // Resolve API v1
  app.use('/v1', v1)
 
