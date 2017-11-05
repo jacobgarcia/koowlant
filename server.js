@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression')
 const winston = require('winston')
 const app = express()
+const cors = require('cors')
 const v1 = require(path.resolve('router/v1'))
 
 const PORT = process.env.PORT || 8080
