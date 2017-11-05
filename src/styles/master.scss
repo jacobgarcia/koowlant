@@ -651,7 +651,11 @@ nav {
       .kawlant-logo {
         width: 120px;
         height: 120px;
-        background: #fff;
+        background-image: url('/static/img/iso.svg');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.3;
         margin-bottom: 20px;
       }
     }
