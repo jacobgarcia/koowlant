@@ -40,7 +40,6 @@ class App extends Component {
       this.props.history.replace('/login')
       error.response.status !== 401 && console.log(error)
     })
-
   }
 
   componentDidMount() {
