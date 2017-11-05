@@ -8,7 +8,7 @@ import { substractReportValues, getStatus, getFilteredReports } from '../Special
 
 function Video(props) {
   return (
-    <video className="camera-video" controls autoPlay loop>
+    <video className="camera-video" controls loop>
       <source src={props.source} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
