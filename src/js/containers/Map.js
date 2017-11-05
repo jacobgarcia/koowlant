@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import qs from 'query-string'
 import { Map, TileLayer, Polygon } from 'react-leaflet'
 
-import { setZone, setSubzone, setSite, setReport } from '../actions'
+import { setReport, setZone, setSubzone, setSite } from '../actions'
 import { CreateZoneBar, ZoneDetail, Reports, ZonePolygon, SiteMarker, Search } from '../components'
 import { getAreaCenter } from '../SpecialFunctions'
 
@@ -55,51 +55,7 @@ class MapView extends Component {
     this.getElementDetails = this.getElementDetails.bind(this)
   }
 
-  componentDidMount() {
-    console.log('Component will mount')
-    // Modify store with database information
-    // Zones
-    NetworkOperation.getZones(this.props.credentials.company || 'att&t')
-    .then(response => {
-      const { zones } = response.data
-      // set each zone
-      zones.forEach(zone => {
-        this.props.setZone(zone._id, zone.name, zone.positions)
-      })
-    })
-    .catch(error => {
-      // Dumb catch
-      console.log('Something went wrong:' + error)
-    })
-
-    // Subzones
-    NetworkOperation.getSubzones(this.props.credentials.company || 'att&t')
-    .then(response => {
-      const { subzones } = response.data
-      // set each subzone
-      subzones.forEach(subzone => {
-        this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
-      })
-    })
-    .catch(error => {
-      // Dumb catch
-      console.log('Something went wrong:' + error)
-    })
-
-    // Sites
-    NetworkOperation.getSites(this.props.credentials.company || 'att&t')
-    .then(response => {
-      const { sites } = response.data
-      // set each site
-      sites.forEach(site => {
-        this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
-      })
-    })
-    .catch(error => {
-      // Dumb catch
-      console.log('Something went wrong:' + error)
-    })
-
+  componentWillMount() {
     // Reports
     NetworkOperation.getReports(this.props.credentials.company || 'att&t')
     .then(response => {
@@ -164,8 +120,8 @@ class MapView extends Component {
         newPositions
       )
     } else {
-      // Create zone on database
-      NetworkOperation.getZones(this.props.credentials.company || 'att&t')
+      // Create zone on database company, name, positions, subzones
+      NetworkOperation.setZone(this.props.credentials.company || 'att&t', newName, newPositions)
       .then(response => {
         const { zones } = response.data
         // set each zone
@@ -277,7 +233,6 @@ class MapView extends Component {
   }
 
   popWindow(section) {
-    console.log(window)
     window.open(
       `${window.location}?isWindow=${section}`, 'Telco', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=800,height=493,toolbar=no'
     )
@@ -386,7 +341,7 @@ class MapView extends Component {
             <div className="actions">
               <div>
                 {
-                  this.state.selectedZone !== null
+                  this.state.selectedZone !== null && this.state.isGeneralStatusHidden
                     && <span className="button huge back" onClick={() => {
                       if (this.state.isCreatingSite || this.state.isCreatingZone) this.onCreate()
                       if (this.state.selectedSite) this.props.history.push(`/zones/${this.state.selectedZone._id}/${this.state.selectedSubzone._id}`)
@@ -492,6 +447,9 @@ class MapView extends Component {
                 // Render all zones
                 (this.state.selectedZone === null)
                 && this.props.zones.map(zone =>
+                  // TODO: Mark polygon without positions
+                  (zone.positions && zone.positions.length)
+                  &&
                   <ZonePolygon
                     key={zone._id}
                     zone={zone}
@@ -568,6 +526,9 @@ function mapStateToProps({ credentials, zones, reports }) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setReport: report => {
+      dispatch(setReport(report))
+    },
     setZone: (id, name, positions) => {
       dispatch(setZone(id, name, positions))
     },
@@ -576,9 +537,6 @@ function mapDispatchToProps(dispatch) {
     },
     setSite: (zoneId, subzoneId, siteId, key, name, position) => {
       dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
-    },
-    setReport: report => {
-      dispatch(setReport(report))
     }
   }
 }

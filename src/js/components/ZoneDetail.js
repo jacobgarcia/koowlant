@@ -88,27 +88,28 @@ class ZoneDetail extends Component {
     })
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { _id: currentId } = this.props.site || this.props.subzone || this.props.zone
-    const { _id: nextId } = nextProps.site || nextProps.subzone || nextProps.zone
-
-    if (currentId !== nextId) return true
-    if (this.state.percentage !== nextState.percentage) return true
-    if (this.props.type !== nextProps.type) return true
-    if (this.state.viewStyle !== nextState.viewStyle) return true
-    if (this.state.currentView !== nextState.currentView) return true
-    if (this.state.viewSort !== nextState.viewSort) return true
-    if (this.state.reports && this.state.reports.sensors && (JSON.stringify(Object.values(this.state.reports.sensors)) !== JSON.stringify(Object.values(nextState.reports.sensors)))) return true
-    if (this.getElements(this.props.type, nextProps).length != this.getElements(nextProps.type, nextProps).length) return true
-    return false
-  }
+  // TODO: Optimize and make correct comparisons
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   const { _id: currentId } = this.props.site || this.props.subzone || this.props.zone
+  //   const { _id: nextId } = nextProps.site || nextProps.subzone || nextProps.zone
+  //
+  //   if (currentId !== nextId) return true
+  //   if (this.state.percentage !== nextState.percentage) return true
+  //   if (this.props.type !== nextProps.type) return true
+  //   if (this.state.viewStyle !== nextState.viewStyle) return true
+  //   if (this.state.currentView !== nextState.currentView) return true
+  //   if (this.state.viewSort !== nextState.viewSort) return true
+  //   if (this.state.reports && this.state.reports.sensors && (JSON.stringify(Object.values(this.state.reports.sensors)) !== JSON.stringify(Object.values(nextState.reports.sensors)))) return true
+  //   if (this.getElements(this.props.type, nextProps).length != this.getElements(nextProps.type, nextProps).length) return true
+  //   return false
+  // }
 
   getElements(type, props) {
     switch (type) {
-      case 'general': return props.zone
-      case 'zone': return props.zone.subzones
-      case 'subzone': return props.subzone.sites
-      case 'site': return props.site.sensors
+      case 'general': return props.zone || []
+      case 'zone': return (props.zone && props.zone.subzones) || []
+      case 'subzone': return (props.subzone && props.subzone.sites) || []
+      case 'site': return (props.site && props.site.sensors) || []
       default: return []
     }
   }
@@ -143,7 +144,7 @@ class ZoneDetail extends Component {
           zone={this.props.subzone || this.props.zone}
           site={this.props.site}
           type={this.props.type}
-          hasElements={elements.length > 0}
+          hasElements={elements && elements.length > 0}
         />
           {/* {
             this.isSite
@@ -153,7 +154,7 @@ class ZoneDetail extends Component {
               </div>
           } */}
           {
-            elements.length === 0
+            elements && elements.length === 0
             ? <div className="no-content">
               <div className="kawlant-logo"></div>
               <span>Sin elementos</span>
@@ -189,7 +190,7 @@ ZoneDetail.propTypes = {
     PropTypes.array
   ]),
   type: PropTypes.string,
-  // isWindow: PropTypes.bool,
+  isWindow: PropTypes.string,
   onPopWindow: PropTypes.func,
   onHover: PropTypes.func,
   reports: PropTypes.array
