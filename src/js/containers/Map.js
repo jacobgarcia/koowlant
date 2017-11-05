@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import qs from 'query-string'
 import { Map, TileLayer, Polygon } from 'react-leaflet'
 
-import { setReport } from '../actions'
+import { setReport, setZone, setSubzone, setSite } from '../actions'
 import { CreateZoneBar, ZoneDetail, Reports, ZonePolygon, SiteMarker, Search } from '../components'
 import { getAreaCenter } from '../SpecialFunctions'
 
@@ -120,8 +120,8 @@ class MapView extends Component {
         newPositions
       )
     } else {
-      // Create zone on database
-      NetworkOperation.getZones(this.props.credentials.company || 'att&t')
+      // Create zone on database company, name, positions, subzones
+      NetworkOperation.setZone(this.props.credentials.company || 'att&t', newName, newPositions)
       .then(response => {
         const { zones } = response.data
         // set each zone
@@ -447,6 +447,9 @@ class MapView extends Component {
                 // Render all zones
                 (this.state.selectedZone === null)
                 && this.props.zones.map(zone =>
+                  // TODO: Mark polygon without positions
+                  (zone.positions && zone.positions.length)
+                  &&
                   <ZonePolygon
                     key={zone._id}
                     zone={zone}
@@ -525,6 +528,15 @@ function mapDispatchToProps(dispatch) {
   return {
     setReport: report => {
       dispatch(setReport(report))
+    },
+    setZone: (id, name, positions) => {
+      dispatch(setZone(id, name, positions))
+    },
+    setSubzone: (zoneId, subzoneId, name, positions) => {
+      dispatch(setSubzone(zoneId, subzoneId, name, positions))
+    },
+    setSite: (zoneId, subzoneId, siteId, key, name, position) => {
+      dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
     }
   }
 }
