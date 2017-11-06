@@ -107,24 +107,31 @@ class MapView extends Component {
     } = this.state
 
     if (selectedSubzone && selectedZone) {
-      this.props.setSite(
-        selectedZone._d,
-        selectedSubzone._id,
-        name,
-        newPositions[0] // Add the first position
-      )
-    } else if (selectedZone) {
-      this.props.setSubzone(
+
+      NetworkOperation.setSite(
+        this.props.credentials.company,
         selectedZone._id,
-        newName,
-        newPositions
+        selectedSubzone._id,
+        '[NULL]', // TODO: Set real key
+        newPositions[0],
+        newName // Add the first position
       )
+      .then(response => {
+        console.log(response)
+      })
+    } else if (selectedZone) {
+      // Setting subzone
+      NetworkOperation.setSubzone(this.props.credentials.company, selectedZone._id, newName, newPositions, null)
+      .then(({data}) => {
+        const { _id, name, positions } = data.subzone
+        this.props.setSubzone(_id, name, positions)
+      })
     } else {
       // Create zone on database company, name, positions, subzones
-      NetworkOperation.setZone(this.props.credentials.company || 'att&t', newName, newPositions)
+      NetworkOperation.setZone(this.props.credentials.company, newName, newPositions, null)
       .then(response => {
-        const { zones } = response.data
-        // set each zone
+        const zones = response.data.zone
+        // Set each zone
         zones.forEach(zone => {
           this.props.setZone(zone._id, zone.name, zone.positions)
         })
@@ -379,7 +386,7 @@ class MapView extends Component {
                 // Render subzones in a selected zone
                 (this.state.selectedZone && this.state.selectedZone.subzones && !this.state.selectedSubzone)
                 && this.state.selectedZone.subzones.map(subzone =>
-                  subzone.positions
+                  (subzone.positions && subzone.positions.length)
                   && <ZonePolygon
                       key={subzone._id}
                       zone={subzone}
@@ -424,7 +431,7 @@ class MapView extends Component {
                 ? <Polygon
                     positions={[
                       [[-85,-180], [-85,180], [85,180], [85,-180]],
-                      [...this.state.selectedSubzone.positions]
+                      [...this.state.selectedSubzone.positions || []]
                     ]}
                     fillOpacity={0.3}
                     color="#666"
@@ -435,7 +442,7 @@ class MapView extends Component {
                   && <Polygon
                       positions={[
                         [[-85,-180], [-85,180], [85,180], [85,-180]],
-                        [...this.state.selectedZone.positions]
+                        [...this.state.selectedZone.positions || []]
                       ]}
                       fillOpacity={0.3}
                       color="#666"
