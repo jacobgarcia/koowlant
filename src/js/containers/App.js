@@ -19,7 +19,6 @@ const socket = io() // window.location
 
 class App extends Component {
   componentWillMount() {
-    console.log(this.props.credentials)
     const token = localStorage.getItem('token')
 
     if (!token) {
