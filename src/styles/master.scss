@@ -662,6 +662,7 @@ nav {
     .top {
       display: flex;
       justify-content: space-between;
+      flex-shrink: 0;
     }
     .info-container {
       margin-top: 30px;
