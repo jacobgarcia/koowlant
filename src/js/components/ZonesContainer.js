@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
@@ -48,6 +48,44 @@ function getSensorName(code) {
   }
   name += ` ${code.charAt(2)}`
   return name
+}
+
+class Sensor extends Component {
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.sensor.value === this.props.sensor.value) {
+      return false
+    }
+    return true
+  }
+
+  render() {
+    return (
+      <div className="sensor graph" style={this.props.viewSort === 'DYNAMIC' ? {order: Math.round(this.props.sensor.value * -1)} : {}}>
+        <h3>{getSensorName(this.props.sensor.key)}</h3>
+        <PieChart width={70} height={70}>
+          <Pie
+            dataKey="value"
+            data={[{ name: 'val', value: this.props.sensor.value},{ name: 'rest', value: 100 - this.props.sensor.value }]}
+            outerRadius={35}
+            innerRadius={28}
+            startAngle={-90}
+            endAngle={450}
+            fill=""
+            animationEase="ease"
+            animationDuration={500}
+            animationBegin={0}
+            strokeWidth={0}
+          >
+          <Cell fill={'#ed2a20'} />
+          <Cell fill={'#50E3C2'} />
+          </Pie>
+        </PieChart>
+        {
+          <span className="percentage">{this.props.sensor.value}%</span>
+        }
+      </div>
+    )
+  }
 }
 
 function ZonesContainer(props) {
@@ -142,9 +180,8 @@ function ZonesContainer(props) {
           // MINI ZONES
           <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
             {
-              ((Array.isArray(elements)))
+              (Array.isArray(elements))
               && elements.map((element, index) => {
-                console.log('ELEMENTS', elements.length)
                 let reports = getFilteredReports(props.reports, element)
                 reports = substractReportValues(reports)
                 const { status, percentage } = getStatus(reports || null)
@@ -180,30 +217,11 @@ function ZonesContainer(props) {
             props.sensors.length
             ?
             props.sensors.map(sensor =>
-                <div key={sensor.key} className="sensor graph" style={props.viewSort === 'DYNAMIC' ? {order: Math.round(sensor.value * -1)} : {}}>
-                  <h3>{getSensorName(sensor.key)}</h3>
-                  <PieChart width={70} height={70}>
-                    <Pie
-                      dataKey="value"
-                      data={[{ name: 'val', value: sensor.value},{ name: 'rest', value: 100 - sensor.value }]}
-                      outerRadius={35}
-                      innerRadius={28}
-                      startAngle={-90}
-                      endAngle={450}
-                      fill=""
-                      animationEase="ease"
-                      animationDuration={500}
-                      animationBegin={0}
-                      strokeWidth={0}
-                    >
-                    <Cell fill={'#ed2a20'} />
-                    <Cell fill={'#50E3C2'} />
-                    </Pie>
-                  </PieChart>
-                  {
-                    <span className="percentage">{sensor.value}%</span>
-                  }
-                </div>
+                <Sensor
+                  key={sensor.key}
+                  sensor={sensor}
+                  viewSort={props.viewSort}
+                />
             )
             :
             <div className="no-content">
