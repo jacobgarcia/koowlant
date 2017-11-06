@@ -150,22 +150,44 @@ class MapView extends Component {
       selectedSubzone
     } = this.state
 
-    if (selectedSubzone && selectedZone) {
-      this.props.setSite(
-        selectedZone._d,
-        selectedSubzone._id,
-        name,
-        newPositions[0] // Add the first position
-      )
-    } else if (selectedZone) {
-      this.props.setSubzone(
-        selectedZone._id,
-        newName,
-        newPositions
-      )
+    if (selectedSubzone && selectedZone) { // This means that the user is creating a site
+      NetworkOperation.setSite(this.props.credentials.company || 'att&t', selectedZone._id, selectedSubzone._id, newName, newPositions[0]) // This means that the user is creating zone
+      .then(response => {
+        const { site } = response.data
+        // set the new subzone
+        this.props.setSite(
+          selectedZone._id,
+          selectedSubzone._id,
+          site._id,
+          site.name,
+          site.position // Add the first position
+        )
+      })
+      .catch(error => {
+        // Dumb catch
+        console.log('Something went wrong:' + error)
+      })
+
+    } else if (selectedZone) { // This means that the user is creating subzone
+      //console.log(selectedZone._id, newName, newPositions);
+      NetworkOperation.setSubzone(this.props.credentials.company || 'att&t', selectedZone._id, newName, newPositions) // This means that the user is creating zone
+      .then(response => {
+        const { subzone } = response.data
+        // set the new subzone
+        this.props.setSubzone(
+          selectedZone._id,
+          subzone._id,
+          subzone.name,
+          subzone.positions
+        )
+      })
+      .catch(error => {
+        // Dumb catch
+        console.log('Something went wrong:' + error)
+      })
     } else {
       // Create zone on database
-      NetworkOperation.setZone(this.props.credentials.company || 'att&t', newName, newPositions)
+      NetworkOperation.setZone(this.props.credentials.company || 'att&t', newName, newPositions) // This means that the user is creating zone
       .then(response => {
         const { zone } = response.data
         // set the new zone
