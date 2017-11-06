@@ -1,4 +1,3 @@
-
 /* eslint max-statements: ["error", 20, { "ignoreTopLevelFunctions": true }]*/
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -227,39 +226,6 @@ class MapView extends Component {
         currentPosition: [23.2096057, -101.6139503]
       })
     }
-
-    // if (!selectedZone) {
-    //   this.setState({
-    //     selectedZone: null,
-    //     selectedSubzone: null,
-    //     currentZoom: 5,
-    //     currentPosition: [23.2096057, -101.6139503]
-    //   })
-    // } else if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
-    //   this.setState({
-    //     selectedZone,
-    //     currentZoom: 5.5,
-    //     currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions[0]) : [23.2096057, -101.6139503],
-    //     selectedSubzone: null,
-    //     selectedSite: null
-    //   })
-    // } else if (selectedSubzone && !selectedSite && (!this.state.selectedSubzone || (this.state.selectedSubzone))) {
-    //   this.setState({
-    //     selectedSubzone,
-    //     selectedSite: null,
-    //     currentZoom: 6.7
-    //   }, () => {
-    //     selectedSubzone.positions[0]
-    //     && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
-    //   })
-    // } else if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
-    //   this.setState({
-    //     selectedZone,
-    //     selectedSubzone,
-    //     selectedSite,
-    //     currentZoom: 10.5
-    //   }, () => this.setState({currentPosition: selectedSite.position}))
-    // }
   }
 
   onSiteHover(elementId) {
