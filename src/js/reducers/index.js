@@ -5,8 +5,13 @@ function credentials(state = JSON.parse(localStorage.getItem('credentials')), ac
   switch (action.type) {
     case 'SET_USER':
       return {
-        user: action.user,
-        token: action.token,
+        user: {
+          _id: action.user._id,
+          email: action.user.email,
+          fullName: action.user.fullName
+        },
+        token: action.user.token,
+        company: action.user.company,
         authenticated: true
       }
     case 'LOG_OUT':
