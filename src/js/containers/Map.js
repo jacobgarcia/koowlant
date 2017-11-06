@@ -107,41 +107,44 @@ class MapView extends Component {
       selectedSubzone
     } = this.state
 
+    // SETTING SITE
     if (selectedSubzone && selectedZone) {
-      console.log('CRED', this.props.credentials)
-      console.log(this.props.credentials && this.props.credentials.company && this.props.credentials.company._id)
-      console.log(this.props.credentials.company._id,
-      selectedZone._id,
-      selectedSubzone._id,
-      newName,
-      '_KEY_',
-      newPositions[0],
-      null,
-      null)
       // company, zone, subzone, name, key, position, sensors, alarms
       NetworkOperation.setSite(
         this.props.credentials.company._id,
         selectedZone._id,
         selectedSubzone._id,
         newName,
-        '_KEY_',
+        String(Date.now()), // TODO set key
         newPositions[0],
         null,
         null
       )
-      .then(response => {
-        console.log(response)
+      .then(({data, status}) => {
+        const { zone, subzone, _id, key, name, position } = data.site
+        console.log(zone, subzone, _id, key, name, position)
+        this.props.setSite(zone, subzone, _id, key, name, position)
       })
     } else if (selectedZone) {
       // Setting subzone
-      NetworkOperation.setSubzone(this.props.credentials.company, selectedZone._id, newName, newPositions, null)
+      NetworkOperation.setSubzone(
+        this.props.credentials.company._id,
+        selectedZone._id, newName,
+        newPositions,
+        null
+      )
       .then(({data}) => {
-        const { _id, name, positions } = data.subzone
-        this.props.setSubzone(_id, name, positions)
+        const { _id, name, positions, parentZone } = data.subzone
+        this.props.setSubzone(parentZone, _id, name, positions)
       })
     } else {
       // Create zone on database company, name, positions, subzones
-      NetworkOperation.setZone(this.props.credentials.company, newName, newPositions, null)
+      NetworkOperation.setZone(
+        this.props.credentials.company._id,
+        newName,
+        newPositions,
+        null
+      )
       .then(response => {
 
         const zone = response.data.zone
@@ -431,7 +434,9 @@ class MapView extends Component {
               {
                 // Render subzones in a selected zone
                 (this.state.selectedZone && this.state.selectedZone.subzones && !this.state.selectedSubzone)
-                && this.state.selectedZone.subzones.map(subzone =>
+                && this.props.zones
+                .find(({_id}) => _id === this.state.selectedZone._id)
+                .subzones.map(subzone =>
                   (subzone.positions && subzone.positions.length)
                   && <ZonePolygon
                       key={subzone._id}
@@ -450,7 +455,10 @@ class MapView extends Component {
               {
                 // Render sites in a selected subzone
                 this.state.selectedSubzone && this.state.selectedSubzone.sites
-                && this.state.selectedSubzone.sites.map(site =>
+                &&
+                this.props.zones
+                .find(({_id}) => _id === this.state.selectedZone._id).subzones
+                .find(({_id}) => _id === this.state.selectedSubzone._id).sites.map(site =>
                   <SiteMarker
                     key={site._id}
                     position={site.position}
@@ -493,7 +501,10 @@ class MapView extends Component {
                       fillOpacity={0.3}
                       color="#666"
                       weight={0}
-                      onClick={event => event.stopPropagation() }
+                      onClick={() => {
+                        if (this.state.isCreatingSite || this.state.isCreatingZone) return
+                        this.props.history.push('/')
+                      }}
                     />
               }
               {
