@@ -122,7 +122,6 @@ class MapView extends Component {
       )
       .then(({data, status}) => {
         const { zone, subzone, _id, key, name, position } = data.site
-        console.log(zone, subzone, _id, key, name, position)
         this.props.setSite(zone, subzone, _id, key, name, position)
       })
     } else if (selectedZone) {
