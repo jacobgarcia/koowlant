@@ -38,6 +38,9 @@ const schema = new Schema({
   zone: { type: Schema.Types.ObjectId, ref: 'Zone' }
 })
 
+// Set company-key unique
+schema.index({ key: 1, company: 1}, { unique: true })
+
 schema.loadClass(SiteClass)
 
 module.exports = mongoose.model('Site', schema)
