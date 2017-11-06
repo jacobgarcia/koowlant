@@ -142,8 +142,9 @@ function ZonesContainer(props) {
           // MINI ZONES
           <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
             {
-              (Array.isArray(elements) && elements.length)
+              ((Array.isArray(elements)))
               && elements.map((element, index) => {
+                console.log('ELEMENTS', elements.length)
                 let reports = getFilteredReports(props.reports, element)
                 reports = substractReportValues(reports)
                 const { status, percentage } = getStatus(reports || null)
@@ -167,10 +168,6 @@ function ZonesContainer(props) {
                   </Link>
                 )
               })
-              // : <div className="no-content">
-              //     <div className="kawlant-logo"></div>
-              //     <span>Sin elementos</span>
-              //   </div>
             }
           </div>
         ]
@@ -180,6 +177,8 @@ function ZonesContainer(props) {
         &&
         <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
           {
+            props.sensors.length
+            ?
             props.sensors.map(sensor =>
                 <div key={sensor.key} className="sensor graph" style={props.viewSort === 'DYNAMIC' ? {order: Math.round(sensor.value * -1)} : {}}>
                   <h3>{getSensorName(sensor.key)}</h3>
@@ -206,6 +205,11 @@ function ZonesContainer(props) {
                   }
                 </div>
             )
+            :
+            <div className="no-content">
+              <div className="kawlant-logo"></div>
+              <span>Sin elementos</span>
+            </div>
           }
         </div>
       }
