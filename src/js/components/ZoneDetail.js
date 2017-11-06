@@ -154,11 +154,11 @@ class ZoneDetail extends Component {
               </div>
           } */}
           {
-            elements && elements.length === 0
+            elements && elements.length === 0 && this.props.type !== 'site'
             ? <div className="no-content">
-              <div className="kawlant-logo"></div>
-              <span>Sin elementos</span>
-            </div>
+                <div className="kawlant-logo"></div>
+                <span>Sin elementos</span>
+              </div>
             : <ZonesContainer
                 changeSitesView={this.changeSitesView}
                 viewStyle={this.state.viewStyle}
