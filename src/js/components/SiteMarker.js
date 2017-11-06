@@ -43,7 +43,7 @@ function SiteMarker(props) {
                   {/* { warnings > 0 ? <span className="warnings-icon" /> : null } */}
                   { alerts > 0 ? <span className="alerts-icon" /> : null }
                 </div>
-                <h3>{props.site.name || props.site.key}</h3>
+                <h3>{props.title || props.site.name || props.site.key}</h3>
               </div>
             }
             <div className="hidable">

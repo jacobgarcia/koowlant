@@ -82,7 +82,8 @@ router.route('/users/invite')
 router.route('/users/self')
 .get((req, res) => {
   // Get user id by its
-  User.findById(req._user._id, '-password')
+  User.findById(req._user._id, '-password -pasword')
+  .populate('company')
   .exec((error, user) => {
     if (error) {
       winston.error(error)

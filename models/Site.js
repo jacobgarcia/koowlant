@@ -16,8 +16,8 @@ const History = new Schema({
       value: Number,
       dissmissed: Boolean
     }],
-     timestamp: { type: Number, default: Date.now() } // Unix timestamp. Time when the capture was done
-},{ _id : false })
+     timestamp: { type: Number, default: Date.now } // Unix timestamp. Time when the capture was done
+},{ _id: false })
 
 const schema = new Schema({
   key: { type: String, unique: true, required: true },
@@ -33,6 +33,7 @@ const schema = new Schema({
   }],
   timestamp: { type: Number, default: Date.now() }, // Last updated
   history: [History],
+  company: { type: Schema.Types.ObjectId, required: true, ref: 'Company' },
   subzone: { type: Schema.Types.ObjectId, ref: 'Subzone' },
   zone: { type: Schema.Types.ObjectId, ref: 'Zone' }
 })

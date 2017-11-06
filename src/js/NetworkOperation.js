@@ -25,11 +25,14 @@ class NetworkOperation {
   }
 
   static setSubzone(company, zone, name, positions, sites) {
-    return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/subzones', { name, positions, sites })
+    return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/subzones', { positions, name })
   }
 
-  static setSite(company, zone, subzone, key, position, sensors, alarms) {
-    return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/' + subzone + '/sites', { key, position, sensors, alarms })
+  static setSite(company, zone, subzone, name, key, position, sensors, alarms) {
+    console.log('Setting site...')
+    // /companies/:company/zones/:zone/subzones/:subzone/sites
+    console.log(`${window.baseUrl}/companies/${company}/zones/${zone}/subzones/${subzone}/sites`)
+    return axios.post(`${window.baseUrl}/companies/${company}/zones/${zone}/subzones/${subzone}/sites`, { key, position, sensors, alarms, name })
   }
 
   static getProfile() {

@@ -101,7 +101,7 @@ class MapView extends Component {
     })
   }
 
-  componentWillMount(){
+  componentWillMount() {
     // Reports
     NetworkOperation.getReports(this.props.credentials.company || 'att&t')
     .then(response => {
@@ -152,46 +152,34 @@ class MapView extends Component {
       selectedSubzone
     } = this.state
 
-    if (selectedSubzone && selectedZone) { // This means that the user is creating a site
-      NetworkOperation.setSite(this.props.credentials.company || 'att&t', selectedZone._id, selectedSubzone._id, newName, newPositions[0]) // This means that the user is creating zone
+    if (selectedSubzone && selectedZone) {
+      // company, zone, subzone, name, key, position, sensors, alarms
+      NetworkOperation.setSite(
+        this.props.credentials.company,
+        selectedZone._id,
+        selectedSubzone._id,
+        newName,
+        '_KEY_',
+        newPositions[0],
+        null,
+        null
+      )
       .then(response => {
-        const { site } = response.data
-        // set the new subzone
-        this.props.setSite(
-          selectedZone._id,
-          selectedSubzone._id,
-          site._id,
-          site.name,
-          site.position // Add the first position
-        )
+        console.log(response)
       })
-      .catch(error => {
-        // Dumb catch
-        console.log('Something went wrong:' + error)
-      })
-
-    } else if (selectedZone) { // This means that the user is creating subzone
-      //console.log(selectedZone._id, newName, newPositions);
-      NetworkOperation.setSubzone(this.props.credentials.company || 'att&t', selectedZone._id, newName, newPositions) // This means that the user is creating zone
-      .then(response => {
-        const { subzone } = response.data
-        // set the new subzone
-        this.props.setSubzone(
-          selectedZone._id,
-          subzone._id,
-          subzone.name,
-          subzone.positions
-        )
-      })
-      .catch(error => {
-        // Dumb catch
-        console.log('Something went wrong:' + error)
+    } else if (selectedZone) {
+      // Setting subzone
+      NetworkOperation.setSubzone(this.props.credentials.company, selectedZone._id, newName, newPositions, null)
+      .then(({data}) => {
+        const { _id, name, positions } = data.subzone
+        this.props.setSubzone(_id, name, positions)
       })
     } else {
       // Create zone on database company, name, positions, subzones
-      NetworkOperation.setZone(this.props.credentials.company || 'att&t', newName, newPositions)
+      NetworkOperation.setZone(this.props.credentials.company, newName, newPositions, null)
       .then(response => {
-        const { zone } = response.data
+
+        const zone = response.data.zone
         // set the new zone
         this.props.setZone(zone._id, zone.name, zone.positions)
       })
@@ -444,7 +432,7 @@ class MapView extends Component {
                 // Render subzones in a selected zone
                 (this.state.selectedZone && this.state.selectedZone.subzones && !this.state.selectedSubzone)
                 && this.state.selectedZone.subzones.map(subzone =>
-                  subzone.positions
+                  (subzone.positions && subzone.positions.length)
                   && <ZonePolygon
                       key={subzone._id}
                       zone={subzone}
@@ -489,7 +477,7 @@ class MapView extends Component {
                 ? <Polygon
                     positions={[
                       [[-85,-180], [-85,180], [85,180], [85,-180]],
-                      [...this.state.selectedSubzone.positions]
+                      [...this.state.selectedSubzone.positions || []]
                     ]}
                     fillOpacity={0.3}
                     color="#666"
@@ -500,7 +488,7 @@ class MapView extends Component {
                   && <Polygon
                       positions={[
                         [[-85,-180], [-85,180], [85,180], [85,-180]],
-                        [...this.state.selectedZone.positions]
+                        [...this.state.selectedZone.positions || []]
                       ]}
                       fillOpacity={0.3}
                       color="#666"

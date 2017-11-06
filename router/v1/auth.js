@@ -60,50 +60,48 @@ router.post('/signup/:invitation_token', (req, res) => {
       winston.error({error})
       return res.status(500).json({ error })
     }
-    else if (!guest) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
-    else if (guest.email != email) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
-    else {
-      guest.fullName = fullName
+    if (!guest) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
+    if (guest.email !== email) return res.status(401).json({ message: 'Invalid invitation. Please ask your administrator to send your invitation again'})
 
-      guest.password = bcrypt.hashSync(password)
+    guest.fullName = fullName
 
-      guest.save((error, guest) => {
-        nev.confirmTempUser(invitation_token, (error, user) => {
+    guest.password = bcrypt.hashSync(password)
+    guest.save((error, guest) => {
+      nev.confirmTempUser(invitation_token, (error, user) => {
+          if (error) {
+            winston.error(error)
+            return res.status(500).json({error})
+          }
+          if (!user) {
+            return res.status(500).json({ message: 'Could not send create user information' })
+          }
+          nev.sendConfirmationEmail(user.email, (error, info) => {
             if (error) {
               winston.error(error)
-              return res.status(500).json({error})
+              return res.status(404).json({ message: 'Sending confirmation email FAILED'})
             }
-            else if (user) {
-              nev.sendConfirmationEmail(user.email, (error, info) => {
-                if (error) {
-                  winston.error(error)
-                  return res.status(404).json({ message: 'Sending confirmation email FAILED'})
-                }
 
-                const token = jwt.sign({
-                  _id: user._id,
-                  acc: user.accessLevel,
-                  cmp: user.company
-                }, config.secret)
+            const token = jwt.sign({
+              _id: user._id,
+              acc: user.accessLevel,
+              cmp: user.company
+            }, config.secret)
 
-                user = user.toObject()
+            user = user.toObject()
 
-                return res.status(200).json({
-                   token,
-                   user: {
-                     _id: user._id,
-                     name: user.name || 'User',
-                     surname: user.surname,
-                     accessLevel: user.accessLevel
-                   },
-                   info
-                 })
-              })
-            }
-            else return res.status(500).json({ message: 'Could not send create user information' })
-        })
-    })
-  }
+            return res.status(200).json({
+               token,
+               user: {
+                 _id: user._id,
+                 name: user.name || 'User',
+                 surname: user.surname,
+                 accessLevel: user.accessLevel
+               },
+               info
+             })
+          })
+      })
+  })
 })
 
 
@@ -120,27 +118,28 @@ router.post('/authenticate', (req, res) => {
 
     // Config.secret as salt
     if (!bcrypt.compareSync(password + config.secret, user.password)) {
-           winston.info('Failed to authenticate user password')
-           return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
-         } else {
-           const token = jwt.sign({
-             _id: user._id,
-             acc: user.accessLevel,
-             cmp: user.company
-           }, config.secret)
+       winston.info('Failed to authenticate user password')
+       return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
+     }
 
-           user = user.toObject()
+     const token = jwt.sign({
+       _id: user._id,
+       acc: user.accessLevel,
+       cmp: user.company
+     }, config.secret)
 
-           return res.status(200).json({
-             token,
-             user: {
-               _id: user._id,
-               name: user.fullName || 'User',
-               surname: user.surname,
-               accessLevel: user.accessLevel
-             }
-           })
-    }
+     user = user.toObject()
+
+     return res.status(200).json({
+       token,
+       user: {
+         _id: user._id,
+         name: user.fullName || 'User',
+         surname: user.surname,
+         accessLevel: user.accessLevel
+       }
+     })
+
   })
   .catch(error => {
     winston.error({error})
