@@ -71,15 +71,13 @@ class Signup extends Component {
 
       this.props.history.push('/')
     })
-    .catch((error) => {
+    .catch(error => {
       // TODO: Check status and based on that return information to user
       console.log('Something went wrong: ' + error)
       this.setState({
         signupFailed: true
       })
     })
-
-
   }
 
   validatePassword(password = '') {
@@ -115,7 +113,7 @@ class Signup extends Component {
         <Redirect to="/" />
       )
     }
-    
+
     return (
       <div className="login">
         <img src="/static/img/iso.svg" alt="" className="iso"/>
@@ -204,7 +202,8 @@ function mapDispatchToProps(dispatch) {
 
 Signup.propTypes = {
   setCredentials: PropTypes.func,
-  match: PropTypes.object
+  match: PropTypes.object,
+  history: PropTypes.object
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup)

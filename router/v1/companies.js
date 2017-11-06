@@ -73,10 +73,11 @@ router.route('/companies/:company/:zone/subzones')
 })
 
 //  Save zone and stream change
-router.route('/companies/:company/zones')
+router.route('/companies/:companyId/zones')
 .post((req, res) => {
     const { name, positions, subzones } = req.body
-    const { company } = req.params
+    // const { companyId } = req.params
+
     // Create subzone using the information in the request body
     new Zone({
       name,
@@ -89,7 +90,7 @@ router.route('/companies/:company/zones')
           return res.status(500).json({ error })
         }
 
-        res.status(200).json({ zone })
+        return res.status(200).json({ zone })
     })
 })
 

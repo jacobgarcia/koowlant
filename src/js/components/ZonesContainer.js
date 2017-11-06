@@ -8,7 +8,7 @@ import { substractReportValues, getStatus, getFilteredReports } from '../Special
 
 function Video(props) {
   return (
-    <video className="camera-video" controls autoPlay loop>
+    <video className="camera-video" controls loop>
       <source src={props.source} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
@@ -35,16 +35,6 @@ const getMiniZoneLink = (zone, props) => {
   }
 }
 
-const getElements = (type, props) => {
-  switch (type) {
-    case 'general': return props.zone
-    case 'zone': return props.zone.subzones
-    case 'subzone': return props.subzone.sites
-    case 'site': return props.site.sensors
-    default: return []
-  }
-}
-
 function getSensorName(code) {
   if (code.length < 3) return null
   let name = ''
@@ -61,7 +51,7 @@ function getSensorName(code) {
 }
 
 function ZonesContainer(props) {
-  const elements = getElements(props.type, props)
+  const elements = props.elements
   const url = 'localhost'
   const videoJsOptions = {
     autoplay: true,

@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression')
 const winston = require('winston')
 const app = express()
+const cors = require('cors')
 const v1 = require(path.resolve('router/v1'))
 
 const PORT = process.env.PORT || 8080
@@ -38,13 +39,18 @@ app.use(
   express.static('dist')
 )
 
+// If we're in dev enable CORS
+if (process.env.NODE_ENV === 'development') {
+  winston.info('DEVELOPMENT')
+  app.use(cors())
+}
 // Resolve API v1
  app.use('/v1', v1)
 
 // Send index to all other routes
-app.get('*', (req, res) => {
+app.get('*', (req, res) =>
   res.sendFile(path.resolve('src/index.html'))
-})
+)
 
 // Start server
 const server = app.listen(PORT, () =>

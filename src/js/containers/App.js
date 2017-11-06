@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import qs from 'query-string'
 
-import { setCredentials, alert, dismissAlert, setReport } from '../actions'
+import { setCredentials, alert, dismissAlert, setReport, setSubzone, setZone, setSite } from '../actions'
 import Sites from './Sites'
 import NoMatch from './NoMatch'
 import MapView from './Map'
@@ -33,6 +33,27 @@ class App extends Component {
 
       localStorage.setItem('credentials', JSON.stringify(user))
       this.props.setCredentials(user)
+      return NetworkOperation.getAll()
+    })
+    .then(({data, status}) => {
+      if (status === 200) {
+          const { sites, subzones, zones } = data
+
+          // Set elements, not doint one after another may cause a bug
+          zones.forEach((zone, index, array) => {
+            this.props.setZone(zone._id, zone.name, zone.positions)
+            if (index === array.length - 1) {
+              subzones.forEach((subzone, index, array) => {
+                this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
+                if (index === array.length - 1) {
+                  sites.forEach(site => {
+                    this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
+                  })
+                }
+              })
+            }
+          })
+      }
     })
     .catch(error => {
       // Remove token and replace location to login
@@ -40,7 +61,6 @@ class App extends Component {
       this.props.history.replace('/login')
       error.response.status !== 401 && console.log(error)
     })
-
   }
 
   componentDidMount() {
@@ -126,6 +146,15 @@ function mapDispatchToProps(dispatch) {
     },
     setReport: report => {
       dispatch(setReport(report))
+    },
+    setZone: (id, name, positions) => {
+      dispatch(setZone(id, name, positions))
+    },
+    setSubzone: (zoneId, subzoneId, name, positions) => {
+      dispatch(setSubzone(zoneId, subzoneId, name, positions))
+    },
+    setSite: (zoneId, subzoneId, siteId, key, name, position) => {
+      dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
     }
   }
 }
@@ -136,7 +165,10 @@ App.propTypes = {
   location: PropTypes.object,
   appAlert: PropTypes.object,
   dismissAlert: PropTypes.func,
-  history: PropTypes.object
+  history: PropTypes.object,
+  setZone: PropTypes.func,
+  setSubzone: PropTypes.func,
+  setSite: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
