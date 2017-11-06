@@ -55,6 +55,15 @@ export function setSubzone(zoneId, subzoneId, name, positions) {
   }
 }
 
+export function setAllSites(zoneId, subzoneId, sites) {
+  return {
+    type: 'SET_ALL_SITES',
+    zoneId,
+    subzoneId,
+    sites
+  }
+}
+
 export function setSite(zoneId, subzoneId, siteId, key, name, position) {
   return {
     type: 'SET_SITE',

@@ -20,7 +20,7 @@ const History = new Schema({
 },{ _id: false })
 
 const schema = new Schema({
-  key: { type: String, unique: true, required: true },
+  key: { type: String, default: String(Date.now()) },
   name: String,
   position: [Number], // Lat, lng
   sensors: [{
@@ -33,10 +33,13 @@ const schema = new Schema({
   }],
   timestamp: { type: Number, default: Date.now() }, // Last updated
   history: [History],
-  company: { type: Schema.Types.ObjectId, required: true, ref: 'Company' },
+  company: { type: Schema.Types.ObjectId, ref: 'Company' }, // TODO set required
   subzone: { type: Schema.Types.ObjectId, ref: 'Subzone' },
   zone: { type: Schema.Types.ObjectId, ref: 'Zone' }
 })
+
+// Set company-key unique
+schema.index({ key: 1, company: 1}, { unique: true })
 
 schema.loadClass(SiteClass)
 

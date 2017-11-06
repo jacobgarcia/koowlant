@@ -62,7 +62,7 @@ router.route('/companies/:company/:zoneId/subzones')
         return res.status(500).json({ error })
       }
       // Add the new site to the specified zone
-      return Zone.findByIdAndUpdate(zoneId, { $push: { subzones: subzone } }, { new: true })
+      return Zone.findByIdAndUpdate(zoneId, { $push: { subzones: subzone._id } }, { new: true })
       .exec((error, zone) => {
         if (error) {
           winston.error({error})

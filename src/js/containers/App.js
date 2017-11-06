@@ -19,7 +19,6 @@ const socket = io('https://demo.kawlantid.com') // window.location
 
 class App extends Component {
   componentWillMount() {
-    console.log(this.props.credentials)
     const token = localStorage.getItem('token')
 
     if (!token) {
@@ -33,7 +32,7 @@ class App extends Component {
       const user = data.user
 
       localStorage.setItem('credentials', JSON.stringify(user))
-      this.props.setCredentials(user)
+      this.props.setCredentials({...user, token})
       return NetworkOperation.getAll()
     })
     .then(({data, status}) => {

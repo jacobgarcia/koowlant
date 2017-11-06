@@ -89,7 +89,6 @@ function ZonesContainer(props) {
         (props.site && props.currentView === 'info')
         &&
         <div className="info-container">
-          <h3>Información</h3>
           <div>
             <label htmlFor="address">Dirección</label>
             <input type="text" id="address" placholder="Dirección"/>
@@ -143,7 +142,7 @@ function ZonesContainer(props) {
           // MINI ZONES
           <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
             {
-              Array.isArray(elements)
+              (Array.isArray(elements) && elements.length)
               && elements.map((element, index) => {
                 let reports = getFilteredReports(props.reports, element)
                 reports = substractReportValues(reports)
@@ -168,6 +167,10 @@ function ZonesContainer(props) {
                   </Link>
                 )
               })
+              // : <div className="no-content">
+              //     <div className="kawlant-logo"></div>
+              //     <span>Sin elementos</span>
+              //   </div>
             }
           </div>
         ]
