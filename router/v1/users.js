@@ -90,6 +90,7 @@ router.route('/users/self')
       return res.status(500).json({ error })
     }
     if (!user) return res.status(404).json({ error: { message: 'User not found' } })
+
     return res.status(200).json({
       user: Object.assign({}, user.toObject(), {
         fullName: user.fullName
