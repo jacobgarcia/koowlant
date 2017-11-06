@@ -33,7 +33,7 @@ class App extends Component {
       const user = data.user
 
       localStorage.setItem('credentials', JSON.stringify(user))
-      this.props.setCredentials(user)
+      this.props.setCredentials({...user, token})
       return NetworkOperation.getAll()
     })
     .then(({data, status}) => {
