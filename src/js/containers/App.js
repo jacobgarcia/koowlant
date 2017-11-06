@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import qs from 'query-string'
 
 import { setCredentials, alert, dismissAlert, setReport, setSubzone, setZone, setSite } from '../actions'
-import Sites from './Sites'
+import Statistics from './Statistics'
 import NoMatch from './NoMatch'
 import MapView from './Map'
 import Administrators from './Administrators'
@@ -15,7 +15,7 @@ import io from 'socket.io-client'
 
 import NetworkOperation from '../NetworkOperation'
 
-const socket = io() // window.location
+const socket = io('https://demo.kawlantid.com') // window.location
 
 class App extends Component {
   componentWillMount() {
@@ -56,6 +56,7 @@ class App extends Component {
       }
     })
     .catch(error => {
+      console.log(error)
       // Remove token and replace location to login
       localStorage.removeItem('token')
       this.props.history.replace('/login')
@@ -113,7 +114,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={MapView}/>
             <Route exact path="/administrators" component={Administrators}/>
-            <Route exact path="/stadistics" component={Sites}/>
+            <Route exact path="/stadistics" component={Statistics}/>
             <Route exact path="/settings" component={Settings}/>
             <Route exact path="/zones/:zoneId" component={MapView}/>
             <Route exact path="/zones/:zoneId/:subzoneId" component={MapView}/>
