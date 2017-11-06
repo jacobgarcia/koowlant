@@ -44,7 +44,7 @@ class MapView extends Component {
     this.hide = this.hide.bind(this)
     this.onMapClick = this.onMapClick.bind(this)
     this.onCreate = this.onCreate.bind(this)
-    this.saveNewZone = this.saveNewZone.bind(this)
+    this.saveNewElement = this.saveNewElement.bind(this)
     this.onChange = this.onChange.bind(this)
     this.isNewElementValid = this.isNewElementValid.bind(this)
     this.onSiteHover = this.onSiteHover.bind(this)
@@ -97,7 +97,7 @@ class MapView extends Component {
     }))
   }
 
-  saveNewZone() {
+  saveNewElement() {
     if (!this.isNewElementValid()) return
 
     const {
@@ -108,9 +108,19 @@ class MapView extends Component {
     } = this.state
 
     if (selectedSubzone && selectedZone) {
+      console.log('CRED', this.props.credentials)
+      console.log(this.props.credentials && this.props.credentials.company && this.props.credentials.company._id)
+      console.log(this.props.credentials.company._id,
+      selectedZone._id,
+      selectedSubzone._id,
+      newName,
+      '_KEY_',
+      newPositions[0],
+      null,
+      null)
       // company, zone, subzone, name, key, position, sensors, alarms
       NetworkOperation.setSite(
-        this.props.credentials.company,
+        this.props.credentials.company._id,
         selectedZone._id,
         selectedSubzone._id,
         newName,
@@ -177,27 +187,21 @@ class MapView extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { zoneId, subzoneId, siteId } = nextProps.match.params
-    const selectedZone = this.props.zones.filter(zone => zone._id === zoneId).pop()
-    const selectedSubzone = (selectedZone && selectedZone.subzones) ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
-    const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
 
-    if (!selectedZone) {
-      this.setState({
-        selectedZone: null,
-        selectedSubzone: null,
-        currentZoom: 5,
-        currentPosition: [23.2096057, -101.6139503]
-      })
-    } else if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
+    const selectedZone = this.props.zones.find(({_id}) => _id === zoneId)
+    const selectedSubzone = (selectedZone && selectedZone.subzones) ? selectedZone.subzones.find(subzone => subzone._id === subzoneId) : null
+    const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.find(site => site._id === siteId) : null
+
+    if (selectedZone && selectedSubzone && selectedSite) {
       this.setState({
         selectedZone,
-        currentZoom: 5.5,
-        currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions[0]) : [23.2096057, -101.6139503],
-        selectedSubzone: null,
-        selectedSite: null
-      })
-    } else if (selectedSubzone && !selectedSite && (!this.state.selectedSubzone || (this.state.selectedSubzone))) {
+        selectedSubzone,
+        selectedSite,
+        currentZoom: 10.5
+      }, () => this.setState({currentPosition: selectedSite.position}))
+    } else if (selectedZone && selectedSubzone) {
       this.setState({
+        selectedZone,
         selectedSubzone,
         selectedSite: null,
         currentZoom: 6.7
@@ -205,14 +209,55 @@ class MapView extends Component {
         selectedSubzone.positions[0]
         && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
       })
-    } else if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
+    } else if (selectedZone) {
       this.setState({
         selectedZone,
-        selectedSubzone,
-        selectedSite,
-        currentZoom: 10.5
-      }, () => this.setState({currentPosition: selectedSite.position}))
+        currentZoom: 5.5,
+        currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions[0]) : [23.2096057, -101.6139503],
+        selectedSubzone: null,
+        selectedSite: null
+      })
+    } else {
+      this.setState({
+        selectedZone: null,
+        selectedSubzone: null,
+        currentZoom: 5,
+        currentPosition: [23.2096057, -101.6139503]
+      })
     }
+
+    // if (!selectedZone) {
+    //   this.setState({
+    //     selectedZone: null,
+    //     selectedSubzone: null,
+    //     currentZoom: 5,
+    //     currentPosition: [23.2096057, -101.6139503]
+    //   })
+    // } else if ((this.state.selectedZone && zoneId !== this.state.selectedZone._id) || !subzoneId) {
+    //   this.setState({
+    //     selectedZone,
+    //     currentZoom: 5.5,
+    //     currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions[0]) : [23.2096057, -101.6139503],
+    //     selectedSubzone: null,
+    //     selectedSite: null
+    //   })
+    // } else if (selectedSubzone && !selectedSite && (!this.state.selectedSubzone || (this.state.selectedSubzone))) {
+    //   this.setState({
+    //     selectedSubzone,
+    //     selectedSite: null,
+    //     currentZoom: 6.7
+    //   }, () => {
+    //     selectedSubzone.positions[0]
+    //     && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
+    //   })
+    // } else if (selectedSite && (!this.state.selectedSite || (this.state.selectedSite && subzoneId !== this.state.selectedSite._id))) {
+    //   this.setState({
+    //     selectedZone,
+    //     selectedSubzone,
+    //     selectedSite,
+    //     currentZoom: 10.5
+    //   }, () => this.setState({currentPosition: selectedSite.position}))
+    // }
   }
 
   onSiteHover(elementId) {
@@ -505,7 +550,7 @@ class MapView extends Component {
               newZoneName={this.state.newName}
               onChange={this.onChange}
               isValid={this.state.isNewElementValid}
-              onSave={this.saveNewZone}
+              onSave={this.saveNewElement}
               text={this.state.isCreatingSite ? 'Posiciona el sitio' : 'Traza la zona'}
             />
           </div>
