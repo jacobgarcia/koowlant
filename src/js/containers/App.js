@@ -15,7 +15,7 @@ import io from 'socket.io-client'
 
 import NetworkOperation from '../NetworkOperation'
 
-const socket = io() // window.location
+const socket = io('https://demo.kawlantid.com') // window.location
 
 class App extends Component {
   componentWillMount() {
