@@ -20,7 +20,7 @@ const History = new Schema({
 },{ _id: false })
 
 const schema = new Schema({
-  key: { type: String, unique: true, required: true },
+  key: { type: String, default: String(Date.now()) },
   name: String,
   position: [Number], // Lat, lng
   sensors: [{
