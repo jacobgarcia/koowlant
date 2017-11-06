@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { PieChart, Pie, Cell } from 'recharts'
 
 import { Link } from 'react-router-dom'
 import { MiniZone, Stream } from './'
 import { substractReportValues, getStatus, getFilteredReports } from '../SpecialFunctions'
+import Sensor from './Sensor'
 
 function Video(props) {
   return (
@@ -35,59 +35,6 @@ const getMiniZoneLink = (zone, props) => {
   }
 }
 
-function getSensorName(code) {
-  if (code.length < 3) return null
-  let name = ''
-  switch (code.charAt(0)) {
-    case 't':
-    name += 'Temperatura'
-    break
-    default:
-    name += 'Sensor'
-    break
-  }
-  name += ` ${code.charAt(2)}`
-  return name
-}
-
-class Sensor extends Component {
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.sensor.value === this.props.sensor.value) {
-      return false
-    }
-    return true
-  }
-
-  render() {
-    return (
-      <div className="sensor graph" style={this.props.viewSort === 'DYNAMIC' ? {order: Math.round(this.props.sensor.value * -1)} : {}}>
-        <h3>{getSensorName(this.props.sensor.key)}</h3>
-        <PieChart width={70} height={70}>
-          <Pie
-            dataKey="value"
-            data={[{ name: 'val', value: this.props.sensor.value},{ name: 'rest', value: 100 - this.props.sensor.value }]}
-            outerRadius={35}
-            innerRadius={28}
-            startAngle={-90}
-            endAngle={450}
-            fill=""
-            animationEase="ease"
-            animationDuration={500}
-            animationBegin={0}
-            strokeWidth={0}
-          >
-          <Cell fill={'#ed2a20'} />
-          <Cell fill={'#50E3C2'} />
-          </Pie>
-        </PieChart>
-        {
-          <span className="percentage">{this.props.sensor.value}%</span>
-        }
-      </div>
-    )
-  }
-}
-
 function ZonesContainer(props) {
   const elements = props.elements
   const url = 'localhost'
@@ -101,7 +48,6 @@ function ZonesContainer(props) {
 
   }
   return (
-
     <div>
       {
         props.type === 'site'
@@ -127,17 +73,34 @@ function ZonesContainer(props) {
         (props.site && props.currentView === 'info')
         &&
         <div className="info-container">
+          <p><span>Editar</span></p>
           <div>
             <label htmlFor="address">Dirección</label>
-            <input type="text" id="address" placholder="Dirección"/>
+            <input
+              type="text"
+              id="address"
+              placholder="Dirección"
+              value={props.site.address}
+            />
           </div>
           <div>
             <label htmlFor="name">Nombre</label>
-            <input type="text" id="name" placholder="Nombre"/>
+            <input
+              type="text"
+              id="name"
+              placholder="Nombre"
+              value={props.site.name}
+            />
           </div>
           <div>
             <label htmlFor="key">Key</label>
-            <input type="text" id="key" placholder="Key" readOnly/>
+            <input
+              type="text"
+              id="key"
+              placholder="Key"
+              value={props.site.key}
+              readOnly
+            />
           </div>
           <div>
             <label htmlFor="notes">Notas adicionales</label>
