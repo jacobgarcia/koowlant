@@ -56,51 +56,6 @@ class MapView extends Component {
     this.getElementDetails = this.getElementDetails.bind(this)
   }
 
-  componentDidMount() {
-    // Modify store with database information
-    // Zones
-    NetworkOperation.getZones(this.props.credentials.company || 'att&t')
-    .then(response => {
-      const { zones } = response.data
-      // set each zone
-      zones.forEach(zone => {
-        this.props.setZone(zone._id, zone.name, zone.positions)
-      })
-    })
-    .catch(error => {
-      // Dumb catch
-      console.log('Something went wrong:' + error)
-    })
-
-    // Subzones
-    NetworkOperation.getSubzones(this.props.credentials.company || 'att&t')
-    .then(response => {
-      const { subzones } = response.data
-      // set each subzone
-      subzones.forEach(subzone => {
-        this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
-      })
-    })
-    .catch(error => {
-      // Dumb catch
-      console.log('Something went wrong:' + error)
-    })
-
-    // Sites
-    NetworkOperation.getSites(this.props.credentials.company || 'att&t')
-    .then(response => {
-      const { sites } = response.data
-      // set each site
-      sites.forEach(site => {
-        this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
-      })
-    })
-    .catch(error => {
-      // Dumb catch
-      console.log('Something went wrong:' + error)
-    })
-  }
-
   componentWillMount() {
     // Reports
     NetworkOperation.getReports(this.props.credentials.company || 'att&t')
