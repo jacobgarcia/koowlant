@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
 import { Link } from 'react-router-dom'
-import { MiniZone } from './'
+import { MiniZone, Stream } from './'
 import { substractReportValues, getStatus, getFilteredReports } from '../SpecialFunctions'
 
 function Video(props) {
@@ -52,8 +52,18 @@ function getSensorName(code) {
 
 function ZonesContainer(props) {
   const elements = props.elements
+  const url = 'localhost'
+  const videoJsOptions = {
+    autoplay: true,
+    controls: false,
+    sources: [{
+      src: 'rtmp://' + url + '/live&idiots' ,
+      type: 'rtmp/mp4'
+    }],
 
+  }
   return (
+
     <div>
       {
         props.type === 'site'

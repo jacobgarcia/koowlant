@@ -28,11 +28,11 @@ class NetworkOperation {
     return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/subzones', { positions, name })
   }
 
-  static setSite(company, zone, subzone, key, position, name) {
+  static setSite(company, zone, subzone, name, key, position, sensors, alarms) {
     console.log('Setting site...')
     // /companies/:company/zones/:zone/subzones/:subzone/sites
     console.log(`${window.baseUrl}/companies/${company}/zones/${zone}/subzones/${subzone}/sites`)
-    return axios.post(`${window.baseUrl}/companies/${company}/zones/${zone}/subzones/${subzone}/sites`, { key, position, name })
+    return axios.post(`${window.baseUrl}/companies/${company}/zones/${zone}/subzones/${subzone}/sites`, { key, position, sensors, alarms, name })
   }
 
   static getProfile() {

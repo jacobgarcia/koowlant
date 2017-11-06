@@ -1,3 +1,4 @@
+
 /* eslint max-statements: ["error", 20, { "ignoreTopLevelFunctions": true }]*/
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
@@ -55,6 +56,51 @@ class MapView extends Component {
     this.getElementDetails = this.getElementDetails.bind(this)
   }
 
+  componentDidMount() {
+    // Modify store with database information
+    // Zones
+    NetworkOperation.getZones(this.props.credentials.company || 'att&t')
+    .then(response => {
+      const { zones } = response.data
+      // set each zone
+      zones.forEach(zone => {
+        this.props.setZone(zone._id, zone.name, zone.positions)
+      })
+    })
+    .catch(error => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
+
+    // Subzones
+    NetworkOperation.getSubzones(this.props.credentials.company || 'att&t')
+    .then(response => {
+      const { subzones } = response.data
+      // set each subzone
+      subzones.forEach(subzone => {
+        this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
+      })
+    })
+    .catch(error => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
+
+    // Sites
+    NetworkOperation.getSites(this.props.credentials.company || 'att&t')
+    .then(response => {
+      const { sites } = response.data
+      // set each site
+      sites.forEach(site => {
+        this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
+      })
+    })
+    .catch(error => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
+  }
+
   componentWillMount() {
     // Reports
     NetworkOperation.getReports(this.props.credentials.company || 'att&t')
@@ -107,14 +153,15 @@ class MapView extends Component {
     } = this.state
 
     if (selectedSubzone && selectedZone) {
-
+      // company, zone, subzone, name, key, position, sensors, alarms
       NetworkOperation.setSite(
         this.props.credentials.company,
         selectedZone._id,
         selectedSubzone._id,
-        '[NULL]', // TODO: Set real key
+        newName,
+        'key',
         newPositions[0],
-        newName // Add the first position
+        null // Add the first position
       )
       .then(response => {
         console.log(response)
@@ -130,17 +177,15 @@ class MapView extends Component {
       // Create zone on database company, name, positions, subzones
       NetworkOperation.setZone(this.props.credentials.company, newName, newPositions, null)
       .then(response => {
-        const zones = response.data.zone
-        // Set each zone
-        zones.forEach(zone => {
-          this.props.setZone(zone._id, zone.name, zone.positions)
-        })
+
+        const zone = response.data.zone
+        // set the new zone
+        this.props.setZone(zone._id, zone.name, zone.positions)
       })
       .catch(error => {
         // Dumb catch
         console.log('Something went wrong:' + error)
       })
-      this.props.setZone('myid', newName, newPositions)
     }
 
     this.setState({
