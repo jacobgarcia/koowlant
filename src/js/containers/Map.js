@@ -159,9 +159,10 @@ class MapView extends Component {
         selectedZone._id,
         selectedSubzone._id,
         newName,
-        'key',
+        '_KEY_',
         newPositions[0],
-        null // Add the first position
+        null,
+        null
       )
       .then(response => {
         console.log(response)
