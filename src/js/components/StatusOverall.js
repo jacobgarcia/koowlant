@@ -21,7 +21,7 @@ class StatusOverall extends PureComponent {
         <div className="sites-status">
           <StatusBar status={props.status}/>
           {
-            props.hasElements === false
+            (props.hasElements === false && props.type !== 'site')
             ?
             <p><span>Sin elementos creados</span></p>
             :
