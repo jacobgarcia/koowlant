@@ -117,13 +117,40 @@ function zones(state = [], action) {
         }
         : {...zone}
       )
+    case 'SET_ALL_SITES':
+    return state.map(zone =>
+      zone._id === action.zoneId
+      ? {
+        ...zone,
+        subzones: zone.subzones.map(subzone =>
+          subzone._id === action.subzoneId
+          ? {
+            ...subzone,
+            sites: [...action.sites]
+          }
+          : {...subzone}
+        )
+      }
+      : {...zone}
+    )
     case 'SET_SITE':
       return state.map(zone =>
         zone._id === action.zoneId
         ? {
           ...zone,
-          subzones: zone.subzones.map(subzone =>
-            subzone._id === action.subzoneId
+          subzones: zone.subzones.map(subzone => {
+            console.log(subzone._id === action.subzoneId)
+            console.log(subzone.sites || [])
+            console.log([
+              ...(subzone.sites || []),
+              {
+                _id: action.siteId,
+                key: action.key,
+                name: action.name,
+                position: action.position
+              }
+            ])
+            return subzone._id === action.subzoneId
             ? {
               ...subzone,
               sites: [
@@ -137,7 +164,7 @@ function zones(state = [], action) {
               ]
             }
             : {...subzone}
-          )
+          })
         }
         : {...zone}
       )
