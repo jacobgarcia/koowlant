@@ -83,7 +83,7 @@ router.route('/users/self')
 .get((req, res) => {
   // Get user id by its
   User.findById(req._user._id, '-password -pasword')
-  .populate('company')
+  .populate('company', '_id logo name')
   .exec((error, user) => {
     if (error) {
       winston.error(error)
