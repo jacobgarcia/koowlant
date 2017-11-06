@@ -33,7 +33,7 @@ const schema = new Schema({
   }],
   timestamp: { type: Number, default: Date.now() }, // Last updated
   history: [History],
-  company: { type: Schema.Types.ObjectId, required: true, ref: 'Company' },
+  company: { type: Schema.Types.ObjectId, ref: 'Company' }, // TODO set required
   subzone: { type: Schema.Types.ObjectId, ref: 'Subzone' },
   zone: { type: Schema.Types.ObjectId, ref: 'Zone' }
 })
