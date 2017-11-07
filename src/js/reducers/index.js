@@ -40,7 +40,9 @@ function reports(state = [], action) {
   switch (action.type) {
     case 'SET_REPORT': {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
-      const newState = state // BUG: It only creates a shallow copy
+      const newState = [...state] // BUG: It only creates a shallow copy
+
+      console.log('SET report', action.report)
 
       foundIndex > -1
       ? newState[foundIndex] = {

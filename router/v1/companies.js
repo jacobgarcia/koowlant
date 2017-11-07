@@ -98,12 +98,12 @@ router.route('/companies/:companyId/zones')
 })
 
 // Save sensors and alarms, add to history and stream change
-router.route('/companies/:company/:site/reports')
+router.route('/companies/:companyId/:siteId/reports')
 .put((req, res) => {
     const { sensors, alarms } = req.body
-    const { company, site } = req.params
+    const { companyId, siteId } = req.params
 
-    Site.findById(site)
+    Site.findById(siteId)
     .exec((error, site) => {
       if (!site) return res.status(404).json({ message: 'No site found'})
 
