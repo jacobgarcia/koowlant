@@ -6,13 +6,13 @@ const router = new express.Router()
 
 const State = require(path.resolve('models/State'))
 
-router.route('/polygons/:country/:state/coordinates')
+router.route('/polygons/:country/:stateId')
 .get((req, res) => {
-  const { country, state } = req.params
+  const { country, stateId } = req.params
+
   //TODO: Country
-  State.findOne({ state })
-  .select('positions')
-  .exec((error, positions) => {
+  State.findById(stateId)
+  .exec((error, state) => {
     if (error) {
       winston.error({error})
       return res.status(500).json({ error })
@@ -20,16 +20,15 @@ router.route('/polygons/:country/:state/coordinates')
 
     if (!positions) return res.status(404).json({ message: 'No state found'})
 
-    return res.status(200).json({ positions })
+    return res.status(200).json({ state })
   })
 })
 
-router.route('/polygons/:country/states')
+router.route('/polygons/:countryCode')
 .get((req, res) => {
-  const { country } = req.params
+  const { countryCode } = req.params
   //TODO: Country
-  State.find({ })
-  .select('name')
+  State.find({}, '-positions')
   .exec((error, states) => {
     if (error) {
       winston.error({error})

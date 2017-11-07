@@ -1321,10 +1321,54 @@ nav {
       z-index: 999;
       .links {
         display: flex;
+        border: 1px solid black;
+        height: auto;
       }
       justify-content: center;
       li {
         height: 40px;
+      }
+      .selector {
+        overflow: visible;
+        position: relative;
+        .list {
+          position: absolute;
+          bottom: 41px;
+          max-height: 300px;
+          overflow-y: scroll;
+          display: flex;
+          flex-direction: column;
+          right: 0;
+          left: 0;
+          max-height: 0;
+          border: 1px solid black;
+          border-top: none;
+          border-bottom: none;
+          transition: ease 0.5s;
+          &.visible {
+            max-height: 300px;
+            border: 1px solid black;
+            border-bottom: none;
+          }
+          .selected-radius {
+            background-color: #fff;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid black;
+            &.active {
+              background-color: $green;
+            }
+          }
+          li {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            height: auto;
+            display: flex;
+            align-items: center;
+          }
+        }
       }
     }
     .actions {
