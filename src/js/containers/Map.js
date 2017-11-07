@@ -363,7 +363,7 @@ class MapView extends Component {
               <div>
                 {
                   this.state.selectedZone !== null && this.state.isGeneralStatusHidden
-                    && <span className="button huge back" onClick={() => {
+                  && <span className="button huge back" onClick={() => {
                       if (this.state.isCreatingSite || this.state.isCreatingZone) this.onCreate()
                       if (this.state.selectedSite) this.props.history.push(`/zones/${this.state.selectedZone._id}/${this.state.selectedSubzone._id}`)
                       else if (this.state.selectedSubzone) this.props.history.push(`/zones/${this.state.selectedZone._id}`)
