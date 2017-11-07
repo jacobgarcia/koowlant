@@ -11,15 +11,16 @@ router.route('/polygons/:country/:state/coordinates')
   const { country, state } = req.params
   //TODO: Country
   State.findOne({ state })
-  .exec((error, state) => {
+  .select('positions')
+  .exec((error, positions) => {
     if (error) {
       winston.error({error})
       return res.status(500).json({ error })
     }
 
-    if (!state) return res.status(404).json({ message: 'No state found'})
+    if (!positions) return res.status(404).json({ message: 'No state found'})
 
-    return res.status(200).json({ state.positions })
+    return res.status(200).json({ positions })
   })
 })
 
@@ -28,6 +29,7 @@ router.route('/polygons/:country/states')
   const { country } = req.params
   //TODO: Country
   State.find({ })
+  .select('name')
   .exec((error, states) => {
     if (error) {
       winston.error({error})
@@ -39,3 +41,5 @@ router.route('/polygons/:country/states')
     return res.status(200).json({ states })
   })
 })
+
+module.exports = router
