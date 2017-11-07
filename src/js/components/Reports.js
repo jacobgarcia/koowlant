@@ -9,8 +9,6 @@ class Reports extends Component {
   constructor(props) {
     super(props)
 
-    console.log('REPORTS', this.props.reports)
-
     this.state = {
       reports: [],
       isAlertHidden: true,
@@ -19,7 +17,6 @@ class Reports extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('NEXT PROPS', nextProps)
     const reports = nextProps.reports.reduce((sum, report) => {
       const alarms = report.alarms.map(alarm => ({...alarm, zone: report.zone, subzone: report.subzone, site: report.site}))
       return [...alarms, ...sum]
@@ -33,6 +30,14 @@ class Reports extends Component {
     this.setState({
       reports
     })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.reports.length !== this.state.reports.length) return true
+    if (nextState.isAlertHidden !== this.state.isAlertHidden) return true
+    if (nextState.alarm !== this.state.alarm) return true
+    if (nextProps.isAlertsHidden !== this.props.isAlertsHidden) return true
+    return false
   }
 
   showAlarm(alarm) {
@@ -49,7 +54,6 @@ class Reports extends Component {
   }
 
   getAlertBody(code = 'none') {
-    console.log(code)
     if (code.length < 3) return [null, null]
     switch (code.charAt(0)) {
       case 't': return ['Temperatura alta', 'temperature']
@@ -65,8 +69,7 @@ class Reports extends Component {
     const notChecked = this.state.reports.filter(report => report.attended === false)
     .reduce((sum, element) => sum + element.values.length, 0)
 
-    console.log({state: this.state})
-    const alertBody = this.getAlertBody(this.state.alarm && this.state.alarm.key)
+    const alertBody = this.getAlertBody(this.state.alarm && this.state.alarm.values && this.state.alarm.values.length && this.state.alarm.values[0] && this.state.alarm.values[0].key)
 
     return (
       <div className={`alerts ${props.isAlertsHidden ? 'hidden' : 'active'}`}>
@@ -100,23 +103,25 @@ class Reports extends Component {
                 this.state.reports.map((report, index) => {
                   const date = new Date(report.timestamp)
                   return (
-                    report.values.map((value, index2) =>
-                      <Link
+                    report.values.map((value, index2) => {
+                      const alertBody = this.getAlertBody(value && value.key)
+
+                      return (<Link
                         onClick={() => props.setAlarmAttended(report)}
                         to={`/zones/${report.zone ? report.zone._id : null}/${report.subzone ? report.subzone._id : null}/${report.site ? report.site._id : null}`}
                         key={`${index2}${report.timestamp}${index}`}>
-                        <div className={`mini-alert battery ${report.attended ? 'attended' : 'not-attended'}`}>
+                        <div className={`mini-alert ${alertBody[1]} ${report.attended ? 'attended' : 'not-attended'}`}>
                           <div className="details">
                             <div><span>Zona {report.zone.name} | Sitio {report.site.key}</span></div>
-                            <p>Batería baja {value.value}%</p>
+                            <p>{alertBody[0]} {value.value}%</p>
                           </div>
                           <div className="time">
                             <span>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</span>
                             <span>{`${date.getHours()}:${date.getMinutes()}`}</span>
                           </div>
                         </div>
-                      </Link>
-                    )
+                      </Link>)
+                    })
                   )
                 })
               }
