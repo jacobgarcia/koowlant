@@ -15,6 +15,7 @@ router.use(require(path.resolve('router/v1/auth')))
 // The next things will be protected by auth
 router.use(require(path.resolve('router/v1/companies')))
 router.use(require(path.resolve('router/v1/users')))
+router.use(require(path.resolve('router/v1/polygons')))
 
 // TODO: Send user invitee (mail)
 // TODO: Accept user invitee
