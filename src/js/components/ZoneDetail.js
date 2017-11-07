@@ -122,30 +122,38 @@ class ZoneDetail extends Component {
 
     return (
       <div className="side-content">
-        <div className="top">
-          {
-            this.props.type !== 'general'
-            && <span className="back">
-                <Link to={this.getBackLink(this.props)}>
-                  Regresar
-                  <span>{this.getBackType(this.props)}</span>
-                </Link>
-              </span>
-          }
-          {
-            this.props.isWindow !== 'zones'
-            && <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span>
-          }
-        </div>
-        <StatusOverall
-          status={status}
-          percentage={percentage}
-          alarms={data.alarms}
-          zone={this.props.subzone || this.props.zone}
-          site={this.props.site}
-          type={this.props.type}
-          hasElements={elements && elements.length > 0}
-        />
+        {
+          this.state.currentView !== 'cameras'
+          &&
+          <div className="top">
+            {
+              this.props.type !== 'general'
+              && <span className="back">
+                  <Link to={this.getBackLink(this.props)}>
+                    Regresar
+                    <span>{this.getBackType(this.props)}</span>
+                  </Link>
+                </span>
+            }
+            {
+              this.props.isWindow !== 'zones'
+              && <span className="pop-window" onClick={this.props.onPopWindow}>Hacer ventana</span>
+            }
+          </div>
+        }
+        {
+          this.state.currentView !== 'cameras'
+          &&
+          <StatusOverall
+            status={status}
+            percentage={percentage}
+            alarms={data.alarms}
+            zone={this.props.subzone || this.props.zone}
+            site={this.props.site}
+            type={this.props.type}
+            hasElements={elements && elements.length > 0}
+          />
+        }
           {/* {
             this.isSite
             && <div>
