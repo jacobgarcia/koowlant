@@ -58,9 +58,10 @@ class App extends Component {
     .catch(error => {
       console.log(error)
       // Remove token and replace location to login
-      localStorage.removeItem('token')
-      this.props.history.replace('/login')
-      error.response.status !== 401 && console.log(error)
+      if (error.response && (error.response.status === 401 || error.response.status === 400)) {
+        localStorage.removeItem('token')
+        this.props.history.replace('/login')
+      }
     })
   }
 

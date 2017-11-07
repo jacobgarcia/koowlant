@@ -37,7 +37,9 @@ class MapView extends Component {
       sitesViewOrdering: 'static', // TODO load from localStorage
       isCreatingSite: false,
       isCreatingZone: false,
-      isSearching: false
+      isSearching: false,
+      states: [{name: 'Estado de México'}, { name: 'Guerrero' }],
+      selectedStateIndex: null
     }
 
     this.hide = this.hide.bind(this)
@@ -53,22 +55,29 @@ class MapView extends Component {
     this.getType = this.getType.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.getElementDetails = this.getElementDetails.bind(this)
+    this.onStateSelect = this.onStateSelect.bind(this)
   }
 
-  componentWillMount() {
-    // Reports
-    NetworkOperation.getReports(this.props.credentials.company || 'att&t')
-    .then(response => {
-      const { reports } = response.data
-      // set each report
-      reports.forEach(report => {
-        this.props.setReport(report)
+  Q() {
+    NetworkOperation.getAvailableStates()
+    .then(({data}) => {
+      this.setState({
+        states: data.states
       })
     })
-    .catch(error => {
-      // Dumb catch
-      console.log('Something went wrong:' + error)
-    })
+    // Reports
+    // NetworkOperation.getReports(this.props.credentials.company || 'att&t')
+    // .then(response => {
+    //   const { reports } = response.data
+    //   // set each report
+    //   reports.forEach(report => {
+    //     this.props.setReport(report)
+    //   })
+    // })
+    // .catch(error => {
+    //   // Dumb catch
+    //   console.log('Something went wrong:' + error)
+    // })
   }
 
   isNewElementValid() {
@@ -261,6 +270,21 @@ class MapView extends Component {
 
   changeSitesView(style) {
     this.setState({ sitesViewStyle: style })
+  }
+
+  onStateSelect(stateIndex, stateId) {
+    this.setState(prevState => ({ selectedStateIndex: prevState.selectedStateIndex === stateIndex ? null : stateIndex }))
+
+    NetworkOperation.getStatePolygon(stateId)
+    .then(({data}) => {
+      console.log(data)
+      this.setState({
+        newPositions: []
+      })
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   onSelectElement(elementType) {
@@ -522,11 +546,15 @@ class MapView extends Component {
               />
             </Map>
             <CreateZoneBar
+              isCreatingZone={!this.state.selectedZone}
               elementSelected={this.state.selectedZone ? (this.state.selectedSubzone ? 'site' : 'subzone') : 'zone'}
               newZoneName={this.state.newName}
               onChange={this.onChange}
               isValid={this.state.isNewElementValid}
               onSave={this.saveNewElement}
+              onStateSelect={this.onStateSelect}
+              selectedStateIndex={this.state.selectedStateIndex}
+              states={this.state.states}
               text={this.state.isCreatingSite ? 'Posiciona el sitio' : 'Traza la zona'}
             />
           </div>

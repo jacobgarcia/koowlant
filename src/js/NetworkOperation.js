@@ -55,6 +55,14 @@ class NetworkOperation {
   static getAll(company) {
     return axios.get(`${window.baseUrl}/companies/` + company + '/exhaustive')
   }
+
+  static getAvailableStates() {
+    return axios.get(`${window.baseUrl}/polygons/mx`)
+  }
+
+  static getStatePolygon(stateId) {
+    return axios.get(`${window.baseUrl}/polygons/mx/${stateId}`)
+  }
 }
 
 export default NetworkOperation
