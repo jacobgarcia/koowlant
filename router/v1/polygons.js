@@ -18,7 +18,7 @@ router.route('/polygons/:country/:stateId')
       return res.status(500).json({ error })
     }
 
-    if (!positions) return res.status(404).json({ message: 'No state found'})
+    if (!state) return res.status(404).json({ message: 'No state found'})
 
     return res.status(200).json({ state })
   })
