@@ -31,7 +31,7 @@ class CreateZoneBar extends Component {
                     <li
                       key={index}
                       style={{backgroundColor: index % 2 ? '#fff' : '#efefef'}}
-                      onClick={() => props.onStateSelect(index)}
+                      onClick={() => props.onStateSelect(index, state._id)}
                     >
                       <div className={`selected-radius ${props.selectedStateIndex === index && 'active'}`} />
                       <span>{state.name}</span>

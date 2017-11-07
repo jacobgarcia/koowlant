@@ -273,14 +273,22 @@ class MapView extends Component {
   }
 
   onStateSelect(stateIndex, stateId) {
+    if (this.state.selectedStateIndex === stateIndex) {
+      this.setState({
+        selectedStateIndex: null,
+        newPositions: [],
+        newName: ''
+      }, () => this.isNewElementValid())
+      return
+    }
     this.setState(prevState => ({ selectedStateIndex: prevState.selectedStateIndex === stateIndex ? null : stateIndex }))
 
     NetworkOperation.getStatePolygon(stateId)
     .then(({data}) => {
-      console.log(data)
       this.setState({
-        newPositions: []
-      })
+        newPositions: data.state.positions,
+        newName: data.state.name
+      }, () => this.isNewElementValid())
     })
     .catch(error => {
       console.log(error)
