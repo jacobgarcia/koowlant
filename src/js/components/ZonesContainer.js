@@ -37,7 +37,7 @@ const getMiniZoneLink = (zone, props) => {
 
 function ZonesContainer(props) {
   const elements = props.elements
-  const url = 'localhost'
+  const url = 'demo.kawlantid.com'
   const videoJsOptions = {
     autoplay: true,
     controls: false,
