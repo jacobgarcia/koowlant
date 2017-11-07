@@ -58,7 +58,7 @@ class MapView extends Component {
     this.onStateSelect = this.onStateSelect.bind(this)
   }
 
-  Q() {
+  componentWillMount() {
     NetworkOperation.getAvailableStates()
     .then(({data}) => {
       this.setState({
@@ -66,18 +66,18 @@ class MapView extends Component {
       })
     })
     // Reports
-    // NetworkOperation.getReports(this.props.credentials.company || 'att&t')
-    // .then(response => {
-    //   const { reports } = response.data
-    //   // set each report
-    //   reports.forEach(report => {
-    //     this.props.setReport(report)
-    //   })
-    // })
-    // .catch(error => {
-    //   // Dumb catch
-    //   console.log('Something went wrong:' + error)
-    // })
+    NetworkOperation.getReports(this.props.credentials.company || 'att&t')
+    .then(response => {
+      const { reports } = response.data
+      // set each report
+      reports.forEach(report => {
+        this.props.setReport(report)
+      })
+    })
+    .catch(error => {
+      // Dumb catch
+      console.log('Something went wrong:' + error)
+    })
   }
 
   isNewElementValid() {
