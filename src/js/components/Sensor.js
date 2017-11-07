@@ -46,7 +46,7 @@ class Sensor extends Component {
           </div>
         )
       }
-      case 'b':
+      case 'f':
       case 'c':
       return (
         <div className="chart">
@@ -83,10 +83,10 @@ class Sensor extends Component {
       case 't':
       name += 'Temperatura'
       break
-      case 'b':
+      case 'c':
       name += 'Batería'
       break
-      case 'c':
+      case 'f':
       name += 'Combustible'
       break
       default:
