@@ -9,6 +9,8 @@ class Reports extends Component {
   constructor(props) {
     super(props)
 
+    console.log('REPORTS', this.props.reports)
+
     this.state = {
       reports: [],
       isAlertHidden: true,
@@ -16,8 +18,9 @@ class Reports extends Component {
     }
   }
 
-  componentWillReceiveProps() {
-    const reports = this.props.reports.reduce((sum, report) => {
+  componentWillReceiveProps(nextProps) {
+    console.log('NEXT PROPS', nextProps)
+    const reports = nextProps.reports.reduce((sum, report) => {
       const alarms = report.alarms.map(alarm => ({...alarm, zone: report.zone, subzone: report.subzone, site: report.site}))
       return [...alarms, ...sum]
     }, [])
@@ -45,21 +48,35 @@ class Reports extends Component {
     })
   }
 
+  getAlertBody(code = 'none') {
+    console.log(code)
+    if (code.length < 3) return [null, null]
+    switch (code.charAt(0)) {
+      case 't': return ['Temperatura alta', 'temperature']
+      case 'c': return ['Batería baja', 'battery']
+      case 'f': return ['Combustible bajo', 'fuel']
+      default: return [null, null]
+    }
+  }
+
   render() {
     const props = this.props
 
     const notChecked = this.state.reports.filter(report => report.attended === false)
     .reduce((sum, element) => sum + element.values.length, 0)
 
+    console.log({state: this.state})
+    const alertBody = this.getAlertBody(this.state.alarm && this.state.alarm.key)
+
     return (
       <div className={`alerts ${props.isAlertsHidden ? 'hidden' : 'active'}`}>
         {/* <Link to={`/zones/${this.state.alarm.zone ? this.state.alarm.zone._id : null}/${this.state.alarm.subzone ? this.state.alarm.subzone._id : null}/${this.state.alarm.site ? this.state.alarm.site._id : null}`}> */}
           <div
             className={`alert-thumbnail ${this.state.isAlertHidden ? 'hidden' : 'active'}`}
-            style={{backgroundImage: `url(/static/img/icons/battery.svg)`}}
+            style={{backgroundImage: `url(/static/img/icons/${alertBody[1]}.svg)`}}
             onClick={props.onHide}>
             <div className="content">
-              <p className="alert-description">Batería baja</p>
+              <p className="alert-description">{alertBody[0]}</p>
               {
                 (this.state.alarm && this.state.alarm.zone) &&
                 <p className="location">Zona {this.state.alarm.zone.name} | Subzona {this.state.alarm.subzone.name} | Sitio {this.state.alarm.site.key}</p>
