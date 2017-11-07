@@ -10,13 +10,13 @@ const History = new Schema({
     sensors: [{
       name: String,
       value: Number
-    }],
+    }, { _id: false }],
     alarms: [{
       sensor: String, // Sensor id
       value: Number,
-      dissmissed: Boolean
-    }],
-     timestamp: { type: Number, default: Date.now } // Unix timestamp. Time when the capture was done
+      dissmissed: { type: Boolean, default: false }
+    }, { _id: false }],
+    timestamp: { type: Number, default: Date.now } // Unix timestamp. Time when the capture was done
 },{ _id: false })
 
 const schema = new Schema({
@@ -26,11 +26,11 @@ const schema = new Schema({
   sensors: [{
     key: String,
     value: Number
-  }],
+  },{ _id: false }],
   alarms: [{
-    sensor: String, // Sensor id
+    key: String, // Sensor id
     value: Number
-  }],
+  }, { _id: false }],
   timestamp: { type: Number, default: Date.now() }, // Last updated
   history: [History],
   company: { type: Schema.Types.ObjectId, ref: 'Company' }, // TODO set required
