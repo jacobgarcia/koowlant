@@ -60,7 +60,7 @@ function ZonesContainer(props) {
       src: 'rtmp://' + url + '/live&idiots' ,
       type: 'rtmp/mp4'
     }],
-
+    width: 480
   }
   return (
 
@@ -112,10 +112,7 @@ function ZonesContainer(props) {
         (props.site && props.currentView === 'cameras')
         &&
         <div className="cameras-container">
-          <Video source="/uploads/video/test-1.mp4" />
-          <Video source="/uploads/video/test-2.mp4" />
-          <Video source="/uploads/video/test-3.mp4" />
-          <Video source="/uploads/video/test-4.mp4" />
+           <Stream { ...videoJsOptions } className="camera-video" />
         </div>
       }
       {
