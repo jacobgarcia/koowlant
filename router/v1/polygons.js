@@ -6,7 +6,7 @@ const router = new express.Router()
 
 const State = require(path.resolve('models/State'))
 
-router.route('/polygons/:country/:state/:coordinates')
+router.route('/polygons/:country/:state/coordinates')
 .get((req, res) => {
   const { country, state } = req.params
   //TODO: Country
