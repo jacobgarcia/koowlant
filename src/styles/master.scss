@@ -332,10 +332,13 @@ ul.links {
       }
     }
     &.huge {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       padding: 8px 20px;
+      &.short input {
+        width: 200px;
+      }
       input {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
     }
   }
@@ -397,6 +400,14 @@ nav {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+  }
+  .user, .status {
+    flex-basis: 200px;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
   &.active {
     span.sandwitch {
@@ -1323,12 +1334,13 @@ nav {
       bottom: 20px;
       width: 100%;
       z-index: 999;
+      justify-content: flex-start;
+      padding-left: 20px;
       .links {
         display: flex;
         border: 1px solid black;
         height: auto;
       }
-      justify-content: center;
       li {
         height: 40px;
       }
