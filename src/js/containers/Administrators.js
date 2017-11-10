@@ -75,7 +75,7 @@ class Administrators extends Component {
             <div className="content">
               <form onSubmit={this.handleSubmit}>
                 <div className="section inline no-space space-between">
-                  <h4>Agregar administrador</h4>
+                  <h4>Agregar usuario</h4>
                   <span className="action" onClick={() => this.setState({isAddingAdmin: false})}>Cancelar</span>
                 </div>
                 <div className="section">
@@ -154,7 +154,7 @@ class Administrators extends Component {
           <h4>11 Administradores</h4>
           <ul className="links">
             <li className="big search">Buscar</li>
-            <li className="big create" onClick={this.onAddAdministrator}>Administrador</li>
+            <li className="big create" onClick={this.onAddAdministrator}>Usuario</li>
           </ul>
         </div>
         <div className="table-header">
