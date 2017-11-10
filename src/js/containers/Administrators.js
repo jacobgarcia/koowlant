@@ -166,7 +166,7 @@ class Administrators extends Component {
               <span>Email</span>
               <span>Monitorear</span>
               <div className="permits">
-                <span>Permisos</span>
+                <span>Administrador</span>
               </div>
             </div>
           </div>

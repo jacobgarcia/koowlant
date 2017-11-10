@@ -57,7 +57,7 @@ class Nav extends PureComponent {
           <span className="sandwitch" onClick={this.toggleNav}></span>
           <ul className={this.state.isHidden ? 'nav links' : 'nav links active'}>
             <li onClick={this.toggleNav}><NavLink exact to="/" activeClassName="selected" className={isZone ? 'selected' : ''}>Mapa</NavLink></li>
-            <li onClick={this.toggleNav}><NavLink to="/administrators" activeClassName="selected">Administradores</NavLink></li>
+            <li onClick={this.toggleNav}><NavLink to="/administrators" activeClassName="selected">Usuarios</NavLink></li>
             <li onClick={this.toggleNav}><NavLink to="/stadistics" activeClassName="selected">Estadísiticas</NavLink></li>
             <li onClick={this.toggleNav}><NavLink to="/settings" activeClassName="selected">Configuración</NavLink></li>
           </ul>
