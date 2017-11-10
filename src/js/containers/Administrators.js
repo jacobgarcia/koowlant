@@ -76,7 +76,7 @@ class Administrators extends Component {
             <div className="content">
               <form onSubmit={this.handleSubmit}>
                 <div className="section inline no-space space-between">
-                  <h4>Agregar administrador</h4>
+                  <h4>Agregar usuario</h4>
                   <span className="action" onClick={() => this.setState({isAddingAdmin: false})}>Cancelar</span>
                 </div>
                 <div className="section">
@@ -152,10 +152,10 @@ class Administrators extends Component {
           </div>
         }
         <div className="header">
-          <h4>11 Administradores</h4>
+          <h4>11 Usuarios</h4>
           <ul className="links">
             <li className="big search">Buscar</li>
-            <li className="big create" onClick={this.onAddAdministrator}>Administrador</li>
+            <li className="big create" onClick={this.onAddAdministrator}>Usuario</li>
           </ul>
         </div>
         <div className="table-header">
@@ -179,7 +179,7 @@ class Administrators extends Component {
               <h4>Subzona A</h4>
               <div className="subzone-admins">
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -188,7 +188,7 @@ class Administrators extends Component {
                   <div className="permits-wrapper"><input type="checkbox" id="permits-1"/><label className="permits" htmlFor="permits-1"/></div>
                 </div>
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -197,7 +197,7 @@ class Administrators extends Component {
                   <div className="permits-wrapper"><input type="checkbox" id="permits-2"/><label className="permits" htmlFor="permits-2"/></div>
                 </div>
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -211,7 +211,7 @@ class Administrators extends Component {
               <h4>Subzona B</h4>
               <div className="subzone-admins">
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -220,7 +220,7 @@ class Administrators extends Component {
                   <div className="permits-wrapper"><input type="checkbox" id="permits-4"/><label className="permits" htmlFor="permits-4"/></div>
                 </div>
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -229,7 +229,7 @@ class Administrators extends Component {
                   <div className="permits-wrapper"><input type="checkbox" id="permits-5" defaultChecked/><label className="permits" htmlFor="permits-5"/></div>
                 </div>
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -248,7 +248,7 @@ class Administrators extends Component {
               <h4>Subzona A</h4>
               <div className="subzone-admins">
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -257,7 +257,7 @@ class Administrators extends Component {
                   <div className="permits-wrapper"><input type="checkbox" id="permits-7"/><label className="permits" htmlFor="permits-7"/></div>
                 </div>
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
@@ -266,7 +266,7 @@ class Administrators extends Component {
                   <div className="permits-wrapper"><input type="checkbox" id="permits-8" defaultChecked/><label className="permits" htmlFor="permits-8"/></div>
                 </div>
                 <div className="admin">
-                  <span>Nombre del administrador</span>
+                  <span>Nombre del usuario</span>
                   <span>nombre@dominio.com</span>
                   <div>
                     <span>Sensores</span>
