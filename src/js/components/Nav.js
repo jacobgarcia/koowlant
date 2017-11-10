@@ -60,7 +60,7 @@ class Nav extends PureComponent {
             <li onClick={this.toggleNav}><NavLink to="/settings" activeClassName="selected">Configuración</NavLink></li>
           </ul>
         </div>
-        <div style={{display: 'flex', alignItems: 'center'}}>
+        <div className="status">
           <span className="date">{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</span>
           <span className="time">{date.getHours()}:{date.getMinutes()}:{date.getSeconds()}</span>
           <img className="logo mini" src="/static/img/iso.svg" alt=""/>
