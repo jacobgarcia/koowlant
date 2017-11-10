@@ -1,16 +1,18 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
-import { getStatus, getSensorChart, substractReportValues } from '../SpecialFunctions'
-
-const COLORS = {
-  alerts: '#ed2a20',
-  warnings: '#FFC511',
-  normal: '#50E3C2'
+function colors(value) {
+  if (value > 75) {
+    return '#50E3C2'
+  } else if (value < 40) {
+    return '#ed2a20'
+  } else {
+    return '#FFC511'
+  }
 }
 
-class MiniZone extends Component {
+class MiniZone extends PureComponent {
   shouldComponentUpdate(nextProps) {
     if (this.props.percentage !== nextProps.percentage) return true
     if (this.props.type !== nextProps.type) return true
@@ -43,7 +45,7 @@ class MiniZone extends Component {
         style={{order: props.viewSort === 'DYNAMIC' ? percentage : 0}}
         >
         <div className="status-text">
-          <div className="status-color" style={{ background: COLORS.normal }}></div>
+          <div className="status-color" style={{ background: colors({value: 100}) }}></div>
 
           <h3>{getTitle(props.type, props)}<span>{props.type === 'subzone' && (props.zone.key || props._id)}</span></h3>
           <div className="count">
@@ -59,22 +61,9 @@ class MiniZone extends Component {
               )
               || <p className="no-failures"><span className="no-failures-icon" /> Sin fallas</p>
             }
-            {/* { props.zone.warnings && <p><span className="warnings-icon"/>{props.zone.warnings.length} Posibles fallas</p> } */}
           </div>
         </div>
         <div className="status-graph">
-          {/* <div>
-            {
-              props.reports && props.reports.alerts && props.reports.alert.length > 0
-                ? <p className="alert mini-icon"><span>{props.reports.alerts.length}</span> Alertas</p>
-                : null
-            }
-            {
-              props.reports && props.reports.warnings && props.reports.warnings.length > 0
-              ? <p className="warning mini-icon"><span>{props.reports.warnings.length}</span> Precauciones</p>
-              : null
-            }
-          </div> */}
           {
             status
             && <div className="graph">
@@ -92,7 +81,8 @@ class MiniZone extends Component {
                     animationBegin={0}
                     strokeWidth={0}
                   >
-                  { status.map((status, index) => <Cell key={index} fill={COLORS[status.name]} />) }
+                  <Cell fill={colors(percentage)} />
+                  <Cell fill="#9f9f9f" />
                   </Pie>
                 </PieChart>
                 {
