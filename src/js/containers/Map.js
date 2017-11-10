@@ -195,6 +195,8 @@ class MapView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+
+    console.log('REPORTS', nextProps.reports)
     const { zoneId, subzoneId, siteId } = nextProps.match.params
 
     const selectedZone = this.props.zones.find(({_id}) => _id === zoneId)

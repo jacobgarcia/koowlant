@@ -2,6 +2,16 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell, BarChart, Bar } from 'recharts'
 
+function colors(value) {
+  if (value > 75) {
+    return '#50E3C2'
+  } else if (value < 40) {
+    return '#ed2a20'
+  } else {
+    return '#FFC511'
+  }
+}
+
 class Sensor extends Component {
   shouldComponentUpdate(nextProps) {
     if (nextProps.sensor.value === this.props.sensor.value) {
@@ -12,40 +22,9 @@ class Sensor extends Component {
 
   getSensorChart(code, value) {
     if (code.length < 3) return null
-    switch (code.charAt(0)) {
-      case 't': {
-        const maxTemperature = 100
-        return (
-          <div>
-            <BarChart
-              width={30}
-              height={70}
-              data={[{ name: 'val', value, rest: maxTemperature - value }]}
-              style={{borderRadius: 10}}
-            >
-              <Bar
-                dataKey="value"
-                fill={(() => {
-                  const minimum = 0
-                  const ratio = 2 * (value - minimum) / (maxTemperature - minimum)
-                  const blue = Number.parseInt(Math.max(0, 255 * (1 - ratio)), 10)
-                  const red = Number.parseInt(Math.max(0, 255 * (ratio - 1)), 10)
-                  const green = 255 - blue - red
-                  var rgb = blue | (green << 8) | (red << 16)
-                  return '#' + (0x1000000 + rgb).toString(16).slice(1)
-                })()}
-                stackId="a"
-              />
-              <Bar
-                dataKey="rest"
-                fill="#b1b1b1"
-                stackId="a"
-              />
-            </BarChart>
-            <p><span>{this.props.sensor.value}°</span></p>
-          </div>
-        )
-      }
+    const sensorType = code.charAt(0)
+    switch (sensorType) {
+      case 't':
       case 'f':
       case 'c':
       return (
@@ -56,19 +35,19 @@ class Sensor extends Component {
               data={[{ name: 'val', value},{ name: 'rest', value: 100 - value }]}
               outerRadius={35}
               innerRadius={28}
-              startAngle={-90}
-              endAngle={450}
+              startAngle={sensorType === 't' ? -45 : 90 }
+              endAngle={sensorType === 't' ? 225 : -270 }
               fill=""
               animationEase="ease"
               animationDuration={500}
               animationBegin={0}
               strokeWidth={0}
             >
-            <Cell fill={'#50E3C2'} />
-            <Cell fill={'#ed2a20'} />
+              <Cell fill={colors(this.props.sensor.value)} />
+              <Cell fill="#e3e3e3" />
             </Pie>
           </PieChart>
-          <span className="percentage">{Math.round(this.props.sensor.value)}%</span>
+          <span className="percentage">{Math.round(this.props.sensor.value)}{sensorType !== 't' ? '%' : '°'}</span>
         </div>
       )
       default:

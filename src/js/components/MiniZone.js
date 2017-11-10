@@ -82,7 +82,7 @@ class MiniZone extends PureComponent {
                     strokeWidth={0}
                   >
                   <Cell fill={colors(percentage)} />
-                  <Cell fill="#9f9f9f" />
+                  <Cell fill="#e3e3e3" />
                   </Pie>
                 </PieChart>
                 {
