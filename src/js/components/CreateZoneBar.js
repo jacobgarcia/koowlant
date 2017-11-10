@@ -47,7 +47,7 @@ class CreateZoneBar extends Component {
           }
           {
             props.isCreatingZone
-            ? <li className="huge selector">
+            && <li className="huge selector">
               <span onClick={() => this.setState(prevState => ({isShowingList: !prevState.isShowingList}))}>Selecciona las entidades</span>
               <ul className={`list ${this.state.isShowingList ? 'visible' : ''}`}>
                 {
@@ -64,20 +64,20 @@ class CreateZoneBar extends Component {
                 }
               </ul>
             </li>
-            : <li className="huge">
-                <input
-                  type="text"
-                  name="newName"
-                  value={props.newZoneName}
-                  placeholder={`Nombre ${
-                    (props.elementSelected === 'zone' && 'de la zona') ||
-                    (props.elementSelected === 'site' && 'del sitio') ||
-                    (props.elementSelected === 'subzone' && 'de la subzona')
-                  }...`}
-                  onChange={props.onChange}
-                />
-              </li>
           }
+          <li className="huge">
+              <input
+                type="text"
+                name="newName"
+                value={props.newZoneName}
+                placeholder={`Nombre ${
+                  (props.elementSelected === 'zone' && 'de la zona') ||
+                  (props.elementSelected === 'site' && 'del sitio') ||
+                  (props.elementSelected === 'subzone' && 'de la subzona')
+                }...`}
+                onChange={props.onChange}
+              />
+            </li>
           <li className={`huge ${props.isValid ? 'valid' : 'deactivated'}`}
             onClick={props.onSave}><span>Guardar</span></li>
         </ul>
