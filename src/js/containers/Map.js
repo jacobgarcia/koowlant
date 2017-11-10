@@ -240,10 +240,18 @@ class MapView extends Component {
     this.setState({ highlightedZone: elementId })
   }
 
-  onMapClick(event) {
+  onMapClick({latlng = { lat: 0, lng: 0 }}) {
     if (!this.state.isCreatingZone) return
 
-    const { lat, lng } = event.latlng
+    let { lat = 0, lng = 0 } = latlng
+    lat = String(lat)
+    lng = String(lng)
+    // lat[lat.length - 1] === '.' ? lat += '0' : null
+    // lng[lat.length - 1] === '.' ? lng += '0' : null
+
+    lat = isNaN(lat) ? 0 : lat
+    lng = isNaN(lng) ? 0 : lng
+
     const newPosition = [lat,lng]
 
     // If we're creating a zone, replace the old position
@@ -535,7 +543,18 @@ class MapView extends Component {
                 this.state.isCreatingSite ? (
                   this.state.newPositions[0]
                   && <SiteMarker
-                      position={this.state.newPositions[0]}
+                      position={(() => {
+                        const position = this.state.newPositions[0]
+                        const lat = parseFloat(position[0])
+                        const lng = parseFloat(position[1])
+
+                        const latlng = position.length ? ([
+                          isNaN(lat) ? 0.0 : lat,
+                          isNaN(lng) ? 0.0 : lng
+                        ]) : [0,0]
+
+                        return latlng
+                      })()}
                       title={this.state.newName}
                       site={{name: this.state.newName}}
                       deactivated
@@ -553,6 +572,7 @@ class MapView extends Component {
               />
             </Map>
             <CreateZoneBar
+              isCreatingSite={this.state.isCreatingSite}
               isCreatingZone={!this.state.selectedZone}
               elementSelected={this.state.selectedZone ? (this.state.selectedSubzone ? 'site' : 'subzone') : 'zone'}
               newZoneName={this.state.newName}
@@ -563,6 +583,8 @@ class MapView extends Component {
               selectedStateIndex={this.state.selectedStateIndex}
               states={this.state.states}
               text={this.state.isCreatingSite ? 'Posiciona el sitio' : 'Traza la zona'}
+              newPositions={this.state.newPositions}
+              onPositionChange={this.onMapClick}
             />
           </div>
         }
