@@ -17,7 +17,6 @@ class MapView extends Component {
     this.isWindow = qs.parse(props.location.search).isWindow
 
     const {zoneId, subzoneId, siteId} = props.match.params
-
     const selectedZone = props.zones.filter(zone => zone._id === zoneId).pop()
     const selectedSubzone = (selectedZone && selectedZone.subzones) ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
     const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
@@ -207,23 +206,23 @@ class MapView extends Component {
         selectedZone,
         selectedSubzone,
         selectedSite,
-        currentZoom: 10.5
+        currentZoom: 11
       }, () => this.setState({currentPosition: selectedSite.position}))
     } else if (selectedZone && selectedSubzone) {
       this.setState({
         selectedZone,
         selectedSubzone,
         selectedSite: null,
-        currentZoom: 6.7
+        currentZoom: 8
       }, () => {
         selectedSubzone.positions[0]
-        && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
+        && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions)})
       })
     } else if (selectedZone) {
       this.setState({
         selectedZone,
-        currentZoom: 5.5,
-        currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions[0]) : [23.2096057, -101.6139503],
+        currentZoom: 7,
+        currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions) : [23.2096057, -101.6139503],
         selectedSubzone: null,
         selectedSite: null
       })
