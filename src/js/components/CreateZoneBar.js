@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-
 class CreateZoneBar extends Component {
   constructor(props) {
     super(props)
@@ -13,6 +12,9 @@ class CreateZoneBar extends Component {
 
   render() {
     const props = this.props
+    console.log('new pos', props.newPositions)
+    const newPositions = (props.newPositions[0]) || [[],[]]
+
     return (
       <div className="create-zone-bar">
         <ul className="links">
@@ -20,6 +22,28 @@ class CreateZoneBar extends Component {
             props.isCreatingZone
             ? <li className="huge"><span>0 Entidades en la zona</span></li>
             : <li className="huge"><span>{props.text}</span></li>
+          }
+          {
+            props.isCreatingSite
+            &&
+            <li className="huge short">
+              <input type="text"
+                placeholder="Latitud"
+                value={newPositions[0]}
+                onChange={({target}) => props.onPositionChange({latlng: { lat: target.value, lng: newPositions[1] }})}
+              />
+            </li>
+          }
+          {
+            props.isCreatingSite
+            &&
+            <li className="huge short">
+              <input type="text"
+                placeholder="Longitud"
+                value={newPositions[1]}
+                onChange={({target}) => props.onPositionChange({latlng: { lat: newPositions[1], lng: target.value }})}
+              />
+            </li>
           }
           {
             props.isCreatingZone
@@ -41,7 +65,7 @@ class CreateZoneBar extends Component {
               </ul>
             </li>
             : <li className="huge">
-                <inputs
+                <input
                   type="text"
                   name="newName"
                   value={props.newZoneName}
@@ -71,4 +95,9 @@ CreateZoneBar.propTypes = {
   elementSelected: PropTypes.string,
   isCreatingZone: PropTypes.bool
 }
+
+CreateZoneBar.defaultProps = {
+  newPositions: [[],[]]
+}
+
 export default CreateZoneBar
