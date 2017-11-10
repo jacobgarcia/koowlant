@@ -42,8 +42,6 @@ function reports(state = [], action) {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
       const newState = [...state] // BUG: It only creates a shallow copy
 
-      console.log('SET report', action.report)
-
       foundIndex > -1
       ? newState[foundIndex] = {
         site: newState[foundIndex].site,

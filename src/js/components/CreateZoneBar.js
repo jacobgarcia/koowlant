@@ -12,7 +12,6 @@ class CreateZoneBar extends Component {
 
   render() {
     const props = this.props
-    console.log('new pos', props.newPositions)
     const newPositions = (props.newPositions[0]) || [[],[]]
 
     return (
