@@ -82,13 +82,15 @@ router.route('/users/invite')
 router.route('/users/self')
 .get((req, res) => {
   // Get user id by its
-  User.findById(req._user._id, '-password')
+  User.findById(req._user._id, '-password -pasword')
+  .populate('company', '_id logo name')
   .exec((error, user) => {
     if (error) {
       winston.error(error)
       return res.status(500).json({ error })
     }
     if (!user) return res.status(404).json({ error: { message: 'User not found' } })
+
     return res.status(200).json({
       user: Object.assign({}, user.toObject(), {
         fullName: user.fullName

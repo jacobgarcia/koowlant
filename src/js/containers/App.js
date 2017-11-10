@@ -4,8 +4,8 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import qs from 'query-string'
 
-import { setCredentials, alert, dismissAlert, setReport } from '../actions'
-import Sites from './Sites'
+import { setCredentials, alert, dismissAlert, setReport, setSubzone, setZone, setSite } from '../actions'
+import Statistics from './Statistics'
 import NoMatch from './NoMatch'
 import MapView from './Map'
 import Administrators from './Administrators'
@@ -15,7 +15,7 @@ import io from 'socket.io-client'
 
 import NetworkOperation from '../NetworkOperation'
 
-const socket = io() // window.location
+const socket = io('https://demo.kawlantid.com') // window.location
 
 class App extends Component {
   componentWillMount() {
@@ -32,15 +32,37 @@ class App extends Component {
       const user = data.user
 
       localStorage.setItem('credentials', JSON.stringify(user))
-      this.props.setCredentials(user)
+      this.props.setCredentials({...user, token})
+      return NetworkOperation.getAll()
+    })
+    .then(({data, status}) => {
+      if (status === 200) {
+          const { sites, subzones, zones } = data
+
+          // Set elements, not doint one after another may cause a bug
+          zones.forEach((zone, index, array) => {
+            this.props.setZone(zone._id, zone.name, zone.positions)
+            if (index === array.length - 1) {
+              subzones.forEach((subzone, index, array) => {
+                this.props.setSubzone(subzone.parentZone, subzone._id, subzone.name, subzone.positions)
+                if (index === array.length - 1) {
+                  sites.forEach(site => {
+                    this.props.setSite(site.zone, site.subzone, site._id, site.key, site.name, site.position)
+                  })
+                }
+              })
+            }
+          })
+      }
     })
     .catch(error => {
+      console.log(error)
       // Remove token and replace location to login
-      localStorage.removeItem('token')
-      this.props.history.replace('/login')
-      error.response.status !== 401 && console.log(error)
+      if (error.response && (error.response.status === 401 || error.response.status === 400)) {
+        localStorage.removeItem('token')
+        this.props.history.replace('/login')
+      }
     })
-
   }
 
   componentDidMount() {
@@ -93,7 +115,7 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={MapView}/>
             <Route exact path="/administrators" component={Administrators}/>
-            <Route exact path="/stadistics" component={Sites}/>
+            <Route exact path="/stadistics" component={Statistics}/>
             <Route exact path="/settings" component={Settings}/>
             <Route exact path="/zones/:zoneId" component={MapView}/>
             <Route exact path="/zones/:zoneId/:subzoneId" component={MapView}/>
@@ -126,6 +148,15 @@ function mapDispatchToProps(dispatch) {
     },
     setReport: report => {
       dispatch(setReport(report))
+    },
+    setZone: (id, name, positions) => {
+      dispatch(setZone(id, name, positions))
+    },
+    setSubzone: (zoneId, subzoneId, name, positions) => {
+      dispatch(setSubzone(zoneId, subzoneId, name, positions))
+    },
+    setSite: (zoneId, subzoneId, siteId, key, name, position) => {
+      dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
     }
   }
 }
@@ -136,7 +167,10 @@ App.propTypes = {
   location: PropTypes.object,
   appAlert: PropTypes.object,
   dismissAlert: PropTypes.func,
-  history: PropTypes.object
+  history: PropTypes.object,
+  setZone: PropTypes.func,
+  setSubzone: PropTypes.func,
+  setSite: PropTypes.func
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

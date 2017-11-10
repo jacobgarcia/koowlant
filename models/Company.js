@@ -8,8 +8,8 @@ class CompanyClass {
 
 const schema = new Schema({
   logo: String, // Url
-  name: String,
-  employees: [] // User id
+  name: {type: String, required: true},
+  employees: [{ type: Schema.Types.ObjectId, ref: 'User' }] // User id
 })
 
 schema.loadClass(CompanyClass)

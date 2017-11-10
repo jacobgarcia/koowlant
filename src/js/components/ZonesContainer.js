@@ -1,14 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { PieChart, Pie, Cell } from 'recharts'
 
 import { Link } from 'react-router-dom'
-import { MiniZone } from './'
+import { MiniZone, Stream } from './'
 import { substractReportValues, getStatus, getFilteredReports } from '../SpecialFunctions'
+import Sensor from './Sensor'
 
 function Video(props) {
   return (
-    <video className="camera-video" controls autoPlay loop>
+    <video className="camera-video" controls loop>
       <source src={props.source} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
@@ -35,34 +35,18 @@ const getMiniZoneLink = (zone, props) => {
   }
 }
 
-const getElements = (type, props) => {
-  switch (type) {
-    case 'general': return props.zone
-    case 'zone': return props.zone.subzones
-    case 'subzone': return props.subzone.sites
-    case 'site': return props.site.sensors
-    default: return []
-  }
-}
-
-function getSensorName(code) {
-  if (code.length < 3) return null
-  let name = ''
-  switch (code.charAt(0)) {
-    case 't':
-    name += 'Temperatura'
-    break
-    default:
-    name += 'Sensor'
-    break
-  }
-  name += ` ${code.charAt(2)}`
-  return name
-}
-
 function ZonesContainer(props) {
-  const elements = getElements(props.type, props)
-
+  const elements = props.elements
+  const url = 'demo.kawlantid.com'
+  const videoJsOptions = {
+    autoplay: true,
+    controls: false,
+    sources: [{
+      src: 'rtmp://' + url + '/live&idiots' ,
+      type: 'rtmp/mp4'
+    }],
+    width: 480
+  }
   return (
     <div>
       {
@@ -89,18 +73,34 @@ function ZonesContainer(props) {
         (props.site && props.currentView === 'info')
         &&
         <div className="info-container">
-          <h3>Información</h3>
+          <p><span>Editar</span></p>
           <div>
             <label htmlFor="address">Dirección</label>
-            <input type="text" id="address" placholder="Dirección"/>
+            <input
+              type="text"
+              id="address"
+              placholder="Dirección"
+              value={props.site.address}
+            />
           </div>
           <div>
             <label htmlFor="name">Nombre</label>
-            <input type="text" id="name" placholder="Nombre"/>
+            <input
+              type="text"
+              id="name"
+              placholder="Nombre"
+              value={props.site.name}
+            />
           </div>
           <div>
             <label htmlFor="key">Key</label>
-            <input type="text" id="key" placholder="Key" readOnly/>
+            <input
+              type="text"
+              id="key"
+              placholder="Key"
+              value={props.site.key}
+              readOnly
+            />
           </div>
           <div>
             <label htmlFor="notes">Notas adicionales</label>
@@ -113,10 +113,7 @@ function ZonesContainer(props) {
         (props.site && props.currentView === 'cameras')
         &&
         <div className="cameras-container">
-          <Video source="/uploads/video/test-1.mp4" />
-          <Video source="/uploads/video/test-2.mp4" />
-          <Video source="/uploads/video/test-3.mp4" />
-          <Video source="/uploads/video/test-4.mp4" />
+           <Stream { ...videoJsOptions } className="camera-video" />
         </div>
       }
       {
@@ -143,7 +140,7 @@ function ZonesContainer(props) {
           // MINI ZONES
           <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
             {
-              Array.isArray(elements)
+              (Array.isArray(elements))
               && elements.map((element, index) => {
                 let reports = getFilteredReports(props.reports, element)
                 reports = substractReportValues(reports)
@@ -177,32 +174,20 @@ function ZonesContainer(props) {
         &&
         <div className={`mini-sites-container ${props.viewStyle}`} key="mini-sites-container">
           {
+            props.sensors.length
+            ?
             props.sensors.map(sensor =>
-                <div key={sensor.key} className="sensor graph" style={props.viewSort === 'DYNAMIC' ? {order: Math.round(sensor.value * -1)} : {}}>
-                  <h3>{getSensorName(sensor.key)}</h3>
-                  <PieChart width={70} height={70}>
-                    <Pie
-                      dataKey="value"
-                      data={[{ name: 'val', value: sensor.value},{ name: 'rest', value: 100 - sensor.value }]}
-                      outerRadius={35}
-                      innerRadius={28}
-                      startAngle={-90}
-                      endAngle={450}
-                      fill=""
-                      animationEase="ease"
-                      animationDuration={500}
-                      animationBegin={0}
-                      strokeWidth={0}
-                    >
-                    <Cell fill={'#ed2a20'} />
-                    <Cell fill={'#50E3C2'} />
-                    </Pie>
-                  </PieChart>
-                  {
-                    <span className="percentage">{sensor.value}%</span>
-                  }
-                </div>
+                <Sensor
+                  key={sensor.key}
+                  sensor={sensor}
+                  viewSort={props.viewSort}
+                />
             )
+            :
+            <div className="no-content">
+              <div className="kawlant-logo"></div>
+              <span>Sin elementos</span>
+            </div>
           }
         </div>
       }

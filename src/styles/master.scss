@@ -30,9 +30,10 @@ html, body, #root, #app, #app-content, .body {
   width: 100%;
 }
 
-input, textarea {
+input, textarea, button {
   font-size: 1rem;
   outline: none;
+  -webkit-appearance: none;
 }
 
 li {
@@ -122,6 +123,14 @@ h3 {
     color: $gray;
     margin-left: 10px;
   }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 @keyframes grow {
@@ -487,6 +496,38 @@ nav {
 
 /*
 
+  S T A T I S T I C S
+
+ */
+
+
+
+.statistics {
+  margin: 20px 10% 0;
+  h3 {
+    margin-bottom: 30px;
+  }
+  .statistics-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .statistic-box {
+      border: 1px solid #000;
+      padding: 15px 20px 30px;
+      .info {
+        margin-bottom: 20px;
+      }
+      .recharts-wrapper {
+        margin-left: -50px;
+        margin-right: -20px;
+      }
+    }
+  }
+}
+
+
+/*
+
   M A P
 
  */
@@ -627,10 +668,35 @@ nav {
     width: 500px;
     transition: ease 0.5s;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     border-right: 1px solid $light-gray;
+    display: flex;
+    flex-direction: column;
+    .no-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      span {
+        font-weight: 600;
+        color: rgba(#000, 0.12);
+      }
+      .kawlant-logo {
+        width: 120px;
+        height: 120px;
+        background-image: url('/static/img/iso.svg');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.3;
+        margin-bottom: 20px;
+      }
+    }
     .top {
       display: flex;
       justify-content: space-between;
+      flex-shrink: 0;
     }
     .info-container {
       margin-top: 30px;
@@ -982,8 +1048,8 @@ nav {
       }
     }
     &.battery { background-image: url('/static/img/icons/battery-filled.svg'); }
-    &.fuel { background-image: url('/static/img/icons/fuel-filled.png'); }
-    &.temperature { background-image: url('/static/img/icons/temperature-filled.png'); }
+    &.fuel { background-image: url('/static/img/icons/fuel-filled.svg'); }
+    &.temperature { background-image: url('/static/img/icons/temperature-filled.svg'); }
   }
 }
 
@@ -1019,6 +1085,7 @@ nav {
     .search {
       max-height: 100%;
       overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
       border-radius: 3px;
       border: 1px solid $gray;
       background-color: #fff;
@@ -1101,14 +1168,41 @@ nav {
   .mini-sites-container {
     padding-bottom: 30px;
     display: flex;
+    .sensor {
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.07);
+      display: flex;
+    }
+    &.grid {
+      .sensor {
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+    }
     &.list {
       flex-direction: column;
       .sensor {
-        background-color: #fff;
-        padding: 20px;
-        display: flex;
         margin-bottom: 20px;
-        box-shadow: 0px 0px 5px rgba(#000,.2);
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        .sensor-values {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+        }
+        .graph {
+          position: relative;
+          .percentage {
+            position: absolute;
+            width: 70px;
+            height: 20px;
+            top: 26px;
+            text-align: center;
+            font-weight: 600;
+          }
+        }
       }
       .mini-zone {
         display: flex;
@@ -1225,9 +1319,56 @@ nav {
       bottom: 20px;
       width: 100%;
       z-index: 999;
+      .links {
+        display: flex;
+        border: 1px solid black;
+        height: auto;
+      }
       justify-content: center;
       li {
         height: 40px;
+      }
+      .selector {
+        overflow: visible;
+        position: relative;
+        .list {
+          position: absolute;
+          bottom: 41px;
+          max-height: 300px;
+          overflow-y: scroll;
+          display: flex;
+          flex-direction: column;
+          right: 0;
+          left: 0;
+          max-height: 0;
+          border: 1px solid black;
+          border-top: none;
+          border-bottom: none;
+          transition: ease 0.5s;
+          &.visible {
+            max-height: 300px;
+            border: 1px solid black;
+            border-bottom: none;
+          }
+          .selected-radius {
+            background-color: #fff;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid black;
+            &.active {
+              background-color: $green;
+            }
+          }
+          li {
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            height: auto;
+            display: flex;
+            align-items: center;
+          }
+        }
       }
     }
     .actions {

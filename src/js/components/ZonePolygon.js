@@ -24,7 +24,7 @@ function ZonePolygon(props) {
       color="#666"
       fillColor="#fff"
       weight={1}
-      positions={props.zone.positions}
+      positions={props.zone.positions || []}
       fillOpacity={props.highlightedZone === props.zone._id ? 0.7 : 0.4}
       onMouseOver={() => props.onMouseOver(props.zone._id)}
       onMouseOut={() => props.onMouseOut(null)}

@@ -16,8 +16,8 @@ class Reports extends Component {
     }
   }
 
-  componentWillReceiveProps() {
-    const reports = this.props.reports.reduce((sum, report) => {
+  componentWillReceiveProps(nextProps) {
+    const reports = nextProps.reports.reduce((sum, report) => {
       const alarms = report.alarms.map(alarm => ({...alarm, zone: report.zone, subzone: report.subzone, site: report.site}))
       return [...alarms, ...sum]
     }, [])
@@ -30,6 +30,14 @@ class Reports extends Component {
     this.setState({
       reports
     })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextState.reports.length !== this.state.reports.length) return true
+    if (nextState.isAlertHidden !== this.state.isAlertHidden) return true
+    if (nextState.alarm !== this.state.alarm) return true
+    if (nextProps.isAlertsHidden !== this.props.isAlertsHidden) return true
+    return false
   }
 
   showAlarm(alarm) {
@@ -45,21 +53,33 @@ class Reports extends Component {
     })
   }
 
+  getAlertBody(code = 'none') {
+    if (code.length < 3) return [null, null]
+    switch (code.charAt(0)) {
+      case 't': return ['Temperatura alta', 'temperature']
+      case 'c': return ['Batería baja', 'battery']
+      case 'f': return ['Combustible bajo', 'fuel']
+      default: return [null, null]
+    }
+  }
+
   render() {
     const props = this.props
 
     const notChecked = this.state.reports.filter(report => report.attended === false)
     .reduce((sum, element) => sum + element.values.length, 0)
 
+    const alertBody = this.getAlertBody(this.state.alarm && this.state.alarm.values && this.state.alarm.values.length && this.state.alarm.values[0] && this.state.alarm.values[0].key)
+
     return (
       <div className={`alerts ${props.isAlertsHidden ? 'hidden' : 'active'}`}>
         {/* <Link to={`/zones/${this.state.alarm.zone ? this.state.alarm.zone._id : null}/${this.state.alarm.subzone ? this.state.alarm.subzone._id : null}/${this.state.alarm.site ? this.state.alarm.site._id : null}`}> */}
           <div
             className={`alert-thumbnail ${this.state.isAlertHidden ? 'hidden' : 'active'}`}
-            style={{backgroundImage: `url(/static/img/icons/battery.svg)`}}
+            style={{backgroundImage: `url(/static/img/icons/${alertBody[1]}.svg)`}}
             onClick={props.onHide}>
             <div className="content">
-              <p className="alert-description">Batería baja</p>
+              <p className="alert-description">{alertBody[0]}</p>
               {
                 (this.state.alarm && this.state.alarm.zone) &&
                 <p className="location">Zona {this.state.alarm.zone.name} | Subzona {this.state.alarm.subzone.name} | Sitio {this.state.alarm.site.key}</p>
@@ -83,23 +103,25 @@ class Reports extends Component {
                 this.state.reports.map((report, index) => {
                   const date = new Date(report.timestamp)
                   return (
-                    report.values.map((value, index2) =>
-                      <Link
+                    report.values.map((value, index2) => {
+                      const alertBody = this.getAlertBody(value && value.key)
+
+                      return (<Link
                         onClick={() => props.setAlarmAttended(report)}
                         to={`/zones/${report.zone ? report.zone._id : null}/${report.subzone ? report.subzone._id : null}/${report.site ? report.site._id : null}`}
                         key={`${index2}${report.timestamp}${index}`}>
-                        <div className={`mini-alert battery ${report.attended ? 'attended' : 'not-attended'}`}>
+                        <div className={`mini-alert ${alertBody[1]} ${report.attended ? 'attended' : 'not-attended'}`}>
                           <div className="details">
                             <div><span>Zona {report.zone.name} | Sitio {report.site.key}</span></div>
-                            <p>Batería baja {value.value}%</p>
+                            <p>{alertBody[0]} {value.value}%</p>
                           </div>
                           <div className="time">
                             <span>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}</span>
                             <span>{`${date.getHours()}:${date.getMinutes()}`}</span>
                           </div>
                         </div>
-                      </Link>
-                    )
+                      </Link>)
+                    })
                   )
                 })
               }

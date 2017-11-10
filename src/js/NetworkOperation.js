@@ -25,11 +25,11 @@ class NetworkOperation {
   }
 
   static setSubzone(company, zone, name, positions, sites) {
-    return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/subzones')
+    return axios.post(`${window.baseUrl}/companies/` + company + '/' + zone + '/subzones', { positions, name })
   }
 
-  static setSite(company, subzone, key, position, sensors, alarms) {
-    return axios.post(`${window.baseUrl}/companies/` + company + '/' + subzone + '/sites', { key, position, sensors, alarms })
+  static setSite(company, zone, subzone, name, key, position, sensors, alarms) {
+    return axios.post(`${window.baseUrl}/companies/${company}/zones/${zone}/subzones/${subzone}/sites`, { key, position, sensors, alarms, name })
   }
 
   static getProfile() {
@@ -54,6 +54,14 @@ class NetworkOperation {
 
   static getAll(company) {
     return axios.get(`${window.baseUrl}/companies/` + company + '/exhaustive')
+  }
+
+  static getAvailableStates() {
+    return axios.get(`${window.baseUrl}/polygons/mx`)
+  }
+
+  static getStatePolygon(stateId) {
+    return axios.get(`${window.baseUrl}/polygons/mx/${stateId}`)
   }
 }
 

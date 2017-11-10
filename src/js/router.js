@@ -9,7 +9,7 @@ import { createStore } from 'redux'
 
 import Login from './containers/Login'
 import Signup from './containers/Signup'
-import Streaming from './containers/Streaming'
+import Streaming from './components/Stream'
 
 import App from './containers/App'
 
