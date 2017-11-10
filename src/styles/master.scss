@@ -775,6 +775,10 @@ nav {
       border: 1px solid $light-gray;
       border-right: none;
       background-image: url('/static/img/icons/large-back.png');
+      &.active {
+        border-right: 1px solid $light-gray;
+        border-left: none;
+      }
     }
   }
 }
