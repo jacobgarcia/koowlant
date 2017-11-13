@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { dispatch } from 'redux'
 import PropTypes from 'prop-types'
 
 import { logout } from '../actions'

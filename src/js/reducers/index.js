@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
 // Authentication, initial state from localStorage
-function credentials(state = JSON.parse(localStorage.getItem('credentials')), action) {
+function credentials(state = {}, action) {
   switch (action.type) {
     case 'SET_USER':
       return {
