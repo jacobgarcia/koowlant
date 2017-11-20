@@ -20,8 +20,8 @@ router.use(require(path.resolve('router/v1/polygons')))
 // TODO: Send user invitee (mail)
 // TODO: Accept user invitee
 
-router.use((error, req, res) => {
-  res.status(500).json({ error })
+router.use((req, res) => {
+  return res.status(500).json({ message: 'No route' })
 })
 
 module.exports = router
