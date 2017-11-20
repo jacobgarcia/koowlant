@@ -13,6 +13,7 @@ function sockets(io) {
       jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
           winston.error('Failed to authenticate token', err, token)
+          return res.status(400).json({ message: 'Not authorized' })
         }
 
         // TODO get user granted zone or subzone

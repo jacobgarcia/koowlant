@@ -15,7 +15,6 @@ const config = require(path.resolve('config/config'))
 
 nev.configure({
   verificationURL: 'https://demo.kawlantid.com/signup/${URL}',
-
   // mongo configuration
   persistentUserModel: User,
   tempUserModel: Guest,
