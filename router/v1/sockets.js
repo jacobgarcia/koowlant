@@ -10,10 +10,10 @@ function sockets(io) {
     socket.on('join', token => {
 
       // Verify token and get decoded info
-      jwt.verify(token, config.secret, (err, decoded) => {
+      return jwt.verify(token, config.secret, (err, decoded) => {
         if (err) {
           winston.error('Failed to authenticate token', err, token)
-          return res.status(400).json({ message: 'Not authorized' })
+          return null
         }
 
         // TODO get user granted zone or subzone
