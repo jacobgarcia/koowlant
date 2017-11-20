@@ -8,6 +8,9 @@ const Site = require(path.resolve('models/Site'))
 function sockets(io) {
   io.on('connection', socket => {
     socket.on('join', token => {
+      if (!token) {
+        return null
+      }
 
       // Verify token and get decoded info
       return jwt.verify(token, config.secret, (err, decoded) => {
