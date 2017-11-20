@@ -27,10 +27,6 @@ class App extends Component {
 }
 
 App.propTypes = {
-  setCredentials: PropTypes.func,
-  history: PropTypes.object,
-  user: PropTypes.object,
-  credentials: PropTypes.object
 }
 
 function mapDispatchToProps(dispatch) {

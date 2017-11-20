@@ -1,12 +1,24 @@
-# React Boilerplate
-React, redux, react-router, hot-reload, axios, Eslint, Stage 2
+# KawlantID
 
-## Usage
-Run development server with hot reload
-```npm start:dev```
+## Codes
 
-Create production bundle
-```npm run build```
+### User types
 
-## Licence
-MIT
+0 Main administrator
+1
+2
+3
+4
+
+### Sensor types
+
+0 Energy
+1 Fuel
+2 Temperature
+3 Access
+4
+
+### Sensor metric type
+0 Number
+1 Percentage
+2 Degrees
