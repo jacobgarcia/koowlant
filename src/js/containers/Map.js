@@ -65,7 +65,7 @@ class MapView extends Component {
       })
     })
     // Reports
-    NetworkOperation.getReports(this.props.credentials.company || 'att&t')
+    NetworkOperation.getReports()
     .then(response => {
       const { reports } = response.data
       // set each report
@@ -118,11 +118,10 @@ class MapView extends Component {
     if (selectedSubzone && selectedZone) {
       // company, zone, subzone, name, key, position, sensors, alarms
       NetworkOperation.setSite(
-        this.props.credentials.company._id,
         selectedZone._id,
         selectedSubzone._id,
         newName,
-        String(Date.now()), // TODO set key
+        null, // TODO set key
         newPositions[0],
         null,
         null
@@ -134,7 +133,6 @@ class MapView extends Component {
     } else if (selectedZone) {
       // Setting subzone
       NetworkOperation.setSubzone(
-        this.props.credentials.company._id,
         selectedZone._id, newName,
         newPositions,
         null
@@ -145,12 +143,7 @@ class MapView extends Component {
       })
     } else {
       // Create zone on database company, name, positions, subzones
-      NetworkOperation.setZone(
-        this.props.credentials.company._id,
-        newName,
-        newPositions,
-        null
-      )
+      NetworkOperation.setZone(newName, newPositions)
       .then(response => {
 
         const zone = response.data.zone

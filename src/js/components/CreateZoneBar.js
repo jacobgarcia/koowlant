@@ -50,6 +50,7 @@ class CreateZoneBar extends Component {
               <span onClick={() => this.setState(prevState => ({isShowingList: !prevState.isShowingList}))}>Selecciona las entidades</span>
               <ul className={`list ${this.state.isShowingList ? 'visible' : ''}`}>
                 {
+                  props.state &&
                   props.states.map((state, index) =>
                     <li
                       key={index}

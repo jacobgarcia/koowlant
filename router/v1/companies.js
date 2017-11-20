@@ -9,20 +9,23 @@ const Zone = require(path.resolve('models/Zone'))
 const Subzone = require(path.resolve('models/Subzone'))
 
 // Save sites and stream change
-router.route('/companies/:company/zones/:zone/subzones/:subzone/sites')
+router.route('/zones/:zone/subzones/:subzone/sites')
 .post((req, res) => {
-    const { key, name, position, sensors, alarms } = req.body
-    const { company, zone, subzone } = req.params
+    const { name, position } = req.body
+    let key = req.body.key
+    const { zone, subzone } = req.params
+    const company = req._user.cmp
+
+    if (key === null || key === 'null') key = String(Date.now())
 
     // Create site using the information in the request body
     new Site({
       key,
       name,
       position,
-      sensors,
-      alarms,
       subzone,
-      zone
+      zone,
+      company
     })
     .save((error, site) => {
       if (error) {
@@ -30,8 +33,8 @@ router.route('/companies/:company/zones/:zone/subzones/:subzone/sites')
         return res.status(500).json({ error })
       }
       // Add the new site to the specified subzone
-      return Subzone.findOneAndUpdate({ '_id': subzone }, { $push: { sites: site } }, { new: true })
-      .exec((error, subzone) => {
+      return Subzone.findByIdAndUpdate(subzone, { $push: { sites: site } }, { new: true })
+      .exec(error => {
         if (error) {
           winston.error({error})
           return res.status(500).json({ error })
@@ -42,11 +45,12 @@ router.route('/companies/:company/zones/:zone/subzones/:subzone/sites')
     })
 })
 
-//  Save subzone and stream change
-router.route('/companies/:company/:zoneId/subzones')
+// Save subzone and stream change
+router.route('/:zoneId/subzones')
 .post((req, res) => {
     const { name, positions, sites } = req.body
-    const { company, zoneId } = req.params
+    const { zoneId } = req.params
+    const company = req._user.cmp
 
     // Create subzone using the information in the request body
     new Subzone({
@@ -76,16 +80,16 @@ router.route('/companies/:company/:zoneId/subzones')
 })
 
 //  Save zone and stream change
-router.route('/companies/:companyId/zones')
+router.route('/zones')
 .post((req, res) => {
-    const { name, positions, subzones } = req.body
-    // const { companyId } = req.params
+    const { name, positions } = req.body
+    const company = req._user.cmp
 
     // Create subzone using the information in the request body
     new Zone({
       name,
       positions,
-      subzones
+      company
     })
     .save((error, zone) => {
         if (error) {
@@ -98,12 +102,13 @@ router.route('/companies/:companyId/zones')
 })
 
 // Save sensors and alarms, add to history and stream change
-router.route('/companies/:companyId/:siteId/reports')
+router.route('/:siteKey/reports')
 .put((req, res) => {
     const { sensors, alarms } = req.body
-    const { companyId, siteId } = req.params
+    const { siteKey } = req.params
+    const company = req._user.cmp
 
-    Site.findById(siteId)
+    Site.findOne({key: siteKey, company})
     .exec((error, site) => {
       if (!site) return res.status(404).json({ message: 'No site found'})
 
@@ -134,7 +139,7 @@ router.route('/companies/:companyId/:siteId/reports')
             alarms: updatedSite.alarms
           }
 
-          global.io.to('0293j4ji').emit('report', report)
+          global.io.to(`${company}-${siteKey}`).emit('report', report)
           return res.status(200).json(report)
         })
       })
@@ -143,11 +148,11 @@ router.route('/companies/:companyId/:siteId/reports')
 })
 
 // Get zones. TODO: Retrieve only company zones
-router.route('/companies/:company/zones')
+router.route('/zones')
 .get((req, res) => {
-  const company = req.params.company
+  const company = req._user.cmp
 
-  Zone.find({})
+  Zone.find({ company })
   .exec((error, zones) => {
     if (error) {
       winston.error({error})
@@ -161,11 +166,11 @@ router.route('/companies/:company/zones')
 })
 
 // Get subzones. TODO: Retrieve only company subzones
-router.route('/companies/:company/subzones')
+router.route('/subzones')
 .get((req, res) => {
-  const company = req.params.company
+  const company = req._user.cmp
 
-  Subzone.find({})
+  Subzone.find({ company })
   .exec((error, subzones) => {
     if (error) {
       winston.error({error})
@@ -178,12 +183,12 @@ router.route('/companies/:company/subzones')
   })
 })
 
-// Get sites. TODO: Retrieve only company sites
-router.route('/companies/:company/sites')
-.get((req, res) => {
-  const company = req.params.company
 
-  Site.find({})
+router.route('/sites')
+.get((req, res) => {
+  const company = req._user.cmp
+
+  Site.find({ company })
   .exec((error, sites) => {
     if (error) {
       winston.error({error})
@@ -197,11 +202,11 @@ router.route('/companies/:company/sites')
 })
 
 // Get last report for all sites
-router.route('/companies/:company/reports')
+router.route('/reports')
 .get((req, res) => {
-  const company = req.params.company
+  const company = req._user.cmp
 
-  Site.find({})
+  Site.find({ company })
   .populate('zone', 'name')
   .populate('subzone', 'name')
   .exec((error, sites) => {
@@ -230,13 +235,13 @@ router.route('/companies/:company/reports')
 })
 
 // Get zones, subzones and sites
-// Get zones. TODO: Retrieve only company zones
-router.route('/companies/:company/exhaustive')
+router.route('/exhaustive')
 .get((req, res) => {
-  const company = req.params.company
+  const company = req._user.cmp
 
-  Zone.find({})
+  Zone.find({ company })
   .exec((error, zones) => {
+
     if (error) {
       winston.error({error})
       return res.status(500).json({ error })

@@ -15,9 +15,14 @@ import io from 'socket.io-client'
 
 import NetworkOperation from '../NetworkOperation'
 
-const socket = io('https://demo.kawlantid.com') // window.location
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.initSocket = this.initSocket.bind(this)
+  }
+
   componentWillMount() {
     const token = localStorage.getItem('token')
 
@@ -32,10 +37,17 @@ class App extends Component {
       const user = data.user
 
       localStorage.setItem('credentials', JSON.stringify(user))
+
+      // Init socket with userId and token
+      this.socket = io(`http://localhost:8080`)
+      this.initSocket(this.props, token)
+
+      // Send crededentials to redux
       this.props.setCredentials({...user, token})
       return NetworkOperation.getAll()
     })
     .then(({data, status}) => {
+      console.log(data)
       if (status === 200) {
           const { sites, subzones, zones } = data
 
@@ -56,28 +68,25 @@ class App extends Component {
       }
     })
     .catch(error => {
-      console.log(error)
       // Remove token and replace location to login
-      if (error.response && (error.response.status === 401 || error.response.status === 400)) {
+      if (error.response && (error.response.status === 401 || error.response.status === 400 || error.response.status === 404)) {
         localStorage.removeItem('token')
         this.props.history.replace('/login')
       }
     })
   }
 
-  componentDidMount() {
-    this.initSocket(this.props)
-  }
+  initSocket(props, token) {
+    this.socket.connect()
 
-  initSocket(props) {
-    socket.connect(() => {
+    this.socket.emit('join', token)
+
+    this.socket.on('connect', () => {
+      this.socket.emit('join', token)
     })
 
-    socket.on('connect', () => {
-      socket.emit('join', '0293j4ji')
-    })
-
-    socket.on('report', report => {
+    this.socket.on('report', report => {
+      console.log('GOT REPORT')
       props.setReport(report)
     })
   }

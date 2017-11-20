@@ -7,10 +7,13 @@ class ZoneClass {
 }
 
 const schema = new Schema({
-  name: String,
-  positions: [[Number]],
-  company: { type: Schema.Types.ObjectId, ref: 'Company' }, // TODO required: true
-  subzones: [{ type: Schema.Types.ObjectId, ref: 'Subzone' }], // Id of the subzones that belong to this zone, if applicable
+  name: {type: String, required: true},
+  positions: {
+    type: [[Number]],
+    required: true
+  },
+  company: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
+  subzones: [{ type: Schema.Types.ObjectId, ref: 'Subzone', default: [] }], // Id of the subzones that belong to this zone, if applicable
 })
 
 schema.loadClass(ZoneClass)

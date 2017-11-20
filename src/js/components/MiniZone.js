@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
@@ -12,7 +12,7 @@ function colors(value) {
   }
 }
 
-class MiniZone extends PureComponent {
+class MiniZone extends Component {
   shouldComponentUpdate(nextProps) {
     if (this.props.percentage !== nextProps.percentage) return true
     if (this.props.type !== nextProps.type) return true
