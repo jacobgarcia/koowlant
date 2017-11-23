@@ -240,6 +240,16 @@ router.route('/exhaustive')
   const company = req._user.cmp
 
   Zone.find({ company })
+  .select('name positions subzones')
+  .populate('subzones', 'name positions sites')
+  .populate({
+    path: 'subzones',
+    populate: {
+      path: 'sites',
+      model: 'Site',
+      select: 'alarms name key position sensors timestamp'
+    }
+  })
   .exec((error, zones) => {
 
     if (error) {
@@ -248,27 +258,7 @@ router.route('/exhaustive')
     }
     if (!zones) return res.status(404).json({ message: 'No zones found'})
 
-    return Subzone.find({})
-    .exec((error, subzones) => {
-      if (error) {
-        winston.error({error})
-        return res.status(500).json({ error })
-      }
-
-      if (!subzones) return res.status(206).json({ zones, message: 'No subzones found'})
-
-      return Site.find({})
-      .exec((error, sites) => {
-        if (error) {
-          winston.error({error})
-          return res.status(500).json({ error })
-        }
-        if (!sites) return res.status(206).json({ zones, subzones, message: 'No sites found'})
-
-        return res.status(200).json({ zones, subzones, sites })
-      })
-
-    })
+    return res.status(200).json({ zones })
 
   })
 })
