@@ -1,5 +1,14 @@
 import { combineReducers } from 'redux'
 
+// Loading state
+function loading(state = 0, action) {
+  switch (action.type) {
+    case 'SET_LOADING': return state + 1
+    case 'SET_COMPLETE': return state - 1
+    default: return state
+  }
+}
+
 // Authentication, initial state from localStorage
 function credentials(state = {}, action) {
   switch (action.type) {
@@ -38,6 +47,8 @@ function appAlert(state = {}, action) {
 
 function reports(state = [], action) {
   switch (action.type) {
+    case 'SET_INITIAL_REPORTS':
+      return [...action.reports]
     case 'SET_REPORT': {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
       const newState = [...state] // BUG: It only creates a shallow copy
@@ -96,6 +107,8 @@ function reports(state = [], action) {
 
 function zones(state = [], action) {
   switch (action.type) {
+    case 'SET_EXHAUSTIVE':
+      return [...action.zones]
     case 'SET_ZONE':
       return [...state, {
         _id: action.id,
@@ -170,6 +183,7 @@ function administrators(state = [], action) {
 }
 
 const appReducer = combineReducers({
+  loading,
   credentials,
   zones,
   administrators,
