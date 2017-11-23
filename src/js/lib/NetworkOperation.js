@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:8080/v1'
+import constants from './constants'
+
+const baseUrl = `${constants.hostUrl}/v1`
 
 // Request interceptors
 axios.interceptors.request.use(config => {
@@ -11,8 +13,24 @@ axios.interceptors.request.use(config => {
 }, error => Promise.reject(error))
 
 class NetworkOperation {
-  static login(email, password) {
+  static login({email, password}) {
     return axios.post(`${baseUrl}/authenticate`, { email, password})
+  }
+
+  static getSelf() {
+    return axios.get(`${baseUrl}/users/self`)
+  }
+
+  static getExhaustive() {
+    return axios.get(`${baseUrl}/exhaustive`)
+  }
+
+  static getReports() {
+    return axios.get(`${baseUrl}/reports`)
+  }
+
+  static getAvailableStates() {
+    return axios.get(`${baseUrl}/polygons/mx`)
   }
 }
 
