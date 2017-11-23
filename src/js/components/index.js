@@ -1,12 +1,11 @@
-export {default as MiniZone} from './MiniZone'
-export {default as CreateZoneBar} from './CreateZoneBar'
-export {default as MiniAlert} from './MiniAlert'
-export { default as ZoneDetail } from './ZoneDetail'
-export { default as StatusBar } from './StatusBar'
-export { default as ZonesContainer } from './ZonesContainer'
-export { default as StatusOverall } from './StatusOverall'
-export { default as Reports } from './Reports'
-export { default as ZonePolygon } from './ZonePolygon'
-export { default as SiteMarker } from './SiteMarker'
+export { default as Alerts } from './Alerts'
+export { default as Overall } from './Overall'
+export { default as Nav } from './Nav'
+
+export { default as StatusesContainer } from './StatusesContainer'
+
+export { default as Polygon } from './Polygon'
+export { default as Marker } from './Marker'
+export { default as ElementStatus } from './ElementStatus'
+
 export { default as Search } from './Search'
-export { default as Stream } from './Stream'
