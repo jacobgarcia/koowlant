@@ -1,5 +1,5 @@
 /* eslint-env node */
-module.exports = const config = {
+module.exports = {
   rtmp: {
     port: 1935,
     chunk_size: 60000,
@@ -9,6 +9,10 @@ module.exports = const config = {
   },
   http: {
     port: 8000,
+    allow_origin: '*'
+  },
+  https: {
+    port: 443,
     allow_origin: '*'
   }
 }
