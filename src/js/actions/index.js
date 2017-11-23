@@ -1,4 +1,25 @@
-// Alerts
+/*
+
+        L O A D I N G
+
+ */
+export function setLoading() {
+  return {
+    type: 'SET_LOADING'
+  }
+}
+
+export function setComplete() {
+  return {
+    type: 'SET_COMPLETE'
+  }
+}
+
+/*
+
+        A L E R T S
+
+ */
 export function alert(title, body) {
   return {
     type: 'SET_ALERT',
@@ -13,7 +34,11 @@ export function dismissAlert() {
   }
 }
 
-// Auth
+/*
+
+        C R E D E N T I A L S
+
+ */
 export function logout() {
   return {
     type: 'LOG_OUT'
@@ -35,13 +60,24 @@ export function setAlarmAttended(alarm) {
   }
 }
 
-// Zones
+/*
+
+        Z O N E S
+
+ */
 export function setZone(id, name, positions) {
   return {
     type: 'SET_ZONE',
     id,
     name,
     positions
+  }
+}
+
+export function setExhaustive(zones) {
+  return {
+    type: 'SET_EXHAUSTIVE',
+    zones
   }
 }
 
@@ -76,10 +112,22 @@ export function setSite(zoneId, subzoneId, siteId, key, name, position) {
   }
 }
 
+/*
+
+        R E P O R T S
+
+ */
 export function setReport(report) {
   return {
     type: 'SET_REPORT',
     report
+  }
+}
+
+export function setInitialReports(reports) {
+  return {
+    type: 'SET_INITAL_REPORTS',
+    reports
   }
 }
 
