@@ -34,8 +34,13 @@ body, input, textarea, select, button {
   outline: none;
 }
 
+li {
+  list-style: none;
+}
+
 a {
   text-decoration: none;
+  color: inherit;
 }
 
 input, textarea, button {
