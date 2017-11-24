@@ -6,6 +6,8 @@ import { MiniZone, Stream } from './'
 import { substractReportValues, getStatus, getFilteredReports } from '../SpecialFunctions'
 import Sensor from './Sensor'
 
+import Reflv from 'reflv'
+
 function Video(props) {
   return (
     <video className="camera-video" controls loop>

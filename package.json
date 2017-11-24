@@ -37,6 +37,7 @@
     "react-router-dom": "^4.2.2",
     "recharts": "^1.0.0-beta.0",
     "redux": "^3.7.2",
+    "reflv": "0.0.1",
     "socket.io": "^2.0.4",
     "socket.io-client": "^2.0.4"
   },

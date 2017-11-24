@@ -9,7 +9,7 @@ import { createStore } from 'redux'
 
 import Login from './containers/Login'
 import Signup from './containers/Signup'
-import Streaming from './components/Stream'
+import Streaming from './components/StreamFlashless'
 
 import App from './containers/App'
 
@@ -32,7 +32,7 @@ function Routes() {
       <Router>
         <div id="app">
           <Switch>
-            <Route path="/streaming" render={() => <Streaming { ...videoJsOptions } />} />
+            <Route path="/streaming" component={Streaming} />
             <Route path="/login" component={Login}/>
             <Route path="/signup/:invitation_token" component={Signup}/>
             <Route path="/" component={App} />
