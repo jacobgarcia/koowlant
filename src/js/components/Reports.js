@@ -112,7 +112,7 @@ class Reports extends Component {
                         key={`${index2}${report.timestamp}${index}`}>
                         <div className={`mini-alert ${alertBody[1]} ${report.attended ? 'attended' : 'not-attended'}`}>
                           <div className="details">
-                            <div><span>Zona {report.zone.name} | Sitio {report.site.key}</span></div>
+                            <div><span>Zona {report.zone && report.zone.name} | Sitio {report.site.key}</span></div>
                             <p>{alertBody[0]} {value.value}%</p>
                           </div>
                           <div className="time">

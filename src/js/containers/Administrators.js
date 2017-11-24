@@ -47,15 +47,15 @@ class Administrators extends Component {
     event.preventDefault()
     const { email, selectedSubzone, selectedZone, grantedPermits, monitoringCameras, monitoringSensors } = this.state
 
-    NetworkOperation.invite(email, this.props.credentials.user.company, this.props.credentials.user.email)
+    NetworkOperation.invite(email, this.props.credentials.user.email)
     .then(response => {
       const { zones } = response.data
       // set each zone
-      zones.forEach((zone) => {
+      zones.forEach(zone => {
         this.props.setZone(zone._id, zone.name, zone.positions)
       })
     })
-    .catch((error) => {
+    .catch(error => {
       // Dumb catch
       console.log('Something went wrong:' + error)
     })

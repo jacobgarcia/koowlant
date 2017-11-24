@@ -8,8 +8,11 @@ class SubzoneClass {
 
 const schema = new Schema({
   name: String,
-  positions: [[Number]],
-  company: { type: Schema.Types.ObjectId, ref: 'Company' }, // TODO required: true
+  positions: {
+    type: [[Number]],
+    required: true
+  },
+  company: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
   parentZone: { type: Schema.Types.ObjectId, ref: 'Zone' },
   sites: [{ type: Schema.Types.ObjectId, ref: 'Site' }]
 })

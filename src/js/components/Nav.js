@@ -52,8 +52,6 @@ class Nav extends PureComponent {
           </div>
         </div>
         <div className="navigation">
-          <span className="date">{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</span>
-          <span className="time">{date.getHours()}:{date.getMinutes()}:{date.getSeconds()}</span>
           <span className="sandwitch" onClick={this.toggleNav}></span>
           <ul className={this.state.isHidden ? 'nav links' : 'nav links active'}>
             <li onClick={this.toggleNav}><NavLink exact to="/" activeClassName="selected" className={isZone ? 'selected' : ''}>Mapa</NavLink></li>
@@ -61,6 +59,10 @@ class Nav extends PureComponent {
             <li onClick={this.toggleNav}><NavLink to="/stadistics" activeClassName="selected">Estadísiticas</NavLink></li>
             <li onClick={this.toggleNav}><NavLink to="/settings" activeClassName="selected">Configuración</NavLink></li>
           </ul>
+        </div>
+        <div className="status">
+          <span className="date">{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</span>
+          <span className="time">{date.getHours()}:{date.getMinutes()}:{date.getSeconds()}</span>
           <img className="logo mini" src="/static/img/iso.svg" alt=""/>
         </div>
       </nav>

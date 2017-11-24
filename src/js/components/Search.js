@@ -19,7 +19,23 @@ class Search extends Component {
   constructor(props) {
     super(props)
 
-    const zones = this.props.zones.map(({_id: zoneId, name, subzones}) =>
+    this.state = {
+      query: '',
+      sites: [],
+      subzones: [],
+      zones: [],
+      filteredSubzones: [],
+      filteredSites: [],
+      filteredZones: []
+    }
+
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(nextProps.zones) === JSON.stringify(this.props.zones.length)) return
+
+    const zones = nextProps.zones.map(({_id: zoneId, name, subzones}) =>
       ({
         _id: zoneId,
         name,
@@ -48,6 +64,7 @@ class Search extends Component {
         ...subzones
       ],
     [])
+
     const sites = subzones.reduce((sites, subzone) =>
       ([
         ...subzone.sites,
@@ -55,17 +72,11 @@ class Search extends Component {
       ])
     , [])
 
-    this.state = {
-      query: '',
+    this.setState({
       sites,
       subzones,
       zones,
-      filteredSubzones: [],
-      filteredSites: [],
-      filteredZones: []
-    }
-
-    this.handleChange = this.handleChange.bind(this)
+    })
   }
 
   handleChange(event) {
@@ -106,6 +117,7 @@ class Search extends Component {
 
   render() {
     const props = this.props
+
     return (
       <div className={`search-container ${this.props.isVisible ? '' : 'hidden'}`}>
         <div className="search">

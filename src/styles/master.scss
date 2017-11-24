@@ -30,7 +30,7 @@ html, body, #root, #app, #app-content, .body {
   width: 100%;
 }
 
-input, textarea, button {
+input, textarea, button, select {
   font-size: 1rem;
   outline: none;
   -webkit-appearance: none;
@@ -154,11 +154,6 @@ h3 {
 }
 .no-failures-icon {
   background-image: url('/static/img/icons/alerts-inactive.svg');
-}
-text {
-  transform: translateY(45px);
-  font-weight: 600;
-  margin-top: 50px;
 }
 .site.tooltip {
   &.active {
@@ -332,10 +327,13 @@ ul.links {
       }
     }
     &.huge {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       padding: 8px 20px;
+      &.short input {
+        width: 200px;
+      }
       input {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
       }
     }
   }
@@ -373,6 +371,7 @@ ul.links {
 @import "./containers/Sites";
 @import "./containers/App";
 @import "./leaflet";
+@import "./calendar";
 
 nav {
   padding: 10px 20px;
@@ -397,6 +396,14 @@ nav {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+  }
+  .user, .status {
+    flex-basis: 200px;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
   &.active {
     span.sandwitch {
@@ -500,8 +507,6 @@ nav {
 
  */
 
-
-
 .statistics {
   margin: 20px 10% 0;
   h3 {
@@ -509,17 +514,107 @@ nav {
   }
   .statistics-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    .statistic-box {
-      border: 1px solid #000;
-      padding: 15px 20px 30px;
-      .info {
+    .statistic {
+      flex-grow: 1;
+    }
+    .view-settings {
+      > div {
         margin-bottom: 20px;
       }
+      .selector-title {
+        width: 65px;
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+    .zone-selector {
+      display: flex;
+      > div {
+        margin-right: 30px;
+      }
+    }
+    .selector {
+      display: inline-block;
+      padding: 4px 13px;
+      border: 1px solid #000;
+      padding-right: 40px;
+      font-weight: 600;
+      position: relative;
+      height: 30px;
+      cursor: pointer;
+      ul {
+        position: absolute;
+        left: -1px;
+        top: 28px;
+        background-color: #fff;
+        padding: 10px 20px;
+        border: 1px solid #000;
+        z-index: 100;
+        right: auto;
+        cursor: default;
+        input {
+          cursor: pointer;
+          width: 100%;
+          margin-bottom: 10px;
+          border-radius: 5px;
+          padding: 5px 10px;
+          &.active {
+            background-color: #eee;
+          }
+        }
+        li {
+          font-weight: normal;
+          padding-left: 20px;
+          margin-bottom: 20px;
+          position: relative;
+          cursor: pointer;
+          &.selected {
+            &::before {
+              background-color: $green;
+            }
+          }
+          &:last-child {
+            margin-bottom: 0px;
+          }
+          &::before {
+            position: absolute;
+            content: '';
+            left: 0;
+            bottom: 2px;
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid #000;
+          }
+        }
+      }
+    }
+    .box {
+      border: 1px solid #000;
+      padding: 15px 20px 30px;
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      .info {
+        margin-bottom: 20px;
+        > div {
+          span {
+            display: block;
+            color: gray;
+            font-size: 0.9rem;
+            font-weight: 600;
+          }
+          p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+          }
+        }
+      }
       .recharts-wrapper {
-        margin-left: -50px;
-        margin-right: -20px;
+        // margin-left: -50px;
+        // margin-right: -20px;
       }
     }
   }
@@ -775,6 +870,10 @@ nav {
       border: 1px solid $light-gray;
       border-right: none;
       background-image: url('/static/img/icons/large-back.png');
+      &.active {
+        border-right: 1px solid $light-gray;
+        border-left: none;
+      }
     }
   }
 }
@@ -1319,12 +1418,13 @@ nav {
       bottom: 20px;
       width: 100%;
       z-index: 999;
+      justify-content: flex-start;
+      padding-left: 20px;
       .links {
         display: flex;
         border: 1px solid black;
         height: auto;
       }
-      justify-content: center;
       li {
         height: 40px;
       }
@@ -1395,7 +1495,7 @@ nav {
         margin-bottom: 0;
         position: absolute;
         left: 0px;
-        width: 180px;
+        width: 190px;
       }
     }
   }

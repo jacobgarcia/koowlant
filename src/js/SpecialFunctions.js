@@ -162,31 +162,12 @@ export function getStatus(data) {
 
 export function getAreaCenter(coordsArray) {
   // For rect and poly areas we need to loop through the coordinates
-  let coord
-  let minX = coordsArray[0]
-  let maxX = coordsArray[0]
-  let minY = coordsArray[1]
-  let maxY = coordsArray[1]
+  const xCords = coordsArray.reduce((sum, pos) => [...sum, pos[0]], [])
+  const yCords = coordsArray.reduce((sum, pos) => [...sum, pos[1]], [])
+  const minX = Math.min.apply(Math, xCords)
+  const maxX = Math.max.apply(Math, xCords)
+  const minY = Math.min.apply(Math, yCords)
+  const maxY = Math.max.apply(Math, yCords)
 
-  for (var i = 0, l = coordsArray.length; i < l; i += 1) {
-    coord = coordsArray[i]
-    if (i % 2 === 0) { // Even values are X coordinates
-      if (coord < minX) {
-        minX = coord;
-      } else if (coord > maxX) {
-        maxX = coord;
-      }
-    } else { // Odd values are Y coordinates
-      if (coord < minY) {
-        minY = coord;
-      } else if (coord > maxY) {
-        maxY = coord;
-      }
-    }
-  }
-
-  return ([
-    (minX + maxX) / 2,
-    (minY + maxY) / 2
-  ])
+  return [(minX + maxX) / 2, (minY + maxY) / 2]
 }

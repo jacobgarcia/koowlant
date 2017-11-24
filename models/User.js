@@ -7,13 +7,15 @@ class UserClass {
 }
 
 const schema = new Schema({
-  email: String,
+  email: { type: String, required: true, unique: true, index: true },
   company: { type: Schema.Types.ObjectId, ref: 'Company' }, // Company id
   password: String,
   host: String,
-  accessLevel: String,
+  access: Number,
   name: String,
-  surname: String
+  surname: String,
+  zone: { type: Schema.Types.ObjectId, ref: 'Zone' },
+  subzone: { type: Schema.Types.ObjectId, ref: 'Subzone' }
 })
 
 schema.virtual('fullName').get(function() {

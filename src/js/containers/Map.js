@@ -17,7 +17,6 @@ class MapView extends Component {
     this.isWindow = qs.parse(props.location.search).isWindow
 
     const {zoneId, subzoneId, siteId} = props.match.params
-
     const selectedZone = props.zones.filter(zone => zone._id === zoneId).pop()
     const selectedSubzone = (selectedZone && selectedZone.subzones) ? selectedZone.subzones.filter(subzone => subzone._id === subzoneId).pop() : null
     const selectedSite = (selectedZone && selectedSubzone) ? selectedSubzone.sites.filter(site => site._id === siteId).pop() : null
@@ -66,7 +65,7 @@ class MapView extends Component {
       })
     })
     // Reports
-    NetworkOperation.getReports(this.props.credentials.company || 'att&t')
+    NetworkOperation.getReports()
     .then(response => {
       const { reports } = response.data
       // set each report
@@ -119,11 +118,10 @@ class MapView extends Component {
     if (selectedSubzone && selectedZone) {
       // company, zone, subzone, name, key, position, sensors, alarms
       NetworkOperation.setSite(
-        this.props.credentials.company._id,
         selectedZone._id,
         selectedSubzone._id,
         newName,
-        String(Date.now()), // TODO set key
+        null, // TODO set key
         newPositions[0],
         null,
         null
@@ -135,7 +133,6 @@ class MapView extends Component {
     } else if (selectedZone) {
       // Setting subzone
       NetworkOperation.setSubzone(
-        this.props.credentials.company._id,
         selectedZone._id, newName,
         newPositions,
         null
@@ -146,12 +143,7 @@ class MapView extends Component {
       })
     } else {
       // Create zone on database company, name, positions, subzones
-      NetworkOperation.setZone(
-        this.props.credentials.company._id,
-        newName,
-        newPositions,
-        null
-      )
+      NetworkOperation.setZone(newName, newPositions)
       .then(response => {
 
         const zone = response.data.zone
@@ -196,6 +188,8 @@ class MapView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+
+    console.log('REPORTS', nextProps.reports)
     const { zoneId, subzoneId, siteId } = nextProps.match.params
 
     const selectedZone = this.props.zones.find(({_id}) => _id === zoneId)
@@ -207,23 +201,23 @@ class MapView extends Component {
         selectedZone,
         selectedSubzone,
         selectedSite,
-        currentZoom: 10.5
+        currentZoom: 11
       }, () => this.setState({currentPosition: selectedSite.position}))
     } else if (selectedZone && selectedSubzone) {
       this.setState({
         selectedZone,
         selectedSubzone,
         selectedSite: null,
-        currentZoom: 6.7
+        currentZoom: 8
       }, () => {
         selectedSubzone.positions[0]
-        && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions[0])})
+        && this.setState({currentPosition: getAreaCenter(selectedSubzone.positions)})
       })
     } else if (selectedZone) {
       this.setState({
         selectedZone,
-        currentZoom: 5.5,
-        currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions[0]) : [23.2096057, -101.6139503],
+        currentZoom: 7,
+        currentPosition: selectedZone.positions[0] ? getAreaCenter(selectedZone.positions) : [23.2096057, -101.6139503],
         selectedSubzone: null,
         selectedSite: null
       })
@@ -241,10 +235,18 @@ class MapView extends Component {
     this.setState({ highlightedZone: elementId })
   }
 
-  onMapClick(event) {
+  onMapClick({latlng = { lat: 0, lng: 0 }}) {
     if (!this.state.isCreatingZone) return
 
-    const { lat, lng } = event.latlng
+    let { lat = 0, lng = 0 } = latlng
+    lat = String(lat)
+    lng = String(lng)
+    // lat[lat.length - 1] === '.' ? lat += '0' : null
+    // lng[lat.length - 1] === '.' ? lng += '0' : null
+
+    lat = isNaN(lat) ? 0 : lat
+    lng = isNaN(lng) ? 0 : lng
+
     const newPosition = [lat,lng]
 
     // If we're creating a zone, replace the old position
@@ -536,7 +538,18 @@ class MapView extends Component {
                 this.state.isCreatingSite ? (
                   this.state.newPositions[0]
                   && <SiteMarker
-                      position={this.state.newPositions[0]}
+                      position={(() => {
+                        const position = this.state.newPositions[0]
+                        const lat = parseFloat(position[0])
+                        const lng = parseFloat(position[1])
+
+                        const latlng = position.length ? ([
+                          isNaN(lat) ? 0.0 : lat,
+                          isNaN(lng) ? 0.0 : lng
+                        ]) : [0,0]
+
+                        return latlng
+                      })()}
                       title={this.state.newName}
                       site={{name: this.state.newName}}
                       deactivated
@@ -554,6 +567,7 @@ class MapView extends Component {
               />
             </Map>
             <CreateZoneBar
+              isCreatingSite={this.state.isCreatingSite}
               isCreatingZone={!this.state.selectedZone}
               elementSelected={this.state.selectedZone ? (this.state.selectedSubzone ? 'site' : 'subzone') : 'zone'}
               newZoneName={this.state.newName}
@@ -564,6 +578,8 @@ class MapView extends Component {
               selectedStateIndex={this.state.selectedStateIndex}
               states={this.state.states}
               text={this.state.isCreatingSite ? 'Posiciona el sitio' : 'Traza la zona'}
+              newPositions={this.state.newPositions}
+              onPositionChange={this.onMapClick}
             />
           </div>
         }

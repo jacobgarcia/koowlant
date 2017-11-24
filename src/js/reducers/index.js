@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
 // Authentication, initial state from localStorage
-function credentials(state = JSON.parse(localStorage.getItem('credentials')), action) {
+function credentials(state = {}, action) {
   switch (action.type) {
     case 'SET_USER':
       return {
@@ -41,8 +41,6 @@ function reports(state = [], action) {
     case 'SET_REPORT': {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
       const newState = [...state] // BUG: It only creates a shallow copy
-
-      console.log('SET report', action.report)
 
       foundIndex > -1
       ? newState[foundIndex] = {

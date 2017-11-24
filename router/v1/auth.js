@@ -15,7 +15,6 @@ const config = require(path.resolve('config/config'))
 
 nev.configure({
   verificationURL: 'https://demo.kawlantid.com/signup/${URL}',
-
   // mongo configuration
   persistentUserModel: User,
   tempUserModel: Guest,
@@ -83,7 +82,7 @@ router.post('/signup/:invitation_token', (req, res) => {
 
             const token = jwt.sign({
               _id: user._id,
-              acc: user.accessLevel,
+              acc: user.access,
               cmp: user.company
             }, config.secret)
 
@@ -95,7 +94,7 @@ router.post('/signup/:invitation_token', (req, res) => {
                  _id: user._id,
                  name: user.name || 'User',
                  surname: user.surname,
-                 accessLevel: user.accessLevel
+                 access: user.access
                },
                info
              })
@@ -113,7 +112,7 @@ router.post('/authenticate', (req, res) => {
   .then(user => {
     if (user === null) {
       winston.info('Failed to authenticate user email')
-      return res.status(400).json({ message: 'Authentication failed. Malformed Request.' })
+      return res.status(400).json({ message: 'Authentication failed. Wrong user or password.' })
     }
 
     // Config.secret as salt
@@ -124,11 +123,11 @@ router.post('/authenticate', (req, res) => {
 
      const token = jwt.sign({
        _id: user._id,
-       acc: user.accessLevel,
+       acc: user.access,
        cmp: user.company
      }, config.secret)
 
-     user = user.toObject()
+    user = user.toObject()
 
      return res.status(200).json({
        token,
@@ -136,7 +135,7 @@ router.post('/authenticate', (req, res) => {
          _id: user._id,
          name: user.fullName || 'User',
          surname: user.surname,
-         accessLevel: user.accessLevel
+         access: user.access
        }
      })
 
@@ -160,6 +159,7 @@ router.use((req, res, next) => {
       winston.error('Failed to authenticate token', err, token)
       return res.status(401).json({ error: { message: 'Failed to authenticate token' }})
     }
+
     req._user = decoded
     return next()
   })
