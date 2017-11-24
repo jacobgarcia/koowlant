@@ -64,7 +64,7 @@ router.post('/signup/:invitation_token', (req, res) => {
 
     guest.fullName = fullName
 
-    guest.password = bcrypt.hashSync(password)
+    guest.password = bcrypt.hashSync(password + config.secret)
     guest.save((error, guest) => {
       nev.confirmTempUser(invitation_token, (error, user) => {
           if (error) {
