@@ -39,7 +39,7 @@ class App extends Component {
       localStorage.setItem('credentials', JSON.stringify(user))
 
       // Init socket with userId and token
-      this.socket = io(`http://localhost:8080`)
+      this.socket = io(`https://demo.kawlantid.com`)
       this.initSocket(this.props, token)
 
       // Send crededentials to redux

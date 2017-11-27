@@ -51,7 +51,6 @@ nev.configure({
 router.post('/signup/:invitation_token', (req, res) => {
   const invitation_token = req.params.invitation_token
   const { email, password, fullName } = req.body
-
   if (!invitation_token) return res.status(401).json({ message: 'No invitation token provided'})
   Guest.findOne({ invitation_token })
   .exec((error, guest) => {

@@ -45,7 +45,6 @@ class Signup extends Component {
 
   onSubmit(event) {
     event.preventDefault()
-
     if (!(this.state.password &&
     this.state.passswordRepeat &&
     this.state.isValidEmail)) return
