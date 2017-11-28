@@ -804,10 +804,50 @@ nav {
 .statuses-container {
   display: flex;
   flex-grow: 1;
+  flex-direction: column;
+  .statuses-container-nav {
+    display: flex;
+    padding: 10px;
+    margin-bottom: 10px;
+    li {
+      cursor: pointer;
+      margin-right: 20px;
+      padding: 0 3px;
+      padding-bottom: 5px;
+      &.active {
+        font-weight: 500;
+        border-bottom: 2px solid #000;
+      }
+    }
+  }
   .content {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
+    .info {
+      &.readonly {
+        input {
+          border-bottom: none;
+        }
+      }
+      > div {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 30px;
+      }
+      label, h4 {
+        font-weight: 600;
+        display: block;
+      }
+      input {
+        background-color: transparent;
+        padding-right: 0;
+        padding-left: 0;
+        &[readonly] {
+          border-bottom: none;
+        }
+      }
+    }
     .status {
       display: flex;
       justify-content: space-between;

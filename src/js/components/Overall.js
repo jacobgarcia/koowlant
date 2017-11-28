@@ -92,6 +92,7 @@ class Overall extends PureComponent {
             elements={props.selectedType === 'SITE' ? (props.element ? props.element.sensors : []) : props.elements}
             reports={this.props.reports}
             onHover={props.onHover}
+            element={props.element}
           />
         </div>
       </div>

@@ -226,20 +226,20 @@ class MapContainer extends Component {
     if (selectedSubzone) {
       NetworkOperation.setSite(selectedZone, selectedSubzone, newElementName, Date.now(), newPositions[newPositions.length - 1])
       .then(({data}) => {
-        this.props.setSite(data.site.zone ,data.site.subzone, data.site._id, data.site.key, data.site.name, data.site.position)
         this.setState({ newPositions: [], newElementName: '', isCreating: null, showing: null })
+        this.props.setSite(data.site.zone ,data.site.subzone, data.site._id, data.site.key, data.site.name, data.site.position)
       }).catch(console.log)
     } else if (selectedZone) {
       NetworkOperation.setSubzone(selectedZone, newElementName, newPositions)
       .then(({data}) => {
-        this.props.setSubzone(data.subzone.parentZone, data.subzone._id, data.subzone.name, data.subzone.positions)
         this.setState({ newPositions: [], newElementName: '', isCreating: null, showing: null })
+        this.props.setSubzone(data.subzone.parentZone, data.subzone._id, data.subzone.name, data.subzone.positions)
       }).catch(console.log)
     } else {
       NetworkOperation.setZone(newElementName, newPositions)
       .then(({data}) => {
-        this.props.setZone(data.zone._id, data.zone.name, data.zone.positions)
         this.setState({ newPositions: [], newElementName: '', isCreating: null, showing: null })
+        this.props.setZone(data.zone._id, data.zone.name, data.zone.positions)
       }).catch(console.log)
     }
   }
