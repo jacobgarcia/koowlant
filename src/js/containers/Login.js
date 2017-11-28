@@ -15,7 +15,8 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      return: returnUrl
+      return: returnUrl,
+      error: null
     }
 
     this.onSubmit = this.onSubmit.bind(this)
@@ -26,7 +27,8 @@ class Login extends Component {
     const { value, name } = event.target
 
     this.setState({
-      [name]: value
+      [name]: value,
+      error: null
     })
   }
 
@@ -47,10 +49,15 @@ class Login extends Component {
       const { status = 500 } = response
       switch (status) {
         case 400:
-          // TODO displayer incorrect credentials
+        case 401:
+          this.setState({
+            error: 'Correo o contraseña incorrectos'
+          })
           break
         default:
-          // TODO display error
+          this.setState({
+            error: 'Problemas al iniciar sesión, intenta nuevamente'
+          })
       }
     })
   }
@@ -80,7 +87,14 @@ class Login extends Component {
             placeholder="Contraseña"
             required
           />
-          <input type="submit" value="Listo" className="button destructive"/>
+          <input type="submit" value="Listo" className={`button destructive ${(!state.email || !state.password) && 'disabled' }`} />
+          {
+            state.error
+            &&
+            <div className="error">
+              <p>{state.error}</p>
+            </div>
+          }
         </form>
       </div>
     )

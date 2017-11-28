@@ -9,3 +9,4 @@ export { default as Marker } from './Marker'
 export { default as ElementStatus } from './ElementStatus'
 
 export { default as Search } from './Search'
+export { default as CreateElementBar } from './CreateElementBar'

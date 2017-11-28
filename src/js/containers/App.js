@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import { setCredentials, setComplete, setLoading, setExhaustive } from '../actions'
 import { NetworkOperation } from '../lib'
-import { Map } from './'
+import { Map, Users } from './'
 import { Nav } from '../components'
 import io from 'socket.io-client'
 
@@ -87,6 +87,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={Map} />
           <Route path="/zones/:zoneId?/:subzoneId?/:siteId?" component={Map} />
+          <Route path="/users" component={Users} />
         </Switch>
       </div>
     )

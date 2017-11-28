@@ -32,7 +32,7 @@ class Nav extends PureComponent {
     return (
       <nav>
         <div className="user">
-          <img src={`${props.credentials.company && props.credentials.company.logo}`} alt=""/>
+          <img src="/static/img/connus.png" alt="Logo"/>
           {
             (props.credentials.user && props.credentials.company)
             &&

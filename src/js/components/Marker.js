@@ -13,7 +13,6 @@ import constants from '../lib/constants'
 //   normal: '#50E3C2'
 // }
 //
-console.log({constants})
 
 function SiteMarker(props) {
   const reports = substractReportValues(props.reports)
@@ -25,9 +24,11 @@ function SiteMarker(props) {
     sensors = props.sensors.sensors
   }
 
+  const position = [parseFloat(props.position[0], 10), parseFloat(props.position[1], 10)]
+
   return (
     <Marker
-      position={props.position}
+      position={position}
       onMouseOver={() => props.onMouseHover(props.site ? props.site._id : null)}
       onMouseOut={() => props.onMouseHover(null)}
       onClick={props.onClick}
@@ -51,7 +52,7 @@ function SiteMarker(props) {
             </div>
             <div className="hidable sensors">
               {
-                (status && props.isHighlighted === true)
+                (status && props.isHighlighted === true && sensors)
                 &&
                 sensors.map((sensor, index) => {
                   status = [{ name: 'normal', value: sensor.value}, { name: 'alerts', value: 100 - sensor.value }]
@@ -102,7 +103,8 @@ SiteMarker.propTypes = {
 }
 
 SiteMarker.defaultProps = {
-  onMouseEvent: () => {}
+  onMouseEvent: () => {},
+  onMouseHover: () => {}
 }
 
 export default SiteMarker

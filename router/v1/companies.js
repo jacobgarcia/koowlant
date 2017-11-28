@@ -7,6 +7,25 @@ const router = new express.Router()
 const Site = require(path.resolve('models/Site'))
 const Zone = require(path.resolve('models/Zone'))
 const Subzone = require(path.resolve('models/Subzone'))
+const User = require(path.resolve('models/User'))
+
+router.route('/users')
+.get((req, res) => {
+  const company = req._user.cmp
+
+  // TODO verify user has sufficient permissions
+  // TODO add monitoring zones or subzones
+  User.find({ company })
+  .select('email name surname access')
+  .then(users => {
+    return res.status(200).json({ users })
+  })
+  .catch(error => {
+    winston.error({error})
+    return res.status(500).json({ error })
+  })
+
+})
 
 // Save sites and stream change
 router.route('/zones/:zone/subzones/:subzone/sites')

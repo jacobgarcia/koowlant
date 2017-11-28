@@ -15,7 +15,10 @@ const schema = new Schema({
   name: String,
   surname: String,
   zone: { type: Schema.Types.ObjectId, ref: 'Zone' },
-  subzone: { type: Schema.Types.ObjectId, ref: 'Subzone' }
+  subzone: { type: Schema.Types.ObjectId, ref: 'Subzone' },
+  // TODO add this
+  subzones: [{ type: Schema.Types.ObjectId, ref: 'Subzone' }],
+  zones: [{ type: Schema.Types.ObjectId, ref: 'Zone' }],
 })
 
 schema.virtual('fullName').get(function() {

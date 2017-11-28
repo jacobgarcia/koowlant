@@ -1,12 +1,12 @@
-/*eslint max-statements: ["error", 15]*/
+/* eslint max-statements: ["error", 15] */
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Map, TileLayer, Polygon as LeafletPolygon } from 'react-leaflet'
+import { Map, TileLayer, Polygon as LeafletPolygon, Circle } from 'react-leaflet'
 import { connect } from 'react-redux'
 
-import { Overall, Alerts, Polygon, Marker, Search } from '../components'
+import { Overall, Alerts, Polygon, Marker, Search, CreateElementBar } from '../components'
 import { NetworkOperation } from '../lib'
-import { setLoading, setComplete, setReport } from '../actions'
+import { setLoading, setComplete, setReport, setSubzone, setZone, setSite } from '../actions'
 import { getAreaCenter } from '../lib/specialFunctions'
 
 class MapContainer extends Component {
@@ -24,7 +24,15 @@ class MapContainer extends Component {
       showing: null,
       states: [],
       isSearching: false,
-      elementHover: null
+      elementHover: null,
+
+      // For area creation
+      hoverPosition: [],
+
+      // New element
+      newPositions: [],
+      newElementName: '',
+      isNewElementValid: false
     }
 
     this.getElementsToRender = this.getElementsToRender.bind(this)
@@ -32,6 +40,12 @@ class MapContainer extends Component {
     this.toggleVisible = this.toggleVisible.bind(this)
     this.onToggleSearch = this.onToggleSearch.bind(this)
     this.toggleCreate = this.toggleCreate.bind(this)
+
+    // MAP
+    this.onMapClick = this.onMapClick.bind(this)
+    this.onElementNameChange = this.onElementNameChange.bind(this)
+    this.onElementPositionsChange = this.onElementPositionsChange.bind(this)
+    this.onCreateElement = this.onCreateElement.bind(this)
   }
 
   componentWillMount() {
@@ -142,6 +156,33 @@ class MapContainer extends Component {
     }))
   }
 
+  onElementNameChange(event) {
+    const { value } = event.target
+
+    this.setState({
+      newElementName: value,
+      isNewElementValid: this.state.newPositions.length > 0 && value.length > 0
+    })
+  }
+
+  onElementPositionsChange(event) {
+    let { value, name } = event.target
+    // Remove all non-numbers and no '-' or '.'
+    if (value.length > 0) value = value.match(/[-\d.]/g).join('')
+
+    // Update the last position, since this is the one we're usingto display
+    const positions = (this.state.newPositions.length > 0) ? this.state.newPositions : [[]]
+
+    name === 'lat'
+    ? positions[positions.length - 1][0] ? positions[positions.length - 1][0] = value : positions[positions.length - 1] = [value, 0]
+    : positions[positions.length - 1][1] ? positions[positions.length - 1][1] = value : positions[positions.length - 1] = [0, value]
+
+    this.setState({
+      newPositions: positions,
+      isNewElementValid: this.state.newElementName.length > 0 && positions.length > 0
+    })
+  }
+
   onElementOver(elementId) {
     this.setState({
       hoverElement: elementId
@@ -167,13 +208,49 @@ class MapContainer extends Component {
     return this.props.reports
   }
 
+  onMapClick(event) {
+    if (!this.state.isCreating) return
+
+    const { lat, lng } = event.latlng
+    const newPosition = [lat,lng]
+
+    this.setState(prev => ({
+      newPositions: prev.newPositions.concat([newPosition])
+    }))
+  }
+
+  onCreateElement() {
+    const { zoneId: selectedZone = null, subzoneId: selectedSubzone = null } = this.props.match.params
+    const { newPositions, newElementName } = this.state
+
+    if (selectedSubzone) {
+      NetworkOperation.setSite(selectedZone, selectedSubzone, newElementName, Date.now(), newPositions[newPositions.length - 1])
+      .then(({data}) => {
+        this.props.setSite(data.site.zone ,data.site.subzone, data.site._id, data.site.key, data.site.name, data.site.position)
+        this.setState({ newPositions: [], newElementName: '', isCreating: null, showing: null })
+      }).catch(console.log)
+    } else if (selectedZone) {
+      NetworkOperation.setSubzone(selectedZone, newElementName, newPositions)
+      .then(({data}) => {
+        this.props.setSubzone(data.subzone.parentZone, data.subzone._id, data.subzone.name, data.subzone.positions)
+        this.setState({ newPositions: [], newElementName: '', isCreating: null, showing: null })
+      }).catch(console.log)
+    } else {
+      NetworkOperation.setZone(newElementName, newPositions)
+      .then(({data}) => {
+        this.props.setZone(data.zone._id, data.zone.name, data.zone.positions)
+        this.setState({ newPositions: [], newElementName: '', isCreating: null, showing: null })
+      }).catch(console.log)
+    }
+  }
+
   render() {
     const { state, props } = this
     const { zoneId: selectedZone = null, subzoneId: selectedSubzone = null, siteId: selectedSite = null } = this.props.match.params
     // const reports =
 
     return (
-      <div id="map-container">
+      <div id="map-container" className={state.isCreating ? 'creating-element' : ''}>
         <Overall
           params={props.match.params}
           alerts={null}
@@ -184,6 +261,7 @@ class MapContainer extends Component {
           onVisibleToggle={() => this.toggleVisible('OVERALL')}
           reports={this.getElementReports()}
           element={state.element}
+          isCreating={state.isCreating}
         />
         <Map
           center={state.currentPosition}
@@ -191,12 +269,11 @@ class MapContainer extends Component {
             this.map = map
           }}
           zoom={state.currentZoom}
+          onClick={this.onMapClick}
+          onMouseMove={({latlng}) => this.setState({ hoverPosition: [latlng.lat, latlng.lng] })}
           animate
         >
-          {
-
-          }
-          <div className="bar-actions">
+          <div className="bar-actions" onMouseMove={() => this.setState({hoverPosition: null})}>
             <div>
               {
                 (selectedZone && state.showing !== 'OVERALL' && !state.isCreating)
@@ -210,9 +287,7 @@ class MapContainer extends Component {
               }
             </div>
             {
-              !state.isCreating
-              &&
-              <ul className="links hiddable">
+              <ul className={`links hiddable ${state.isCreating && 'hidden'}`}>
                 <li className="button search"
                   onClick={this.onToggleSearch}>
                   <span className="search">Buscar</span>
@@ -312,15 +387,54 @@ class MapContainer extends Component {
               />
             )
           }
+          {
+            state.isCreating
+            &&
+            (selectedSubzone
+            ?
+            <Marker
+              position={state.newPositions && state.newPositions[0] ? state.newPositions[state.newPositions.length - 1] : [0,0]}
+              site={{name: state.newElementName}}
+              title={state.newElementName}
+            />
+            :
+            <LeafletPolygon
+              weight={1}
+              positions={state.hoverPosition ? [...state.newPositions, state.hoverPosition] : state.newPositions}
+            />)
+          }
+          {
+            state.isCreating && !selectedSubzone
+            &&
+            state.newPositions.map((position, index) =>
+              <Circle
+                key={index}
+                radius={5}
+                center={position}
+              />
+            )
+          }
           <TileLayer
             url={`https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}${window.devicePixelRatio > 1 ? '@2' : ''}.png`}
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
           />
         </Map>
+        <CreateElementBar
+          onCreate={this.onCreateElement}
+          onMouseOver={() => this.setState({hoverPosition: null})}
+          className={state.isCreating ? '' : 'hidden'}
+          isNewElementValid={state.isNewElementValid}
+          isCreatingSite={Boolean(selectedSubzone)}
+          isCreatingSubzone={Boolean(selectedZone)}
+          onNameChange={this.onElementNameChange}
+          onPositionsChange={this.onElementPositionsChange}
+          positions={state.newPositions}
+        />
         <Alerts
           alerts={props.reports.filter(({alarms}) => alarms.length > 0)}
           isVisible={state.showing === 'ALERTS'}
           onVisibleToggle={() => this.toggleVisible('ALERTS')}
+          isCreating={state.isCreating}
         />
       </div>
     )
@@ -343,6 +457,15 @@ function mapStateToProps({zones, reports}) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setZone: (id, name, positions) => {
+      dispatch(setZone(id, name, positions))
+    },
+    setSubzone: (zoneId, subzoneId, name, positions) => {
+      dispatch(setSubzone(zoneId, subzoneId, name, positions))
+    },
+    setSite: (zoneId, subzoneId, siteId, key, name, position) => {
+      dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
+    },
     setLoading: () => {
       dispatch(setLoading())
     },

@@ -32,6 +32,22 @@ class NetworkOperation {
   static getAvailableStates() {
     return axios.get(`${baseUrl}/polygons/mx`)
   }
+
+  static getUsers() {
+    return axios.get(`${baseUrl}/users`)
+  }
+
+  static setZone(name, positions) {
+    return axios.post(`${baseUrl}/zones`, {name, positions})
+  }
+
+  static setSubzone(zone, name, positions) {
+    return axios.post(`${baseUrl}/${zone}/subzones`, { positions, name })
+  }
+
+  static setSite(zone, subzone, name, key, position) {
+    return axios.post(`${baseUrl}/zones/${zone}/subzones/${subzone}/sites`, { key, position, name })
+  }
 }
 
 export default NetworkOperation

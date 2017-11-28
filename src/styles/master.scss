@@ -22,6 +22,30 @@ input[type="text"], input[type="email"], input[type="password"] {
   border-bottom: 1px solid rgb(164, 164, 164);
 }
 
+input {
+  -webkit-appearance: none;
+  -moz-appearance:    none;
+  appearance:         none;
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+  padding: 0 !important;
+  width: 15px;
+  height: 15px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid #000;
+  &:checked {
+    background-color: $green;
+  }
+}
+
 ul.links {
   display: inline-block;
   height: 50px;
@@ -33,6 +57,10 @@ ul.links {
       a { padding: 17px 15px; }
     }
   }
+  transition: transform ease 0.5s;
+  &.hidden {
+    transform: translateY(-100px);
+  }
   li {
     cursor: pointer;
     display: inline-block;
@@ -42,6 +70,16 @@ ul.links {
     color: rgb(47, 47, 47);
     font-weight: 600;
     overflow: hidden;
+    background-size: 18px;
+    background-repeat: no-repeat;
+    &.search { padding-left: 38px !important; background-image: url('/static/img/icons/search.svg'); background-position: 12px center; }
+    &.create { padding-left: 38px !important; background-image: url('/static/img/icons/add.svg'); background-position: 12px center;  }
+    &:first-child {
+      border-right-width: 0;
+    }
+    &:last-child {
+      border-right-width: 1px;
+    }
     &.deactivated {
       cursor: default;
       color: rgb(208, 208, 208);
@@ -67,23 +105,6 @@ ul.links {
         background: #000;
       }
     }
-    &.big {
-      text-transform: none;
-      font-size: 1rem;
-      padding: 4px 15px;
-      border: 1px solid $gray;
-      background-color: #fff;
-      background-repeat: no-repeat;
-      background-size: 16px;
-      &.search { padding-left: 38px; background-image: url('/static/img/icons/search.svg'); background-position: 12px center; }
-      &.create { padding-left: 38px; background-image: url('/static/img/icons/add.svg'); background-position: 12px center;  }
-      &:first-child {
-        border-right-width: 0;
-      }
-      &:last-child {
-        border-right-width: 1px;
-      }
-    }
     &.huge {
       font-size: 1.1rem;
       padding: 8px 20px;
@@ -97,7 +118,7 @@ ul.links {
   }
 }
 
-.button {
+.button, input[type="button"] {
   border: 1px solid #a4a4a4;
   padding: 4px 15px;
   background: #fff;
@@ -171,14 +192,12 @@ nav {
     display: flex;
     justify-content: flex-end;
     margin-right: 10px;
+    font-size: 0.95rem;
     span {
-      margin-right: 20px;
+      margin-right: 15px;
     }
     span.time {
-      width: 60px;
-    }
-    div {
-      margin: 0px !important;
+      width: 50px;
     }
   }
   .user {
@@ -189,7 +208,7 @@ nav {
       height: 35px;
       margin-left: 10px;
       border-radius: 50%;
-      background-color: $light-gray;
+      // background-color: $light-gray;
     }
     .user-info {
       font-size: 0.9rem;
@@ -203,7 +222,42 @@ nav {
   }
 }
 
+.table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  .table-header {
+    font-weight: 500;
+  }
+  .table-header, .table-body {
+    .table-element {
+      justify-content: space-between;
+      display: flex;
+      padding: 8px 16px;
+      div {
+        flex-basis: 300px;
+        flex-grow: 5;
+        text-align: left;
+      }
+      .small {
+        flex-basis: 70px;
+      }
+    }
+  }
+  .table-header .table-element {
+    font-weight: 600;
+  }
+  .table-body {
+    .table-element:nth-child(even) {
+      background-color: $light-gray;
+    }
+  }
+}
 
+.app-content {
+  margin-top: 50px;
+  padding: 20px;
+}
 
 .login {
   display: flex;
@@ -211,7 +265,6 @@ nav {
   height: 100%;
   align-items: center;
   justify-content: center;
-
   #logo {
     display: flex;
     max-width: 400px;
@@ -236,13 +289,48 @@ nav {
     text-align: center;
   }
   form {
-    max-width: 400px;
+    max-width: 270px;
+    width: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
+  }
+  .error {
+    position: absolute;
+    background-color: $red;
+    padding: 5px 12px;
+    margin: 10px 20px 0;
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: 600;
+    bottom: 0;
+    transform: translateY(60px);
+    text-align: center;
+    p {
+      position: relative;
+      &:before {
+        position: absolute;
+        content: '';
+        display: block;
+        width: 0;
+        height: 0;
+        border-left: 16px solid transparent;
+        border-right: 16px solid transparent;
+        border-bottom: 16px solid $red;
+        left: 50%;
+        transform: translateX(-16px) translateY(-14px);
+        top: 0;
+      }
+    }
   }
 }
 
 
+/*
+
+     M A P   C O N T A I N E R
+
+*/
 
 
 #map-container {
@@ -252,6 +340,100 @@ nav {
   padding-top: 50px;
   position: relative;
   overflow-x: hidden;
+  &.creating-element .leaflet-container {
+    cursor: crosshair;
+  }
+  .create-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 1000;
+    display: flex;
+    align-items: stretch;
+    border: 1px solid $gray;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    transition: transform ease 0.5s;
+    &.hidden {
+      transform: translateY(100px);
+    }
+    .add-entities {
+      padding: 7px 20px;
+      font-weight: 500;
+      padding-right: 38px;
+      // TODO Add arrow
+      position: relative;
+      cursor: pointer;
+      ul {
+        position: absolute;
+        width: 100%;
+        bottom: 36px;
+        background-color: #fff;
+        border: 1px solid $gray;
+        left: -1px;
+        margin-bottom: none;
+        max-height: 200px;
+        width: 200px;
+        overflow-y: scroll;
+        transition: max-height ease 0.5s;
+        &.hidden {
+          overflow: hidden;
+          max-height: 0px;
+          border: none;
+        }
+        li {
+          display: flex;
+          align-items: center;
+          padding: 6px 10px;
+          border-bottom: 1px solid $gray;
+          input {
+            margin-right: 7px;
+          }
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+    input[type="text"] {
+      border: none;
+      padding: 0;
+      max-width: 180px;
+      height: 100%;
+    }
+    .coordinates {
+      padding: 0;
+      input {
+        padding: 6px 10px;
+      }
+      input:first-child {
+        border-right: 1px solid $gray;
+      }
+    }
+    input[type="button"] {
+      padding: 7px 20px;
+      font-weight: 400;
+    }
+    .description {
+      font-size: 1rem;
+      padding: 7px 20px;
+      font-weight: 500;
+      color: $gray;
+    }
+    > div {
+      padding: 4px 10px;
+      border-right: 1px solid $gray;
+      display: flex;
+      align-items: center;
+    }
+    > div:last-child {
+      border-right: none;
+    }
+    ul {
+
+    }
+  }
   .bar-actions {
       position: absolute;
       z-index: 999;
@@ -413,7 +595,11 @@ nav {
       background-size: 30px;
       background-repeat: no-repeat;
       background-position: center;
-      background-image: url("/static/img/icons/large-back.png")
+      background-image: url("/static/img/icons/large-back.png");
+      transition: transform ease 0.5s;
+      &.hidden {
+        transform: translateX(0px) !important;
+      }
     }
     .content .tooltip {
       right: 0;
@@ -451,7 +637,7 @@ nav {
     &.hidden {
       transform: translateX(500px);
       .tooltip {
-        background-image: url("/static/img/icons/tower.svg")
+        background-image: url("/static/img/icons/alert.svg")
       }
     }
     .tooltip {
@@ -459,7 +645,11 @@ nav {
       background-size: 30px;
       background-repeat: no-repeat;
       background-position: center;
-      background-image: url("/static/img/icons/large-back.png")
+      background-image: url("/static/img/icons/large-back.png");
+      transition: transform ease 0.5s;
+      &.hidden {
+        transform: translateX(0px) !important;
+      }
     }
     .content .tooltip {
       left: 0;
@@ -584,11 +774,11 @@ nav {
       align-items: center;
     }
     h3 {
-      max-width: 70px;
       overflow-x: hidden;
       text-overflow: ellipsis;
       width: 100%;
       text-align: center;
+      display: block;
     }
   }
   span {
@@ -640,6 +830,34 @@ nav {
         .main {
           font-size: 1.2rem;
           font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+
+
+
+/*
+      U S E R S
+ */
+
+
+.users {
+  .user {
+    display: flex;
+    margin-bottom: 40px;
+    justify-content: space-between;
+    align-items: flex-end;
+    .user-info {
+      display: flex;
+      > div {
+        margin-right: 30px;
+        font-weight: 500;
+        span {
+          font-size: 0.9rem;
+          color: $gray;
         }
       }
     }
