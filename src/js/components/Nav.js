@@ -50,7 +50,7 @@ class Nav extends PureComponent {
         <div className="status">
           <span className="date">{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</span>
           <span className="time">{date.getHours()}:{date.getMinutes()}:{date.getSeconds()}</span>
-          {props.loading ? 'Loading' : 'Done'}
+          <span id="spinner" className={props.loading ? 'active' : ''} />
         </div>
       </nav>
     )

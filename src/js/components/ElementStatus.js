@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { PieChart, Pie, Cell } from 'recharts'
 
 function colors(value) {
@@ -44,8 +45,23 @@ function ElementStatus(props) {
           </PieChart>
         </div>
       </div>
-
   )
+}
+
+ElementStatus.defaultProps = {
+  onHover: () => {}
+}
+
+ElementStatus.propTypes = {
+  onHover: PropTypes.func,
+  title: PropTypes.string,
+  elements: PropTypes.array,
+  alarms: PropTypes.array,
+  name: PropTypes.string,
+  siteKey: PropTypes.string,
+  type: PropTypes.string,
+  id: PropTypes.string,
+  status: PropTypes.array
 }
 
 export default ElementStatus

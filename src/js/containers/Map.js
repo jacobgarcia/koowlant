@@ -246,7 +246,7 @@ class MapContainer extends Component {
 
   render() {
     const { state, props } = this
-    const { zoneId: selectedZone = null, subzoneId: selectedSubzone = null, siteId: selectedSite = null } = this.props.match.params
+    const { zoneId: selectedZone = null, subzoneId: selectedSubzone = null, siteId: selectedSite = null } = props.match.params
     // const reports =
 
     return (
@@ -263,6 +263,12 @@ class MapContainer extends Component {
           element={state.element}
           isCreating={state.isCreating}
         />
+        <Search
+          isVisible={state.isSearching}
+          zones={props.zones}
+          onClose={this.onToggleSearch}
+          reports={props.reports}
+        />
         <Map
           center={state.currentPosition}
           ref={map => {
@@ -270,16 +276,16 @@ class MapContainer extends Component {
           }}
           zoom={state.currentZoom}
           onClick={this.onMapClick}
-          onMouseMove={({latlng}) => this.setState({ hoverPosition: [latlng.lat, latlng.lng] })}
+          onMouseMove={({latlng}) => state.isCreating && this.setState({ hoverPosition: [latlng.lat, latlng.lng] })}
           animate
         >
-          <div className="bar-actions" onMouseMove={() => this.setState({hoverPosition: null})}>
+          <div className="bar-actions" onMouseMove={() =>  state.isCreating && this.setState({hoverPosition: null})}>
             <div>
               {
                 (selectedZone && state.showing !== 'OVERALL' && !state.isCreating)
                 &&
                 <span className="button back" onClick={() => {
-                    if (this.state.isCreating) this.toggleCreate()
+                    if (state.isCreating) this.toggleCreate()
                     if (selectedSite) props.history.push(`/zones/${selectedZone}/${selectedSubzone}`)
                     else if (selectedSubzone) props.history.push(`/zones/${selectedZone}`)
                     else if (selectedZone) props.history.push('/')
@@ -310,12 +316,7 @@ class MapContainer extends Component {
               }
             </div>
           </div>
-          <Search
-            isVisible={this.state.isSearching}
-            zones={props.zones}
-            onClose={this.onToggleSearch}
-            reports={props.reports}
-          />
+
           {
             state.shadow
             &&

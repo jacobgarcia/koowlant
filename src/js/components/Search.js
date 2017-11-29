@@ -2,22 +2,14 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { MiniZone } from './'
+import { ElementStatus } from './'
 import { getFilteredReports, substractReportValues, getStatus } from '../lib/specialFunctions'
-
-function getMiniZoneLink(zone, props) {
-  switch (props.type) {
-    case 'general': return `/zones/${zone._id}`
-    case 'zone': return `/zones/${props.zone._id}/${zone._id}`
-    case 'subzone': return `/zones/${props.zone._id}/${props.subzone._id}/${zone._id}`
-    case 'site': return 'Torre ' + name
-    default: return `/`
-  }
-}
 
 class Search extends Component {
   constructor(props) {
     super(props)
+
+    console.log({props})
 
     this.state = {
       query: '',
@@ -30,9 +22,11 @@ class Search extends Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
+    this.getLink = this.getLink.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log({nextProps})
     if (JSON.stringify(nextProps.zones) === JSON.stringify(this.props.zones.length)) return
 
     const zones = nextProps.zones.map(({_id: zoneId, name, subzones}) =>
@@ -115,51 +109,68 @@ class Search extends Component {
     })
   }
 
+  getElementTitle(type) {
+    switch (type) {
+      case 'GENERAL': return 'Zona'
+      case 'ZONE': return 'Subzona'
+      case 'SUBZONE': return 'Sitio'
+      case 'SITE': return 'Sensor'
+      default: return `Otro`
+    }
+  }
+
+  getLink(type, element) {
+    switch (type) {
+      case 'GENERAL': return `/zones/${element._id}`
+      case 'ZONE': return `/zones/${element.zone}/${element._id}`
+      case 'SUBZONE': return `/zones/${element.zone}/${element.subzone}/${element._id}`
+      default: return `/`
+    }
+  }
+
   render() {
-    const props = this.props
+    const {state, props} = this
 
     return (
-      <div className={`search-container ${this.props.isVisible ? '' : 'hidden'}`}>
-        <div className="search">
+      <div className={`search-container ${props.isVisible ? '' : 'hidden'}`} onClick={props.onClose}>
+        <div className="search" onClick={evt => evt.stopPropagation()}>
           <div className="header">
             <input
               type="text"
               onChange={this.handleChange}
-              value={this.state.query}
+              value={state.query}
               name="query"
-              placeholder="Buscar"
+              placeholder="Buscar..."
+              autoComplete="off"
+              autoCorrect="off"
             />
             <span className="button" onClick={this.props.onClose}>Cerrar</span>
           </div>
           <div className="results">
             {
-              this.state.filteredSites.length > 0
+              state.filteredSites.length > 0
               &&
               <div className="sites-container">
                 <p>Sitios</p>
                 {
-                  this.state.filteredSites.map((element, index) => {
-                    let reports = getFilteredReports(this.props.reports, element)
+                  state.filteredSites.map(element => {
+                    let reports = getFilteredReports(this.props.reports, {...element, type: 'SITE'})
                     reports = substractReportValues(reports)
                     const { status, percentage } = getStatus(reports || null)
 
                     return (
-                      <Link
-                        key={index}
-                        to={`/zones/${element.zone}/${element.subzone}/${element._id}`}
-                        onClick={this.props.onClose}
-                        >
-                        {/* <MiniZone
-                          onHover={props.onHover}
-                          type={'subzone'}
+                      <Link key={element._id} to={this.getLink('SUBZONE', element)}>
+                        <ElementStatus
                           id={element._id}
+                          title={this.getElementTitle('SUBZONE')}
                           name={element.name}
-                          zone={element}
-                          active={props.highlightedZone === element._id}
-                          reports={reports}
-                          status={status}
-                          percentage={percentage}
-                        /> */}
+                          type={'SUBZONE'}
+                          siteKey={element.key}
+                          percentage={percentage} // Zone
+                          status={status} // Zone
+                          alarms={reports ? reports.alarms.length : 0}
+                          elements={element.elements} // Subzones or sites
+                        />
                       </Link>
                     )
                   })
@@ -172,28 +183,24 @@ class Search extends Component {
               <div className="subzones-container">
                 <p>Subzonas</p>
                 {
-                  this.state.filteredSubzones.map((element, index) => {
-                    let reports = getFilteredReports(this.props.reports, element)
+                  this.state.filteredSubzones.map(element => {
+                    let reports = getFilteredReports(this.props.reports, {...element, type: 'SUBZONE'})
                     reports = substractReportValues(reports)
                     const { status, percentage } = getStatus(reports || null)
 
                     return (
-                      <Link
-                        to={`/zones/${element.zone}/${element._id}`}
-                        key={index}
-                        onClick={this.props.onClose}
-                        >
-                        {/* <MiniZone
-                          onHover={props.onHover}
-                          type={'zone'}
+                      <Link key={element._id} to={this.getLink('ZONE', element)}>
+                        <ElementStatus
                           id={element._id}
+                          title={this.getElementTitle('ZONE')}
                           name={element.name}
-                          zone={element}
-                          active={props.highlightedZone === element._id}
-                          reports={reports}
-                          status={status}
-                          percentage={percentage}
-                        /> */}
+                          type={'ZONE'}
+                          siteKey={element.key}
+                          percentage={percentage} // Zone
+                          status={status} // Zone
+                          alarms={reports ? reports.alarms.length : 0}
+                          elements={element.elements} // Subzones or sites
+                        />
                       </Link>
                     )
                   })
@@ -206,27 +213,23 @@ class Search extends Component {
               <div className="zones-container">
                 <p>Zonas</p>
                 {
-                  this.state.filteredZones.map((element, index) => {
-                    let reports = getFilteredReports(this.props.reports, element)
+                  this.state.filteredZones.map(element => {
+                    let reports = getFilteredReports(this.props.reports, {...element, type: 'ZONE'})
                     reports = substractReportValues(reports)
                     const { status, percentage } = getStatus(reports || null)
+
                     return (
-                      <Link
-                        to={`/zones/${element._id}`}
-                        key={index}
-                        onClick={this.props.onClose}
-                        >
-                        {/* <span>{JSON.stringify(element)}</span> */}
-                        <MiniZone
-                          onHover={props.onHover}
-                          type={'general'}
+                      <Link key={element._id} to={this.getLink('GENERAL', element)}>
+                        <ElementStatus
                           id={element._id}
+                          title={this.getElementTitle('GENERAL')}
                           name={element.name}
-                          zone={element}
-                          active={props.highlightedZone === element._id}
-                          reports={reports}
-                          status={status}
-                          percentage={percentage}
+                          type={'GENERAL'}
+                          siteKey={element.key}
+                          percentage={percentage} // Zone
+                          status={status} // Zone
+                          alarms={reports ? reports.alarms.length : 0}
+                          elements={element.elements} // Subzones or sites
                         />
                       </Link>
                     )
