@@ -14,7 +14,8 @@ const schema = new Schema({
   },
   company: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
   parentZone: { type: Schema.Types.ObjectId, ref: 'Zone' },
-  sites: [{ type: Schema.Types.ObjectId, ref: 'Site' }]
+  sites: [{ type: Schema.Types.ObjectId, ref: 'Site' }],
+  users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 })
 
 schema.loadClass(SubzoneClass)

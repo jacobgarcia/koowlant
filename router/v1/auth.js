@@ -109,6 +109,7 @@ router.post('/authenticate', (req, res) => {
   const { email, password } = req.body
 
   User.findOne({ email })
+  .lean() // User to plain js object
   .then(user => {
     if (user === null) {
       winston.info('Failed to authenticate user email')
@@ -116,29 +117,30 @@ router.post('/authenticate', (req, res) => {
     }
 
     // Config.secret as salt
-    if (!bcrypt.compareSync(password + config.secret, user.password)) {
-       winston.info('Failed to authenticate user password')
-       return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
-     }
-
-     const token = jwt.sign({
-       _id: user._id,
-       acc: user.access,
-       cmp: user.company
-     }, config.secret)
-
-    user = user.toObject()
-
-     return res.status(200).json({
-       token,
-       user: {
+     return bcrypt.compare(password + config.secret, user.password)
+     .then(() => {
+       const token = jwt.sign({
          _id: user._id,
-         name: user.fullName || 'User',
-         surname: user.surname,
-         access: user.access
-       }
-     })
+         acc: user.access,
+         cmp: user.company
+       }, config.secret)
 
+      const { _id, fullName: name, surname, access } = user
+
+       return res.status(200).json({
+         token,
+         user: {
+           _id,
+           name,
+           surname,
+           access
+         }
+       })
+     })
+     .catch(error => {
+       winston.info('Failed to authenticate user password', error)
+       return res.status(401).json({ message: 'Authentication failed. Wrong user or password' })
+     })
   })
   .catch(error => {
     winston.error({error})

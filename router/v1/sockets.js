@@ -4,10 +4,12 @@ const jwt = require('jsonwebtoken')
 const path = require('path')
 const config = require(path.resolve('config/config'))
 const Site = require(path.resolve('models/Site'))
+const User = require(path.resolve('models/User'))
 
 function sockets(io) {
   io.on('connection', socket => {
     socket.on('join', token => {
+
       if (!token) {
         return null
       }
@@ -19,42 +21,42 @@ function sockets(io) {
           return null
         }
 
+        const { cmp: companyId, acc: access = 0, _id: userId} = decoded
+
         // TODO get user granted zone or subzone
         // and join all the sites that are in that
         // zone or subzone
-        switch (decoded.acc) {
+        switch (access) {
           case 3:
-            return Site.find(decoded.cmp)
+            return Site.find(companyId)
             .select('key')
             .then(sites => {
               sites.map(site => {
                 if (site.key === null) return
-                winston.info(`Joining ${decoded._id} to ${decoded.cmp}-${site.key}`)
-                socket.join(`${decoded.cmp}-${site.key}`)
+                winston.info(`Joining ${decoded._id} to ${companyId}-${site.key}`)
+                socket.join(`${companyId}-${site.key}`)
               })
             })
           case 1:
           case 0:
-            if (decoded.zon) {
-              return Site.find({zone: decoded.zon})
-              .select('key')
-              .then(sites => {
-                sites.map(site => {
-                  socket.join(`${decoded.cmp}-${site.key}`)
-                })
+            User.findById(userId)
+            .select('zones subzones')
+            .then(({zones, subzones}) => {
+              return Site.find({ $or: [{ zone: { $in: zones }} , { subzone: { $in: subzones}}]})
+            })
+            .then(sites => {
+              sites.map(site => {
+                if (site.key === null) return
+                winston.info(`Joining ${decoded._id} to ${companyId}-${site.key}`)
+                socket.join(`${companyId}-${site.key}`)
               })
-            } else if (decoded.sbz) {
-              return Site.find({subzone: decoded.sbz})
-              .select('key')
-              .then(sites => {
-                sites.map(site => {
-                  socket.join(`${decoded.cmp}-${site.key}`)
-                })
-              })
-            }
+            })
+            .catch(error => {
+              winston.info(error)
+            })
             return null
           default:
-            return null
+            return winston.info('User could not join any')
         }
       })
     })

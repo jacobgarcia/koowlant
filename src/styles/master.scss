@@ -125,7 +125,8 @@ ul.links {
   cursor: pointer;
   color: $text-gray;
   user-select: none;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 0.9rem;
   &.huge {
     font-size: 1rem;
     padding: 6px 20px;
@@ -336,12 +337,14 @@ nav {
 #map-container {
   width: 100%;
   height: 100%;
+  max-height: 100%;
+  overflow-y: hidden;
   display: flex;
   padding-top: 50px;
   position: relative;
   overflow-x: hidden;
   &.creating-element .leaflet-container {
-    cursor: crosshair;
+    cursor: crosshair !important;
   }
   .create-bar {
     position: absolute;
@@ -898,6 +901,27 @@ nav {
         span {
           font-size: 0.9rem;
           color: $gray;
+        }
+      }
+    }
+  }
+
+  .small {
+    position: relative;
+    .drop-list {
+      position: absolute;
+      background-color: #fff;
+      li {
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        -webkit-user-select:none;
+        user-select:none;
+        input, label {
+          cursor: pointer;
+        }
+        input {
+          margin-right: 7px;
         }
       }
     }

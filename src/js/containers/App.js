@@ -60,10 +60,8 @@ class App extends Component {
   }
 
   initSocket(props, token) {
-    this.socket = io(`https://demo.kawlantid.com`)
+    this.socket = io('localhost:8080')
     this.socket.connect()
-
-    this.socket.emit('join', token)
 
     this.socket.on('connect', () => {
       this.socket.emit('join', token)

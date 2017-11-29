@@ -14,6 +14,7 @@ const schema = new Schema({
   },
   company: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
   subzones: [{ type: Schema.Types.ObjectId, ref: 'Subzone', default: [] }], // Id of the subzones that belong to this zone, if applicable
+  users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 })
 
 schema.loadClass(ZoneClass)

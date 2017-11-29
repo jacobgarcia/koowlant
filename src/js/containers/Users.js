@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 
 import { NetworkOperation } from '../lib'
 
@@ -29,7 +30,7 @@ class Users extends Component {
   }
 
   render() {
-    const { state } = this
+    const { state, props } = this
 
     return (
       <div className="app-content users">
@@ -72,7 +73,20 @@ class Users extends Component {
                   <div className="table-element" key={user._id}>
                     <div>{user.name} {user.surname}</div>
                     <div>{user.email}</div>
-                    <div className="small"></div>
+                    <div className="small">
+                      <input type="button" value="Asignar"/>
+                      <ul className="drop-list">
+                        <li><input type="checkbox" id={user._id}/><label htmlFor={user._id}>Todas</label></li>
+                        {
+                          props.zones.map(zone =>
+                            <li key={zone._id}>
+                              <input type="checkbox" id={user._id + zone._id}/>
+                              <label htmlFor={user._id + zone._id}> {zone.name}</label>
+                            </li>
+                          )
+                        }
+                      </ul>
+                    </div>
                   </div>
                 )
               }
@@ -84,4 +98,10 @@ class Users extends Component {
   }
 }
 
-export default Users
+function mapStateToProps({zones}) {
+  return {
+    zones: zones.map(({name, _id, subzones}) => ({name, _id, subzones: subzones.map(({_id, name}) => ({_id, name}))}))
+  }
+}
+
+export default connect(mapStateToProps)(Users)

@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import { substractReportValues, getStatus, getFilteredReports } from '../lib/specialFunctions'
 import { ElementStatus } from './'
 
+
+// IMPORTANT TODO if we change the site key, re-set the socket or ask to join there
 class StatusesContainer extends PureComponent {
   constructor(props) {
     super(props)
@@ -40,10 +42,13 @@ class StatusesContainer extends PureComponent {
   getContent() {
     const { props, state } = this
 
-    switch (state.show) {
+    const isSensor = props.type !== 'SITE' ? 'SENSORS' : null
+
+    switch (isSensor || state.show) {
       case 'SENSORS':
       return (
-        props.elements &&
+        (props.elements && props.elements.length > 0)
+        ?
         props.elements.map(element => {
           let reports = getFilteredReports(props.reports, element)
           reports = substractReportValues(reports)
@@ -72,10 +77,16 @@ class StatusesContainer extends PureComponent {
             </Link>
           )
         })
+        :
+        <div>
+          Sin información
+        </div>
       )
       case 'CAMERAS':
       return (
-        <h1>Cameras</h1>
+        <div>
+          Sin información de video
+        </div>
       )
       case 'INFO':
       return (
@@ -100,9 +111,9 @@ class StatusesContainer extends PureComponent {
           <div>
             <h4>Coordenadas</h4>
             <label htmlFor="">Latitud</label>
-            <input type="text" value={props.element.position[0]} />
+            <input type="text" value={props.element.position ? props.element.position[0] : ''} />
             <label htmlFor="">Longitud</label>
-            <input type="text" value={props.element.position[1]} />
+            <input type="text" value={props.element.position ? props.element.position[1] : ''} />
           </div>
           <div>
             <h4>Usuarios monitoreando</h4>
@@ -118,14 +129,18 @@ class StatusesContainer extends PureComponent {
   }
 
   render() {
-    const { state } = this
+    const { state, props } = this
     return (
       <div className="statuses-container">
-        <ul className="statuses-container-nav">
-          <li onClick={() => this.setState({show: 'SENSORS'})} className={state.show === 'SENSORS' ? 'active' : ''}>Sensores</li>
-          <li onClick={() => this.setState({show: 'CAMERAS'})} className={state.show === 'CAMERAS' ? 'active' : ''}>Cámaras</li>
-          <li onClick={() => this.setState({show: 'INFO'})} className={state.show === 'INFO' ? 'active' : ''}>Información</li>
-        </ul>
+        {
+          props.type === 'SITE'
+          &&
+          <ul className="statuses-container-nav">
+            <li onClick={() => this.setState({show: 'SENSORS'})} className={state.show === 'SENSORS' ? 'active' : ''}>Sensores</li>
+            <li onClick={() => this.setState({show: 'CAMERAS'})} className={state.show === 'CAMERAS' ? 'active' : ''}>Cámaras</li>
+            <li onClick={() => this.setState({show: 'INFO'})} className={state.show === 'INFO' ? 'active' : ''}>Información</li>
+          </ul>
+        }
         <div className="content">
           {
             this.getContent()
