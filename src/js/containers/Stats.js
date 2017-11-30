@@ -108,7 +108,7 @@ class Stats extends Component {
           <div>
             <p>Comparar: </p>
             <div className="counter">
-              <span className="value">7</span>
+              <span className="value">{state.selectedZones.length}</span>
               Zonas
               <ul className="drop-list">
                 <li>

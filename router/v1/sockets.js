@@ -28,16 +28,14 @@ function sockets(io) {
         // TODO get user granted zone or subzone
         // and join all the sites that are in that
         // zone or subzone
-        console.log({access})
         switch (access) {
           case 3:
             return Site.find({company: companyId})
             .select('key')
             .then(sites => {
-              console.log({sites})
               sites.map(site => {
                 if (site.key === null) return
-                winston.info(`Joining ${decoded._id} to ${companyId}-${site.key}`)
+                // winston.debug(`Joining ${decoded._id} to ${companyId}-${site.key}`)
                 socket.join(`${companyId}-${site.key}`)
                 io.to('some-room').emit('reload')
               })
@@ -52,7 +50,7 @@ function sockets(io) {
             .then(sites => {
               sites.map(site => {
                 if (site.key === null) return
-                winston.info(`Joining ${decoded._id} to ${companyId}-${site.key}`)
+                // winston.debug(`Joining ${decoded._id} to ${companyId}-${site.key}`)
                 socket.join(`${companyId}-${site.key}`)
               })
             })

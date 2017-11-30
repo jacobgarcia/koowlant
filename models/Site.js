@@ -15,9 +15,8 @@ const History = new Schema({
       sensor: String, // Sensor id
       value: Number,
       dissmissed: { type: Boolean, default: false }
-    }, { _id: false }],
-    timestamp: { type: Number, default: Date.now } // Unix timestamp. Time when the capture was done
-},{ _id: false })
+    }, { _id: false }]
+})
 
 const schema = new Schema({
   key: { type: String, default: String(Date.now()) },

@@ -134,13 +134,12 @@ router.route('/:siteKey/reports')
       if (!site) return res.status(404).json({ message: 'No site found'})
 
       // TODO just update the returned site
-      return Site.findByIdAndUpdate(site, { $push: { history: { sensors: site.sensors, alarms: site.alarms, timestamp: site.timestamp} } }, { new: true })
+      return Site.findByIdAndUpdate(site, { $push: { history: { sensors: site.sensors, alarms: site.alarms} } }, { new: true })
       .populate('zone', 'name')
       .populate('subzone', 'name')
       .exec((error, populatedSite) => {
         site.sensors = sensors
         site.alarms = alarms
-        site.timestamp = Date.now()
 
         site.save((error, updatedSite) => {
 
