@@ -17,7 +17,8 @@ function credentials(state = {}, action) {
         user: {
           _id: action.user._id,
           email: action.user.email,
-          fullName: action.user.fullName
+          fullName: `${action.user.name} ${action.user.surname}`,
+          access: action.user.access
         },
         token: action.user.token,
         company: action.user.company,
@@ -52,6 +53,7 @@ function reports(state = [], action) {
     case 'SET_REPORT': {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
       const newState = [...state] // BUG: It only creates a shallow copy
+      console.log({report: action.report, foundIndex})
 
       foundIndex > -1
       ? newState[foundIndex] = {

@@ -3,9 +3,9 @@ import { Switch, Route } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { setCredentials, setComplete, setLoading, setExhaustive } from '../actions'
+import { setCredentials, setComplete, setLoading, setExhaustive, setReport } from '../actions'
 import { NetworkOperation } from '../lib'
-import { Map, Users } from './'
+import { Map, Users, Stats } from './'
 import { Nav } from '../components'
 import io from 'socket.io-client'
 
@@ -24,6 +24,7 @@ class App extends Component {
 
     NetworkOperation.getSelf()
     .then(({data}) => {
+      console.log({data})
       this.props.setCredentials({...data.user, token})
 
       // Start socket connection
@@ -61,16 +62,18 @@ class App extends Component {
 
   initSocket(props, token) {
     this.socket = io('localhost:8080')
-    this.socket.connect()
+    this.socket.emit('join', token)
 
-    this.socket.on('connect', () => {
-      this.socket.emit('join', token)
+    // this.socket.on('connect', () => {
+    //   console.log('connected')
+    //   this.socket.emit('join', token)
+    // })
+
+    this.socket.on('reload', () => {
+      console.log('Got reload')
     })
 
-    this.socket.on('report', report => {
-      console.log('GOT REPORT')
-      props.setReport(report)
-    })
+    this.socket.on('report', props.setReport)
   }
 
   render() {
@@ -86,6 +89,7 @@ class App extends Component {
           <Route exact path="/" component={Map} />
           <Route path="/zones/:zoneId?/:subzoneId?/:siteId?" component={Map} />
           <Route path="/users" component={Users} />
+          <Route path="/statistics" component={Stats} />
         </Switch>
       </div>
     )
@@ -102,6 +106,9 @@ App.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setReport: report => {
+      dispatch(setReport(report))
+    },
     setCredentials: user => {
       dispatch(setCredentials(user))
     },

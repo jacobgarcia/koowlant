@@ -48,6 +48,10 @@ class NetworkOperation {
   static setSite(zone, subzone, name, key, position) {
     return axios.post(`${baseUrl}/zones/${zone}/subzones/${subzone}/sites`, { key, position, name })
   }
+
+  static getGeneralStats(from, to) {
+    return axios.get(`${baseUrl}/stats?from=${from}&to=${to}`)
+  }
 }
 
 export default NetworkOperation

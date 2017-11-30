@@ -1,20 +1,20 @@
 /* eslint max-statements: ["error", 15] */
 
-export function hashCode(str = '') { // java String#hashCode
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-       hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return hash;
-}
-
-export function intToRGB(i) {
-    var c = (i & 0x00FFFFFF)
-        .toString(16)
-        .toUpperCase();
-
-    return "00000".substring(0, 6 - c.length) + c;
-}
+// export function hashCode(str = '') { // java String#hashCode
+//     var hash = 0
+//     for (let i = 0; i < str.length; i++) {
+//        hash = str.charCodeAt(i) + ((hash << 5) - hash)
+//     }
+//     return hash;
+// }
+//
+// export function intToRGB(i) {
+//     var c = (i & 0x00FFFFFF)
+//         .toString(16)
+//         .toUpperCase();
+//
+//     return "00000".substring(0, 6 - c.length) + c;
+// }
 
 /**
  * Recieves filtered reports of an element
@@ -120,9 +120,8 @@ export function getStatus(data) {
         ],
         percentage: Math.round((1 - ((data.alarms ? data.alarms.length : 0) / (data.sensors ? data.sensors.length : 1))) * 1000) / 10
     })
-  } else {
-    return { status: [], percentage: 0 }
   }
+  return { status: [], percentage: 0 }
 }
 
 export function getAreaCenter(cordinatesArray = [[],[]]) {

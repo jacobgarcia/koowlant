@@ -4,11 +4,12 @@ $text-gray: rgb(61, 61, 61);
 
 $green: #50E3C2;
 $red: #ed2a20;
-$connus-blue: #195FAD;
+$connus-blue: #00c0ff;
 
 // Custom normalize
 @import "./normalize.scss";
 @import "./leaflet";
+@import "./calendar.scss";
 
 body, .tooltip {
   font-family: 'Raleway';
@@ -17,6 +18,11 @@ body, .tooltip {
 html, body, #root, #app {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
@@ -31,6 +37,16 @@ input {
     opacity: 0.5;
     cursor: default;
   }
+}
+
+p > span {
+  font-weight: bolder;
+}
+
+span.description {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: $text-gray;
 }
 
 input[type="checkbox"] {
@@ -205,7 +221,7 @@ nav {
     #spinner {
       width: 35px;
       height: 35px;
-      background-color: $green;
+      background-color: $connus-blue;
       transform: scale(0);
 
       border-radius: 100%;
@@ -246,6 +262,11 @@ nav {
   }
 }
 
+.date-picker {
+  display: flex;
+  border: 1px solid #000;
+}
+
 .table {
   display: flex;
   flex-direction: column;
@@ -274,6 +295,54 @@ nav {
   .table-body {
     .table-element:nth-child(even) {
       background-color: $light-gray;
+    }
+  }
+}
+
+.prompt {
+  position: fixed;
+  z-index: 2000;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter:         blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  padding: 20px;
+  cursor: pointer;
+  .content {
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid $gray;
+  }
+  .user-add {
+    width: 100%;
+    max-width: 500px;
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      padding-bottom: 10px;
+    }
+    .fields {
+      padding: 20px 40px;
+      display: flex;
+      flex-direction: column;
+      input {
+        margin-bottom: 20px;
+      }
+    }
+    input.next {
+      width: 100%;
+      text-align: center;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
   }
 }
@@ -516,7 +585,7 @@ nav {
     cursor: pointer;
     .search {
       cursor: default;
-      max-height: 800px;
+      max-height: 80%;
       border-radius: 3px;
       border: 1px solid $gray;
       background-color: #fff;
@@ -583,12 +652,13 @@ nav {
       position: relative;
       display: flex;
       flex-direction: column;
+      height: 100%;
       .mini-header {
         display: flex;
         justify-content: space-between;
-        flex-grow: 1;
         font-size: 0.8rem;
         font-weight: 500;
+        flex-shrink: 0;
         a {
           padding-left: 24px;
           background-size: 22px;
@@ -640,7 +710,7 @@ nav {
       border-left: 0;
     }
     .overall-header {
-      flex-grow: 1;
+      flex-shrink: 0;
       margin: 30px 0;
       .bar-container {
         width: 100%;
@@ -838,6 +908,8 @@ nav {
   display: flex;
   flex-grow: 1;
   flex-direction: column;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
   .statuses-container-nav {
     display: flex;
     padding: 10px;
@@ -884,7 +956,8 @@ nav {
   }
 }
 
-.status {
+// Zone, subzone, site, sensor status
+.content .status, .search .status {
   display: flex;
   justify-content: space-between;
   flex-grow: 1;
@@ -918,6 +991,27 @@ nav {
 
 
 .users {
+  .mini-nav {
+    display: flex;
+    padding: 10px 0 0;
+    border-bottom: 1px solid #000;
+    margin-bottom: 30px;
+    li {
+      margin: 5px 15px 0px;
+      font-weight: 500;
+      margin-bottom: 1px;
+      padding-bottom: 8px;
+      cursor: pointer;
+      &.active {
+        margin-bottom: -2px;
+        font-weight: 600;
+        border-bottom: 3px solid #000;
+      }
+    }
+  }
+  .users-container {
+    margin-top: 10px;
+  }
   .user {
     display: flex;
     margin-bottom: 40px;
@@ -925,6 +1019,7 @@ nav {
     align-items: flex-end;
     .user-info {
       display: flex;
+      margin: 30px 0;
       > div {
         margin-right: 30px;
         font-weight: 500;
@@ -935,25 +1030,84 @@ nav {
       }
     }
   }
-
   .small {
     position: relative;
-    .drop-list {
-      position: absolute;
-      background-color: #fff;
-      li {
-        padding: 5px 10px;
-        display: flex;
-        align-items: center;
-        -webkit-user-select:none;
-        user-select:none;
-        input, label {
-          cursor: pointer;
-        }
-        input {
-          margin-right: 7px;
-        }
+  }
+}
+
+.drop-list {
+  z-index: 100;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid $gray;
+  input[type="button"] {
+    width: 100%;
+    max-width: none !important;
+  }
+  li {
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    -webkit-user-select:none;
+    user-select:none;
+    border-bottom: 1px solid $light-gray;
+    &:nth-child(even) {
+      background-color: #efefef;
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+    input, label {
+      cursor: pointer;
+    }
+    input[type="checkbox"] {
+      margin-right: 7px;
+    }
+  }
+}
+
+.counter {
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  height: 28px;
+  position: relative;
+  .drop-list {
+    left: -1px;
+    top: 30px;
+    bottom: auto;
+    width: 180px;
+  }
+  .value {
+    padding: 2px 8px;
+    height: 100%;
+    color: #fff;
+    background-color: #000;
+    margin-right: 10px;
+  }
+  .span {
+    display: block;
+  }
+}
+
+
+
+.stats {
+  .actions {
+    display: flex;
+    align-items: center;
+    > div {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+      > p {
+        margin-right: 10px;
       }
+    }
+    input {
+      max-width: 120px;
+      text-align: center;
     }
   }
 }

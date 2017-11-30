@@ -53,9 +53,11 @@ class StatusesContainer extends PureComponent {
           let reports = getFilteredReports(props.reports, element)
           reports = substractReportValues(reports)
           let { status, percentage } = getStatus(reports || null)
+
           if (props.type === 'SITE') {
-            status = [{ name: 'normal', value: element.value}, { name: 'alerts', value: 100 - element.value }]
-            percentage = element.value
+            const sensor = substractReportValues(props.reports).sensors.find(({key}) => key === element.key)
+            status = [{ name: 'normal', value: sensor.value}, { name: 'alerts', value: 100 - sensor.value }]
+            percentage = sensor.value
           }
 
           // const { value = null } = element // Sensors
@@ -73,6 +75,7 @@ class StatusesContainer extends PureComponent {
                 alarms={reports ? reports.alarms.length : 0}
                 elements={element.elements} // Subzones or sites
                 onHover={props.onHover}
+                nonPercentage={props.type === 'SITE'}
               />
             </Link>
           )

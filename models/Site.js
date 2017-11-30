@@ -44,3 +44,4 @@ schema.index({ key: 1, company: 1}, { unique: true })
 schema.loadClass(SiteClass)
 
 module.exports = mongoose.model('Site', schema)
+module.exports.History = mongoose.model('History', History)

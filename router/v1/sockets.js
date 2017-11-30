@@ -8,6 +8,8 @@ const User = require(path.resolve('models/User'))
 
 function sockets(io) {
   io.on('connection', socket => {
+    socket.emit('connect')
+
     socket.on('join', token => {
 
       if (!token) {
@@ -26,15 +28,18 @@ function sockets(io) {
         // TODO get user granted zone or subzone
         // and join all the sites that are in that
         // zone or subzone
+        console.log({access})
         switch (access) {
           case 3:
-            return Site.find(companyId)
+            return Site.find({company: companyId})
             .select('key')
             .then(sites => {
+              console.log({sites})
               sites.map(site => {
                 if (site.key === null) return
                 winston.info(`Joining ${decoded._id} to ${companyId}-${site.key}`)
                 socket.join(`${companyId}-${site.key}`)
+                io.to('some-room').emit('reload')
               })
             })
           case 1:
@@ -61,14 +66,6 @@ function sockets(io) {
       })
     })
   })
-
-  // io.on('connection', socket => {
-  //   socket.on('join', token => {
-  //
-
-  //
-  //   })
-  // })
 
   global.io = io
 }

@@ -16,12 +16,13 @@ router.use(require(path.resolve('router/v1/auth')))
 router.use(require(path.resolve('router/v1/companies')))
 router.use(require(path.resolve('router/v1/users')))
 router.use(require(path.resolve('router/v1/polygons')))
+router.use(require(path.resolve('router/v1/stats')))
 
 // TODO: Send user invitee (mail)
 // TODO: Accept user invitee
 
 router.use((req, res) => {
-  return res.status(500).json({ message: 'No route' })
+  return res.status(400).json({ message: 'No route' })
 })
 
 module.exports = router

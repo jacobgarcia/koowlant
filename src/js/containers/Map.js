@@ -66,6 +66,7 @@ class MapContainer extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { zoneId = null, subzoneId = null, siteId = null } = nextProps.match.params
+    if (this.props.match.params === nextProps.match.params) return
 
     if (nextProps.zones.length === 0) return
 
@@ -166,7 +167,8 @@ class MapContainer extends Component {
   }
 
   onElementPositionsChange(event) {
-    let { value, name } = event.target
+    let value = event.target.value
+    const name = event.target.name
     // Remove all non-numbers and no '-' or '.'
     if (value.length > 0) value = value.match(/[-\d.]/g).join('')
 
@@ -263,12 +265,16 @@ class MapContainer extends Component {
           element={state.element}
           isCreating={state.isCreating}
         />
-        <Search
-          isVisible={state.isSearching}
-          zones={props.zones}
-          onClose={this.onToggleSearch}
-          reports={props.reports}
-        />
+        {
+          state.isSearching
+          &&
+          <Search
+            isVisible={state.isSearching}
+            zones={props.zones}
+            onClose={this.onToggleSearch}
+            reports={props.reports}
+          />
+        }
         <Map
           center={state.currentPosition}
           ref={map => {
@@ -279,7 +285,7 @@ class MapContainer extends Component {
           onMouseMove={({latlng}) => state.isCreating && this.setState({ hoverPosition: [latlng.lat, latlng.lng] })}
           animate
         >
-          <div className="bar-actions" onMouseMove={() =>  state.isCreating && this.setState({hoverPosition: null})}>
+          <div className="bar-actions" onMouseMove={() => state.isCreating && this.setState({hoverPosition: null})}>
             <div>
               {
                 (selectedZone && state.showing !== 'OVERALL' && !state.isCreating)
@@ -446,7 +452,8 @@ MapContainer.propTypes = {
   history: PropTypes.object,
   zones: PropTypes.array,
   match: PropTypes.object,
-  reports: PropTypes.array
+  reports: PropTypes.array,
+  setReport: PropTypes.func
 }
 
 function mapStateToProps({zones, reports}) {

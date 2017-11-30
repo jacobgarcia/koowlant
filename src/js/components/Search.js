@@ -2,14 +2,12 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { ElementStatus } from './'
+import { ElementStatus, Prompt } from './'
 import { getFilteredReports, substractReportValues, getStatus } from '../lib/specialFunctions'
 
 class Search extends Component {
   constructor(props) {
     super(props)
-
-    console.log({props})
 
     this.state = {
       query: '',
@@ -23,10 +21,18 @@ class Search extends Component {
 
     this.handleChange = this.handleChange.bind(this)
     this.getLink = this.getLink.bind(this)
+    this.setElements = this.setElements.bind(this)
+  }
+
+  componentDidMount() {
+    this.setElements(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log({nextProps})
+    this.setElements(nextProps)
+  }
+
+  setElements(nextProps) {
     if (JSON.stringify(nextProps.zones) === JSON.stringify(this.props.zones.length)) return
 
     const zones = nextProps.zones.map(({_id: zoneId, name, subzones}) =>
@@ -129,10 +135,10 @@ class Search extends Component {
   }
 
   render() {
-    const {state, props} = this
+    const { state, props } = this
 
     return (
-      <div className={`search-container ${props.isVisible ? '' : 'hidden'}`} onClick={props.onClose}>
+      <Prompt className={props.isVisible ? 'search-container' : 'hidden'} onDismiss={props.onClose}>
         <div className="search" onClick={evt => evt.stopPropagation()}>
           <div className="header">
             <input
@@ -148,7 +154,7 @@ class Search extends Component {
           </div>
           <div className="results">
             {
-              state.filteredSites.length > 0
+              (state.filteredSites.length > 0)
               &&
               <div className="sites-container">
                 <p>Sitios</p>
@@ -178,7 +184,7 @@ class Search extends Component {
               </div>
             }
             {
-              this.state.filteredSubzones.length > 0
+              (this.state.filteredSubzones.length > 0)
               &&
               <div className="subzones-container">
                 <p>Subzonas</p>
@@ -208,7 +214,7 @@ class Search extends Component {
               </div>
             }
             {
-              this.state.filteredZones.length > 0
+              (this.state.filteredZones.length > 0)
               &&
               <div className="zones-container">
                 <p>Zonas</p>
@@ -239,7 +245,7 @@ class Search extends Component {
             }
           </div>
           </div>
-      </div>
+      </Prompt>
     )
   }
 }

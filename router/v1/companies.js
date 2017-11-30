@@ -127,10 +127,13 @@ router.route('/:siteKey/reports')
     const { siteKey } = req.params
     const company = req._user.cmp
 
+    winston.info({key: siteKey, company})
+
     Site.findOne({key: siteKey, company})
     .exec((error, site) => {
       if (!site) return res.status(404).json({ message: 'No site found'})
 
+      // TODO just update the returned site
       return Site.findByIdAndUpdate(site, { $push: { history: { sensors: site.sensors, alarms: site.alarms, timestamp: site.timestamp} } }, { new: true })
       .populate('zone', 'name')
       .populate('subzone', 'name')
@@ -158,6 +161,7 @@ router.route('/:siteKey/reports')
             alarms: updatedSite.alarms
           }
 
+          // global.io.emit('report', report)
           global.io.to(`${company}-${siteKey}`).emit('report', report)
           return res.status(200).json(report)
         })

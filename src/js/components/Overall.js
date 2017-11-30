@@ -18,8 +18,10 @@ class Overall extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('!this.props.reports', !this.props.reports)
     if (!this.props.reports) return
 
+    console.log('Different lengths', nextProps.reports.length !== this.props.reports.length)
     if (nextProps.reports.length !== this.props.reports.length) {
       this.setState({
         data: substractReportValues(nextProps.reports)
@@ -81,16 +83,16 @@ class Overall extends PureComponent {
           <div className="overall-header">
             <h3>{this.getTitle(props.params, props.element && props.element.name)}</h3>
             <div className="bar-container">
-              <div className="normal" style={{width: `${this.state.percentage}%`}} />
-              <div className="alert" style={{width: `${100 - this.state.percentage}%`}} />
+              <div className="normal" style={{width: `${state.percentage}%`}} />
+              <div className="alert" style={{width: `${100 - state.percentage}%`}} />
             </div>
-            <span className="leyend">{this.state.percentage}% de funcionalidad, {this.state.data.alarms.length} alarmas en total.</span>
+            <span className="leyend">{state.percentage}% de funcionalidad, {state.data.alarms.length} alarmas en total.</span>
           </div>
           <StatusesContainer
             params={props.params}
             type={props.selectedType}
             elements={props.selectedType === 'SITE' ? (props.element ? props.element.sensors : []) : props.elements}
-            reports={this.props.reports}
+            reports={props.reports}
             onHover={props.onHover}
             element={props.element}
           />
@@ -103,6 +105,10 @@ class Overall extends PureComponent {
 Overall.propTypes = {
   selectedType: PropTypes.string.isRequired,
   reports: PropTypes.array
+}
+
+Overall.defaultProps = {
+  reports: []
 }
 
 export default Overall
