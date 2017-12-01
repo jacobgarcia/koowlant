@@ -150,7 +150,7 @@ class Search extends Component {
               autoComplete="off"
               autoCorrect="off"
             />
-            <span className="button" onClick={this.props.onClose}>Cerrar</span>
+            <button onClick={this.props.onClose}>Cancelar</button>
           </div>
           <div className="results">
             {

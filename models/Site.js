@@ -7,6 +7,7 @@ class SiteClass {
 }
 
 const History = new Schema({
+    timestamp: { type: Date, default: new Date() },
     sensors: [{
       name: String,
       value: Number
@@ -30,7 +31,7 @@ const schema = new Schema({
     key: String, // Sensor id
     value: Number
   }, { _id: false }],
-  timestamp: { type: Number, default: Date.now() }, // Last updated
+  timestamp: { type: Date, default: new Date() }, // Last updated
   history: { type: [History], default: []},
   company: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
   subzone: { type: Schema.Types.ObjectId, ref: 'Subzone', required: true },

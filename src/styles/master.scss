@@ -4,7 +4,7 @@ $text-gray: rgb(61, 61, 61);
 
 $green: #50E3C2;
 $red: #ed2a20;
-$connus-blue: #00c0ff;
+$connus-blue: #00adee;
 
 // Custom normalize
 @import "./normalize.scss";
@@ -59,7 +59,7 @@ input[type="checkbox"] {
   border-radius: 50%;
   border: 1px solid #000;
   &:checked {
-    background-color: $green;
+    background-color: $connus-blue;
   }
 }
 
@@ -135,8 +135,9 @@ ul.links {
   }
 }
 
-.button, input[type="button"] {
+.button, input[type="button"], button {
   border: 1px solid #a4a4a4;
+  border-radius: 3px;
   padding: 4px 15px;
   background: #fff;
   cursor: pointer;
@@ -160,9 +161,8 @@ ul.links {
     color: #fff;
   }
   &.destructive {
-    background: #000;
+    background: $connus-blue;
     color: #fff;
-    border-color: #000;
   }
 }
 
@@ -175,7 +175,7 @@ nav {
   right: 0;
   background-color: #fff;
   z-index: 1000;
-  border-bottom: 1px solid $gray;
+  box-shadow: 0px 0px 10px rgba(#000, 0.1);
   display: flex;
   align-items: center;
   font-weight: 500;
@@ -198,8 +198,9 @@ nav {
       text-transform: capitalize;
       font-weight: 600;
       &.active {
-        color: #000;
-        border-bottom: 2px solid #000;
+        color: $connus-blue;
+        transform: translateY(1px);
+        border-bottom: 2px solid $connus-blue;
       }
     }
     li:last-child a {
@@ -264,7 +265,8 @@ nav {
 
 .date-picker {
   display: flex;
-  border: 1px solid #000;
+  border: 1px solid $gray;
+  border-radius: 3px;
 }
 
 .table {
@@ -1040,6 +1042,10 @@ nav {
   position: absolute;
   background-color: #fff;
   border: 1px solid $gray;
+  border-radius: 3px;
+  &.hidden {
+    display: none;
+  }
   input[type="button"] {
     width: 100%;
     max-width: none !important;
@@ -1052,7 +1058,7 @@ nav {
     user-select:none;
     border-bottom: 1px solid $light-gray;
     &:nth-child(even) {
-      background-color: #efefef;
+      background-color: #f4f4f4;
     }
     &:last-child {
       border-bottom: none;
@@ -1067,7 +1073,7 @@ nav {
 }
 
 .counter {
-  border: 1px solid #000;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   padding-right: 10px;
@@ -1080,11 +1086,25 @@ nav {
     width: 180px;
   }
   .value {
-    padding: 2px 8px;
+    padding: 4px 8px;
     height: 100%;
+    font-weight: 600;
+    width: 30px;
+    text-align: center;
     color: #fff;
-    background-color: #000;
-    margin-right: 10px;
+    background-color: $connus-blue;
+    border-radius: 3px 0 0 3px;
+  }
+  .title {
+    border: 1px solid $gray;
+    border-left: 0;
+    border-radius: 0 3px 3px 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    padding-left: 12px;
   }
   .span {
     display: block;
