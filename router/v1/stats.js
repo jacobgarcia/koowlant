@@ -14,35 +14,53 @@ router.route('/stats')
 .get((req, res) => {
   const { from, to } = req.query
 
-  console.log('STATS')
   const fromDate = new Date(from)
   const toDate = new Date(to)
 
-  // console.log(req._user.cmp)
-  // console.log(mongoose.version)
-
-  // Site.find({ company: req._user.cmp, history: { $elemMatch: { timestamp: 1512004317599 }} })
-  // .select('company history')
-  // .then(sites => {
-  //   console.log({sites})
-  //   sites.map(site => console.log({ history: site.company }))
-  //
-  //   return res.status(200).json({ history })
-  // })
-
   Site.aggregate([
-    { $match: { company: mongoose.Types.ObjectId(req._user.cmp) }}, // We need to cast the string to ObjectId
+    { $match: { company: new mongoose.Types.ObjectId(req._user.cmp) }}, // We need to cast the string to ObjectId
+    // { NOT USING
+    //   $lookup: {
+    //     from: 'zones',
+    //     localField: 'zone',
+    //     foreignField: '_id',
+    //     as: 'zone'
+    //   }
+    // },
     { $unwind: '$history' },
-    { $match: { 'history.timestamp': 1512004317599 }}
+    { $match: { 'history.timestamp': { $gte: fromDate, $lte: toDate } }},
+    { $group: {
+      _id: { zone: '$zone', month: { $month: '$timestamp' }, day: { $dayOfMonth: '$timestamp' }, year: { $year: '$timestamp' } },
+      alarmsCount: { $sum: { $size: '$history.alarms' }},
+      sensorsCount: { $sum: { $size: '$history.sensors' }},
+      count: { $sum: 1 }
+      }
+    },
+    { $project: {
+      zone: '$id.zone',
+      averageHealth: { $multiply: [100, {$subtract: [1, {$divide: ['$alarmsCount', '$sensorsCount']}]}]}
+    }},
+    {
+      $group: {
+        _id: { day: '$_id.day', month: '$_id.month', year: '$_id.year' },
+        zones: { $addToSet: {_id: '$_id.zone', health: '$averageHealth' } }
+      }
+    }
   ])
-  .then(sites => {
-    console.log('length', sites.length)
-    sites.map(site => console.log({ history: site.history }))
+  .then(zonesAverage => {
+    const data = zonesAverage.map(({_id, zones}) => {
+      const day = { name: `${_id.day}/${_id.month}/${_id.year}` }
 
-    return res.status(200).json({ sites })
+      zones.map(({_id, health}) => {
+        day[_id] = Math.round(health * 100) / 100
+      })
+
+      return day
+
+    })
+    return res.status(200).json({ data })
   })
   .catch(error => {
-    console.log({ error })
     return res.status(500).json({ error })
   })
 })
