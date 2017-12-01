@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import DayPickerInput from 'react-day-picker/DayPickerInput'
 import { formatDate, parseDate } from 'react-day-picker'
 import { connect } from 'react-redux'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 
 import { NetworkOperation } from '../lib'
+import { intToRGB, hashCode } from '../lib/specialFunctions'
 
 class Stats extends Component {
   constructor(props) {
@@ -13,7 +15,9 @@ class Stats extends Component {
     this.state = {
       from: undefined,
       to: undefined,
-      selectedZones: []
+      selectedZones: [props.zones],
+      data: [],
+      showZoneSelector: false
     }
 
     this.handleFromChange = this.handleFromChange.bind(this)
@@ -88,11 +92,18 @@ class Stats extends Component {
 
   getStats() {
     const from = this.state.from.toISOString()
-    const to = this.state.from.toISOString()
+    const to = this.state.to.toISOString()
 
     NetworkOperation.getGeneralStats(from, to)
     .then(({data}) => {
-      console.log({data})
+      this.setState({
+        data: data.data
+      })
+    })
+    .catch(error => {
+      this.setState({
+        data: null
+      })
     })
   }
 
@@ -103,14 +114,14 @@ class Stats extends Component {
 
     return (
       <div className="app-content stats">
-        {JSON.stringify(state.selectedZones)}
+        {/* {JSON.stringify(state.selectedZones)} */}
         <div className="actions">
           <div>
             <p>Comparar: </p>
-            <div className="counter">
+            <div className="counter" onClick={() => this.setState(prev => ({ showZoneSelector: !prev.showZoneSelector }))}>
               <span className="value">{state.selectedZones.length}</span>
-              Zonas
-              <ul className="drop-list">
+              <span className="title">Zonas</span>
+              <ul className={`drop-list ${!state.showZoneSelector && 'hidden'}`} onClick={evt => evt.stopPropagation()}>
                 <li>
                   <input
                     type="checkbox"
@@ -181,6 +192,31 @@ class Stats extends Component {
               </div>
             </div>
           </div>
+          <div>
+            <button>Generar reporte</button>
+          </div>
+        </div>
+        <div>
+          <LineChart width={600} height={300} data={state.data}
+            margin={{top: 5, right: 30, left: 20, bottom: 5}}>
+           <XAxis axisLine={false} dataKey="name" />
+           <YAxis axisLine={false} domain={[0,100]} tickFormatter={value => value + '%'} />
+           <CartesianGrid vertical={false} stroke="#dfdfdf" />
+           <Tooltip/>
+           <Legend />
+           {
+             props.zones &&
+             props.zones.filter(({_id: zoneId}) => state.selectedZones.some(_id => _id === zoneId)).map(zone =>
+               <Line
+                 key={zone._id}
+                 type="monotone"
+                 dataKey={zone._id}
+                 stroke={`#${intToRGB(hashCode(zone._id))}`}
+                 name={zone.name}
+               />
+             )
+           }
+          </LineChart>
         </div>
       </div>
     )
