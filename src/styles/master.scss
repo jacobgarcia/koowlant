@@ -1114,6 +1114,10 @@ nav {
 
 
 .stats {
+  h3, h4 {
+    margin: 20px 0;
+    margin-top: 10px;
+  }
   .actions {
     display: flex;
     align-items: center;
@@ -1129,5 +1133,10 @@ nav {
       max-width: 120px;
       text-align: center;
     }
+  }
+  .chart {
+    padding: 50px 10px;
+    margin: 0 20px;
+    border-bottom: 1px solid $gray;
   }
 }

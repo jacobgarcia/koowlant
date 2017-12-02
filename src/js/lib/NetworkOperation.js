@@ -52,6 +52,10 @@ class NetworkOperation {
   static getGeneralStats(from, to) {
     return axios.get(`${baseUrl}/stats?from=${from}&to=${to}`)
   }
+
+  static getGeneralAlarms(from, to) {
+    return axios.get(`${baseUrl}/alarms?from=${from}&to=${to}`)
+  }
 }
 
 export default NetworkOperation

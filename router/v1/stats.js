@@ -65,9 +65,49 @@ router.route('/stats')
   })
 })
 
-router.route('/:zoneId')
+router.route('/alarms')
 .get((req, res) => {
-  const params = req.params
-})
+  const { from, to } = req.query
 
+  const fromDate = new Date(from)
+  const toDate = new Date(to)
+
+  Site.aggregate([
+    { $match: { company: new mongoose.Types.ObjectId(req._user.cmp) }}, // We need to cast the string to ObjectId
+    { $unwind: '$history' },
+    { $match: { 'history.timestamp': { $gte: fromDate, $lte: toDate } }},
+    { $group: {
+      _id: { zone: '$zone', month: { $month: '$timestamp' }, day: { $dayOfMonth: '$timestamp' }, year: { $year: '$timestamp' } },
+      alarmsCount: { $sum: { $size: '$history.alarms' }},
+      count: { $sum: 1 }
+      }
+    },
+    { $project: {
+      zone: '$id.zone',
+      alarmsCount: { $sum: '$alarmsCount' }
+    }},
+    {
+      $group: {
+        _id: { day: '$_id.day', month: '$_id.month', year: '$_id.year' },
+        zones: { $addToSet: {_id: '$_id.zone', alarms: '$alarmsCount' } }
+      }
+    }
+  ])
+  .then(zonesAverage => {
+    const alarms = zonesAverage.map(({_id, zones}) => {
+      const day = { name: `${_id.day}/${_id.month}/${_id.year}` }
+
+      zones.map(({_id, alarms}) => {
+        day[_id] = alarms
+      })
+
+      return day
+
+    })
+    return res.status(200).json({ alarms })
+  })
+  .catch(error => {
+    return res.status(500).json({ error })
+  })
+})
 module.exports = router

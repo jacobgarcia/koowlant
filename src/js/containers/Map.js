@@ -64,6 +64,13 @@ class MapContainer extends Component {
     })
   }
 
+  componentDidMount() {
+    const { elements = [] } = this.getElementsToRender(this.props)
+    this.setState({
+      elements
+    })
+  }
+
   componentWillReceiveProps(nextProps) {
     const { zoneId = null, subzoneId = null, siteId = null } = nextProps.match.params
     if (this.props.match.params === nextProps.match.params) return
@@ -72,7 +79,7 @@ class MapContainer extends Component {
 
     // If we have the same paramters dont update the state
     if (zoneId === null && subzoneId === null && siteId === null) {
-      const { elements = null, shadow = null } = this.getElementsToRender(nextProps)
+      const { elements = [], shadow = null } = this.getElementsToRender(nextProps)
       this.setState({
         elements,
         shadow,
@@ -86,7 +93,7 @@ class MapContainer extends Component {
       currentPosition: null // !important
     }, () => {
       // Get elements to render and the shadow polygon
-      const { elements = null, element = null, shadow = null } = this.getElementsToRender(nextProps)
+      const { elements = [], element = null, shadow = null } = this.getElementsToRender(nextProps)
 
       // Update state
       this.setState(prev => ({
@@ -109,8 +116,8 @@ class MapContainer extends Component {
     }))
   }
 
-  getElementsToRender(nextProps) {
-    const { zoneId = null, subzoneId = null, siteId = null } = nextProps.match.params
+  getElementsToRender(props) {
+    const { zoneId = null, subzoneId = null, siteId = null } = props.match.params
 
     if (this.props.zones.length === 0) return { elements: [], shadow: null }
 
