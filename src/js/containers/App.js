@@ -60,7 +60,7 @@ class App extends Component {
   }
 
   initSocket(props, token) {
-    this.socket = io()
+    this.socket = io(window.location.host, {transports: ['websocket']})
     // this.socket.emit('join', token)
 
     this.socket.on('connect', () => {
