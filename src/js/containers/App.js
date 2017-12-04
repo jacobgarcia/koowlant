@@ -24,7 +24,6 @@ class App extends Component {
 
     NetworkOperation.getSelf()
     .then(({data}) => {
-      console.log({data})
       this.props.setCredentials({...data.user, token})
 
       // Start socket connection
@@ -61,7 +60,7 @@ class App extends Component {
   }
 
   initSocket(props, token) {
-    this.socket = io('localhost:8080')
+    this.socket = io()
     this.socket.emit('join', token)
 
     // this.socket.on('connect', () => {
