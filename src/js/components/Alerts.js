@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import { NetworkOperation } from '../lib'
+
 class Alerts extends Component {
   constructor(props) {
     super(props)
@@ -14,7 +16,10 @@ class Alerts extends Component {
   }
 
   componentDidMount() {
+    NetworkOperation.getPreviousAlarms(50)
+    .then(({data}) => {
 
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -26,7 +31,7 @@ class Alerts extends Component {
       before: []
     }
 
-    this.props.alerts.map(alert => {
+    this.props.alarms.map(alert => {
       alert.alarms.map(({timestamp, values}) => {
         if (new Date(timestamp).getDay() === today) {
           alerts.today = alerts.today.concat([{timestamp, ...alert}])
@@ -43,12 +48,76 @@ class Alerts extends Component {
 
   render() {
     const { state, props } = this
+    const today = new Date().getDay()
+
+    console.log('PROPS', this.props.alarms)
+
+    const todayReports = props.alarms.reduce((sum, alarm) => {
+      const alarms = alarm.alarms.filter(({timestamp}) => new Date(timestamp).getDay() === today)
+      .reduce((sum, {values = [], attended, timestamp}) => [...sum, ...values.map(value => ({...value, timestamp, attended }))], [])
+      return [...sum, ...alarms]
+    }, [])
+
+    const erlierReports = props.alarms.reduce((sum, alarm) => {
+      const alarms = alarm.alarms.filter(({timestamp}) => new Date(timestamp).getDay() !== today)
+      .reduce((sum, {values = [], attended, timestamp}) => [...sum, ...values.map(value => ({...value, timestamp, attended }))], [])
+      return [...sum, ...alarms]
+    }, [])
+
     return (
       <div className={`alerts ${!props.isVisible && 'hidden'}`}>
         <div className="content">
           <div className={`tooltip ${props.isCreating && 'hidden'}`} onClick={props.onVisibleToggle}/>
           <div className="mini-header">
             <span className="pop-window">Hacer ventana</span>
+          </div>
+          <div className="alerts-container">
+            <h4>Activas</h4>
+            {
+              props.alarms.map((siteAlarms, siteAlarmsIndex) => {
+                if (!siteAlarms.alarms || !siteAlarms.alarms.length || !siteAlarms.alarms[0].values.length) return null
+
+                return (
+                  <div className="site-container" key={siteAlarmsIndex}>
+                    {
+                      siteAlarms.alarms[0].values.map((value, index) =>
+                        <div className="alert" key={index}>
+                          <div className="icon"></div>
+                          <div>
+                            <p>{value.key} {value.value}</p>
+                            <span className="location">Zona {siteAlarms.zone.name}, {siteAlarms.subzone.name}, {siteAlarms.site.key}</span>
+                          </div>
+                          <p className="date">{new Date(siteAlarms.alarms[0].timestamp).toLocaleString('es-MX')}</p>
+                        </div>
+                      )
+                    }
+                  </div>
+                )
+              })
+            }
+            <h4>Anteriores</h4>
+            {
+              props.alarms.map((siteAlarms, siteAlarmsIndex) => {
+                if (!siteAlarms.alarms || !siteAlarms.alarms.length || !siteAlarms.alarms[0].values.length) return null
+
+                return (
+                  <div className="site-container" key={siteAlarmsIndex}>
+                    {
+                      siteAlarms.alarms.reduce((sum, alarms, index) => index === 0 ? [...sum] : [...sum, alarms.values], []).map((value, index) =>
+                        <div className="alert" key={index}>
+                          <div className="icon"></div>
+                          <div>
+                            <p>{value[0].key} {value[0].value}</p>
+                            <span className="location">Zona {siteAlarms.zone.name}, {siteAlarms.subzone.name}, {siteAlarms.site.key}</span>
+                          </div>
+                          <p className="date">{new Date(siteAlarms.alarms[0].timestamp).toLocaleString('es-MX')}</p>
+                        </div>
+                      )
+                    }
+                  </div>
+                )
+              })
+            }
           </div>
           <div>
             {

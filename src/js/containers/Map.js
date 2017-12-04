@@ -445,7 +445,7 @@ class MapContainer extends Component {
           positions={state.newPositions}
         />
         <Alerts
-          alerts={props.reports.filter(({alarms}) => alarms.length > 0)}
+          alarms={props.reports.filter(({alarms}) => alarms.length > 0)}
           isVisible={state.showing === 'ALERTS'}
           onVisibleToggle={() => this.toggleVisible('ALERTS')}
           isCreating={state.isCreating}

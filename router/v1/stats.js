@@ -71,10 +71,17 @@ router.route('/stats')
 
 router.route('/alarms')
 .get((req, res) => {
-  const { from, to } = req.query
+  const { from, to, last } = req.query
 
   const fromDate = new Date(from)
   const toDate = new Date(to)
+
+  if (last) {
+    Site.aggregate([
+      { $match: { company: new mongoose.Types.ObjectId(req._user.cmp) }}, // We need to cast the string to ObjectId
+      { $unwind: '$history' }
+    ])
+  }
 
   Site.aggregate([
     { $match: { company: new mongoose.Types.ObjectId(req._user.cmp) }}, // We need to cast the string to ObjectId
