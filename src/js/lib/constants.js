@@ -1,6 +1,6 @@
 export default {
   // hostUrl: 'https://demo.kawlantid.com'
-  hostUrl: 'http://localhost:8080',
+  hostUrl: window.location.origin,
   colors: value => {
     if (value > 75) {
       return '#50E3C2'
