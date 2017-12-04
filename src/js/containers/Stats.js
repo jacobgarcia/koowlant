@@ -125,7 +125,6 @@ class Stats extends Component {
 
     NetworkOperation.getGeneralAlarms(from, to)
     .then(({data}) => {
-      console.log('ALARMS', data)
       this.setState({
         alarms: data.alarms
       })

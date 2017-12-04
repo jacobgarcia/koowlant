@@ -1,5 +1,5 @@
 $gray: #a1a1a1;
-$light-gray: #f2f2f2;
+$light-gray: #f6f6f6;
 $text-gray: rgb(61, 61, 61);
 
 $green: #50E3C2;
@@ -27,6 +27,10 @@ html, body, #root, #app {
 
 input[type="text"], input[type="email"], input[type="password"] {
   border-bottom: 1px solid rgb(164, 164, 164);
+  // border-radius: 4px;
+  &:focus {
+    border-color: $connus-blue;
+  }
 }
 
 input {
@@ -135,6 +139,13 @@ ul.links {
   }
 }
 
+.inline-button {
+  font-weight: 600;
+  color: $connus-blue;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
 .button, input[type="button"], button {
   border: 1px solid #a4a4a4;
   border-radius: 3px;
@@ -163,6 +174,7 @@ ul.links {
   &.destructive {
     background: $connus-blue;
     color: #fff;
+    border: none;
   }
 }
 
@@ -175,7 +187,7 @@ nav {
   right: 0;
   background-color: #fff;
   z-index: 1000;
-  box-shadow: 0px 0px 10px rgba(#000, 0.1);
+  box-shadow: 0px 0px 10px rgba(#000, 0.2);
   display: flex;
   align-items: center;
   font-weight: 500;
@@ -314,14 +326,15 @@ nav {
   justify-content: center;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.3);
-  backdrop-filter:         blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter:         blur(1px);
+  -webkit-backdrop-filter: blur(1px);
   padding: 20px;
   cursor: pointer;
   .content {
     cursor: default;
     background-color: #fff;
-    border: 1px solid $gray;
+    box-shadow: 0px 0px 10px rgba(#000, 0.2);
+    border-radius: 4px;
   }
   .user-add {
     width: 100%;
@@ -362,18 +375,13 @@ nav {
   justify-content: center;
   #logo {
     display: flex;
-    max-width: 400px;
+    width: 400px;
+    height: 150px;
     flex-direction: column;
     align-items: center;
     margin-top: -100px;
     margin-bottom: 50px;
-    .iso {
-      max-width: 50px;
-    }
-    .logo {
-      margin-top: 30px;
-      max-width: 150px;
-    }
+    background: url('/static/img/iso.svg') no-repeat center;
   }
   input {
     border: 1px solid $gray;
@@ -384,11 +392,15 @@ nav {
     text-align: center;
   }
   form {
-    max-width: 270px;
+    max-width: 310px;
     width: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
+    background-color: rgba(#fff, 0.8);
+    padding: 20px;
+    backdrop-filter:         blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
   .error {
     position: absolute;
@@ -448,7 +460,9 @@ nav {
     z-index: 1000;
     display: flex;
     align-items: stretch;
-    border: 1px solid $gray;
+    box-shadow: 0px 0px 10px rgba(#000, 0.2);
+    border-radius: 4px;
+    // border: 1px solid $gray;
     margin-bottom: 20px;
     margin-left: 20px;
     transition: transform ease 0.5s;
@@ -467,13 +481,15 @@ nav {
         width: 100%;
         bottom: 36px;
         background-color: #fff;
-        border: 1px solid $gray;
+        // border: 1px solid $gray;
         left: -1px;
         margin-bottom: none;
         max-height: 200px;
         width: 200px;
         overflow-y: scroll;
         transition: max-height ease 0.5s;
+        box-shadow: 0px 0px 10px rgba(#000, 0.2);
+        border-radius: 4px;
         &.hidden {
           overflow: hidden;
           max-height: 0px;
@@ -511,6 +527,8 @@ nav {
     input[type="button"] {
       padding: 7px 20px;
       font-weight: 400;
+      margin: -1px;
+      border-radius: 0 4px 4px 0;
     }
     .description {
       font-size: 1rem;
@@ -649,6 +667,7 @@ nav {
     background-color: $light-gray;
     z-index: 500;
     transition: ease 0.3s transform;
+    box-shadow: 0px 0px 10px rgba(#000, 0.2);
     > .content {
       padding: 20px 10px;
       position: relative;
@@ -682,29 +701,33 @@ nav {
         position: absolute;
         top: 20px;
         background-color: $light-gray;
-        border: 1px solid $gray;
+        box-shadow: 5px 0px 5px rgba(#000, 0.075);
+        // border: 1px solid $gray;
       }
     }
   }
   .overall {
     top: 0;
     left: 0;
-    border-right: 1px solid $gray;
+    // border-right: 1px solid $gray;
     &.hidden {
       transform: translateX(-500px);
-      .tooltip {
-        background-image: url("/static/img/icons/tower.svg")
+      > .content .tooltip {
+        background-image: url("/static/img/icons/tower.svg");
+        width: 45px;
+        transform: translateX(45px) !important;
       }
     }
-    .tooltip {
+    > .content .tooltip {
       background-size: 30px;
       background-repeat: no-repeat;
       background-position: center;
       background-image: url("/static/img/icons/large-back.png");
       transition: transform ease 0.5s;
-      &.hidden {
-        transform: translateX(0px) !important;
-      }
+      width: 25px;
+      transform: translateX(25px) !important;
+      border-radius: 0 4px 4px 0;
+      &.hidden { transform: translateX(0px) !important; }
     }
     .content .tooltip {
       right: 0;
@@ -738,7 +761,7 @@ nav {
   .alerts {
     top: 0;
     right: 0;
-    border-left: 1px solid $gray;
+    // border-left: 1px solid $gray;
     &.hidden {
       transform: translateX(500px);
       .tooltip {
@@ -1041,7 +1064,8 @@ nav {
   z-index: 100;
   position: absolute;
   background-color: #fff;
-  border: 1px solid $gray;
+  box-shadow: 0px 0px 10px rgba(#000, 0.2);
+  // border: 1px solid $gray;
   border-radius: 3px;
   &.hidden {
     display: none;
@@ -1079,6 +1103,9 @@ nav {
   padding-right: 10px;
   height: 28px;
   position: relative;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
   .drop-list {
     left: -1px;
     top: 30px;

@@ -17,6 +17,8 @@ router.route('/stats')
   const fromDate = new Date(from)
   const toDate = new Date(to)
 
+  console.log({fromDate, toDate})
+
   Site.aggregate([
     { $match: { company: new mongoose.Types.ObjectId(req._user.cmp) }}, // We need to cast the string to ObjectId
     // { NOT USING
@@ -30,7 +32,7 @@ router.route('/stats')
     { $unwind: '$history' },
     { $match: { 'history.timestamp': { $gte: fromDate, $lte: toDate } }},
     { $group: {
-      _id: { zone: '$zone', month: { $month: '$timestamp' }, day: { $dayOfMonth: '$timestamp' }, year: { $year: '$timestamp' } },
+      _id: { zone: '$zone', month: { $month: '$history.timestamp' }, day: { $dayOfMonth: '$history.timestamp' }, year: { $year: '$history.timestamp' } },
       alarmsCount: { $sum: { $size: '$history.alarms' }},
       sensorsCount: { $sum: { $size: '$history.sensors' }},
       count: { $sum: 1 }
@@ -48,6 +50,8 @@ router.route('/stats')
     }
   ])
   .then(zonesAverage => {
+
+
     const data = zonesAverage.map(({_id, zones}) => {
       const day = { name: `${_id.day}/${_id.month}/${_id.year}` }
 
@@ -77,7 +81,7 @@ router.route('/alarms')
     { $unwind: '$history' },
     { $match: { 'history.timestamp': { $gte: fromDate, $lte: toDate } }},
     { $group: {
-      _id: { zone: '$zone', month: { $month: '$timestamp' }, day: { $dayOfMonth: '$timestamp' }, year: { $year: '$timestamp' } },
+      _id: { zone: '$zone', month: { $month: '$history.timestamp' }, day: { $dayOfMonth: '$history.timestamp' }, year: { $year: '$history.timestamp' } },
       alarmsCount: { $sum: { $size: '$history.alarms' }},
       count: { $sum: 1 }
       }

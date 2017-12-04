@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import queryString from 'query-string'
+import Particles from 'react-particles-js'
 
 import { NetworkOperation } from '../lib'
 import { setCredentials } from '../actions'
+import * as particleParams from '../lib/particlesjs-config.json'
 
 class Login extends Component {
   constructor(props) {
@@ -21,6 +23,10 @@ class Login extends Component {
 
     this.onSubmit = this.onSubmit.bind(this)
     this.onChange = this.onChange.bind(this)
+  }
+
+  componentDidMount() {
+    // movingNodes()
   }
 
   onChange(event) {
@@ -66,10 +72,20 @@ class Login extends Component {
     const { state } = this
     return (
       <div className="login">
-        <div id="logo">
-          <img src="/static/img/iso.svg" alt="" className="iso" />
-          <img src="/static/img/logo.svg" alt="" className="logo" />
-        </div>
+        <Particles
+          style={{
+            width: '100%',
+            height: '100%',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0
+          }}
+          params={particleParams}
+        />
+        <div id="logo"></div>
         <form onSubmit={this.onSubmit}>
           <input
             type="text"

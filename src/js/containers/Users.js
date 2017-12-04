@@ -91,7 +91,11 @@ class Users extends Component {
     this.state = {
       users: [],
       isAddingUser: false,
-      selectedOption: 'ADMINS'
+      selectedOption: 'ADMINS',
+      userAddSection: 'CONTACT',
+      selectedZones: [],
+      selectedZone: null,
+      selectedSubzones: []
     }
 
     this.toggleAddUser = this.toggleAddUser.bind(this)
@@ -109,7 +113,8 @@ class Users extends Component {
 
   toggleAddUser() {
     this.setState(prev => ({
-      isAddingUser: !prev.isAddingUser
+      isAddingUser: !prev.isAddingUser,
+      userAddSection: 'CONTACT'
     }))
   }
 
@@ -127,22 +132,99 @@ class Users extends Component {
             <div className="content user-add" onClick={evt => evt.stopPropagation()}>
               <div className="actions">
                 <p>Nuevo <span>{this.state.selectedOption === 'ADMINS' ? 'administrador' : 'operador'}</span></p>
-                <span onClick={this.toggleAddUser}>Cancelar</span>
+                {
+                  state.userAddSection === 'CONTACT'
+                  ? <span onClick={this.toggleAddUser} className="inline-button">Cancelar</span>
+                  : <span onClick={() => this.setState({ userAddSection: 'CONTACT' })} className="inline-button">Regresar</span>
+                }
               </div>
-              <div className="fields">
-                <label htmlFor="name">Nombre</label>
-                <input
-                  type="text"
-                  placeholder="Nombre"
-                />
-                <label htmlFor="email">Email</label>
-                <input
-                  type="text"
-                  placeholder="Email"
-                />
-                <span className="description">A este email se le hará llegar una invitación que deberá aceptar para poder accesar.</span>
-              </div>
-              <input type="button" className="next destructive" value="Siguiente"/>
+              {
+                state.userAddSection === 'CONTACT'
+                ?
+                <div className="fields">
+                  <label htmlFor="name">Nombre</label>
+                  <input
+                    type="text"
+                    placeholder="Nombre"
+                  />
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="text"
+                    placeholder="Email"
+                  />
+                  <span className="description">A este email se le hará llegar una invitación que deberá aceptar para poder accesar.</span>
+                </div>
+                :
+                <div className="fields">
+                  <label htmlFor="">Permisos</label>
+                  <div className="counter" onClick={() => this.setState(prev => ({ showZoneSelector: !prev.showZoneSelector }))}>
+                    <span className="value">{state.selectedZones.length}</span>
+                    <span className="title">Zonas</span>
+                    <ul className={`drop-list ${!state.showZoneSelector && 'hidden'}`} onClick={evt => evt.stopPropagation()}>
+                      <li>
+                        <input
+                          type="checkbox"
+                          id="all"
+                          name="ALL"
+                          onChange={this.onChange}
+                        />
+                        <label htmlFor="all"><b>Todas</b></label>
+                      </li>
+                      {
+                        props.zones.map(zone =>
+                          <li key={zone._id}>
+                            <input
+                              type="checkbox"
+                              id={zone._id}
+                              name={zone._id}
+                              onChange={this.onChange}
+                              checked={this.state.selectedZones.some(zoneId => zoneId === zone._id)}
+                            />
+                            <label htmlFor={zone._id}> {zone.name}</label>
+                          </li>
+                        )
+                      }
+                      {/* <input type="button" className="destructive" value="Aplicar"/> */}
+                    </ul>
+                  </div>
+                  <div className="counter" onClick={() => this.setState(prev => ({ showSubzoneSelector: !prev.showSubzoneSelector }))}>
+                    <span className="value">{state.selectedSubzones.length}</span>
+                    <span className="title">Subzonas</span>
+                    <ul className={`drop-list ${!state.showSubzoneSelector && 'hidden'}`} onClick={evt => evt.stopPropagation()}>
+                      <li>
+                        <input
+                          type="checkbox"
+                          id="all"
+                          name="ALL"
+                          onChange={this.onChange}
+                        />
+                        <label htmlFor="all"><b>Todas</b></label>
+                      </li>
+                      {
+                        props.zones.map(zone =>
+                          <li key={zone._id}>
+                            <input
+                              type="checkbox"
+                              id={zone._id}
+                              name={zone._id}
+                              onChange={this.onChange}
+                              checked={this.state.selectedSubzones.some(zoneId => zoneId === zone._id)}
+                            />
+                            <label htmlFor={zone._id}> {zone.name}</label>
+                          </li>
+                        )
+                      }
+                      {/* <input type="button" className="destructive" value="Aplicar"/> */}
+                    </ul>
+                  </div>
+                </div>
+              }
+              <input
+                type="button"
+                className="next destructive"
+                value="Siguiente"
+                onClick={() => state.userAddSection === 'CONTACT' ? this.setState({userAddSection: 'PERMISSIONS'}) : this.addUser()}
+              />
             </div>
           </Prompt>
         }
