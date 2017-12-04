@@ -72,7 +72,10 @@ class App extends Component {
       console.log('Got reload')
     })
 
-    this.socket.on('report', props.setReport)
+    this.socket.on('report', report => {
+      console.log('Got report', report)
+      props.setReport(report)
+    })
   }
 
   render() {

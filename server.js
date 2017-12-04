@@ -57,7 +57,7 @@ const server = app.listen(PORT, () =>
 )
 
 const io = require('socket.io').listen(server)
-io.set('origins', '*')
+// io.set('origins', '*')
 // Connect sockets
 require(path.resolve('router/v1/sockets'))(io)
 
