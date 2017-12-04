@@ -3,11 +3,31 @@ const express = require('express')
 const path = require('path')
 const winston = require('winston')
 const router = new express.Router()
+const jwt = require('jsonwebtoken')
+const config = require(path.resolve('config/config'))
 
 const Site = require(path.resolve('models/Site'))
 const Zone = require(path.resolve('models/Zone'))
 const Subzone = require(path.resolve('models/Subzone'))
 const User = require(path.resolve('models/User'))
+
+
+router.route('/site-token')
+.post((req, res) => {
+  if (req._user.acc < 3) {
+    return res.status(401).json({ message: 'Not enough privilegies' })
+  }
+
+  if (!req.body.company) return res.status(400).json({message: 'Missing company parameter'})
+  if (!req.body.site) return res.status(400).json({message: 'Missing site parameter'})
+
+  const token = jwt.sign({
+    cmp: req.body.company,
+    ste: req.body.site
+  }, config.secret)
+
+  return res.status(200).json({ token })
+})
 
 router.route('/users')
 .get((req, res) => {

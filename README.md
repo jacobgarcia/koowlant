@@ -1,5 +1,12 @@
 # KawlantID
 
+# Usage
+
+## Send site reports
+First will need a site token (jwt), you can generate one on /v1/site-token POST, passing your user token (must be access 3) and it will return a site token.
+
+Then simply make a PUT request to /v1/reports and the route will access the company and site key by the token and make the corresponding update.
+
 ## Codes
 
 ### User types

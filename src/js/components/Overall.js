@@ -18,11 +18,12 @@ class Overall extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('!this.props.reports', !this.props.reports)
-    if (!this.props.reports) return
+    if (!this.props.reports || !nextProps.reports) return
 
-    console.log('Different lengths', nextProps.reports.length, this.props.reports.length)
-    if (nextProps.reports.length !== this.props.reports.length) {
+    const nextAlarms = nextProps.reports.reduce((alarms, {alarms: currentAlarms = []}) => [...alarms, ...currentAlarms], [])
+    const currentAlarms = this.props.reports.reduce((alarms, {alarms: currentAlarms = []}) => [...alarms, ...currentAlarms], [])
+
+    if (nextAlarms.length !== currentAlarms.length) {
       this.setState({
         data: substractReportValues(nextProps.reports)
       }, () => {
