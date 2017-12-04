@@ -12,6 +12,8 @@ function sockets(io) {
 
     socket.on('join', token => {
 
+      winston.info('Asking to join', token)
+
       if (!token) {
         return null
       }
@@ -35,7 +37,7 @@ function sockets(io) {
             .then(sites => {
               sites.map(site => {
                 if (site.key === null) return
-                // winston.debug(`Joining ${decoded._id} to ${companyId}-${site.key}`)
+                winston.info(`Joining ${decoded._id} to ${companyId}-${site.key}`)
                 socket.join(`${companyId}-${site.key}`)
                 io.to('some-room').emit('reload')
               })
@@ -50,7 +52,7 @@ function sockets(io) {
             .then(sites => {
               sites.map(site => {
                 if (site.key === null) return
-                // winston.debug(`Joining ${decoded._id} to ${companyId}-${site.key}`)
+                winston.info(`Joining ${decoded._id} to ${companyId}-${site.key}`)
                 socket.join(`${companyId}-${site.key}`)
               })
             })

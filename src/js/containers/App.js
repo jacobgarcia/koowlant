@@ -61,12 +61,12 @@ class App extends Component {
 
   initSocket(props, token) {
     this.socket = io()
-    this.socket.emit('join', token)
+    // this.socket.emit('join', token)
 
-    // this.socket.on('connect', () => {
-    //   console.log('connected')
-    //   this.socket.emit('join', token)
-    // })
+    this.socket.on('connect', () => {
+      console.log('connected')
+      this.socket.emit('join', token)
+    })
 
     this.socket.on('reload', () => {
       console.log('Got reload')

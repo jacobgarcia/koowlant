@@ -21,7 +21,7 @@ class Overall extends PureComponent {
     console.log('!this.props.reports', !this.props.reports)
     if (!this.props.reports) return
 
-    console.log('Different lengths', nextProps.reports.length !== this.props.reports.length)
+    console.log('Different lengths', nextProps.reports.length, this.props.reports.length)
     if (nextProps.reports.length !== this.props.reports.length) {
       this.setState({
         data: substractReportValues(nextProps.reports)
@@ -68,9 +68,6 @@ class Overall extends PureComponent {
 
   render() {
     const { state, props } = this
-    // Elements (or sensors) to be rendered
-    // const elements = this.getElements(props.selectedType, this.props)
-    // console.log('GET ELEMENTS', elements)
 
     return (
       <div className={`overall ${!props.isVisible && 'hidden'}`}>
