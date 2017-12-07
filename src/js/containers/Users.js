@@ -90,15 +90,20 @@ class Users extends Component {
 
     this.state = {
       users: [],
+      filteredUsers: [],
       isAddingUser: false,
       selectedOption: 'ADMINS',
       userAddSection: 'CONTACT',
       selectedZones: [],
       selectedZone: null,
-      selectedSubzones: []
+      selectedSubzones: [],
+      query: '',
+      isSearching: false
     }
 
     this.toggleAddUser = this.toggleAddUser.bind(this)
+    this.onSearchChange = this.onSearchChange.bind(this)
+    this.onLogout = this.onLogout.bind(this)
   }
 
   componentDidMount() {
@@ -106,8 +111,22 @@ class Users extends Component {
     NetworkOperation.getUsers()
     .then(({data}) => {
       this.setState({
-        users: data.users
+        users: data.users,
+        filteredUsers: data.users
       })
+    })
+  }
+
+  onLogout() {
+    localStorage.removeItem('token')
+    this.props.history.replace('/login')
+  }
+
+  onSearchChange(event) {
+    const { value } = event.target
+    this.setState({
+      filteredUsers: this.state.users.filter(user => JSON.stringify(user).toLowerCase().includes(value.toLowerCase())),
+      query: value
     })
   }
 
@@ -120,8 +139,8 @@ class Users extends Component {
 
   render() {
     const { state, props } = this
-    const operators = this.state.users.filter(({access}) => access < 3)
-    const admins = this.state.users.filter(({access}) => access === 3)
+    const operators = this.state.filteredUsers.filter(({access}) => access < 3)
+    const admins = this.state.filteredUsers.filter(({access}) => access === 3)
 
     return (
       <div className="app-content users">
@@ -231,16 +250,20 @@ class Users extends Component {
         <div className="user">
           <div className="user-info">
             <div>
-              <span>Administrador Principal</span>
-              <p>Adrián González Martinez</p>
+              <span>Nombre</span>
+              <p>{props.credentials && props.credentials.user && props.credentials.user.fullName}</p>
             </div>
             <div>
               <span>Email</span>
-              <p>adrián.gonzales@mail.com</p>
+              <p>{props.credentials && props.credentials.user && props.credentials.user.email}</p>
+            </div>
+            <div>
+              <span>Tipo de usuario</span>
+              <p>{props.credentials && props.credentials.user && props.credentials.user.access}</p>
             </div>
           </div>
           <div>
-            <p>Cerrar sesión</p>
+            <input type="button" value="Cerrar sesión" onClick={this.onLogout}/>
           </div>
         </div>
         <div className="users-container">
@@ -253,9 +276,19 @@ class Users extends Component {
             </ul>
           }
           <div className="users-table">
-            <div>
+            <div className="actions">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Buscar..."
+                  value={state.query}
+                  className="shrinkable"
+                  onChange={this.onSearchChange}
+                  onFocus={() => this.setState({isSearching: true})}
+                />
+                {state.isSearching && <span className="inline-button" onClick={() => {this.setState({isSearching: false, query: ''}); this.onSearchChange({target: {value: ''}})}}>Cancelar</span>}
+              </div>
               <input type="button" value="Añadir" onClick={this.toggleAddUser}/>
-              <input type="text" placeholder="Buscar..." />
             </div>
             <div className="table">
               <div className="table-header">

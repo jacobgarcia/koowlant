@@ -81,14 +81,14 @@ class Login extends Component {
             left: 0,
             right: 0,
             bottom: 0,
-            zIndex: 0
+            zIndex: -100
           }}
           params={particleParams}
         />
         <div id="logo"></div>
         <form onSubmit={this.onSubmit}>
           <input
-            type="text"
+            type="email"
             name="email"
             onChange={this.onChange}
             value={state.email}

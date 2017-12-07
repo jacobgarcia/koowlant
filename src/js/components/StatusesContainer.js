@@ -81,8 +81,8 @@ class StatusesContainer extends PureComponent {
           )
         })
         :
-        <div>
-          Sin información
+        <div className="no-info">
+          <span>Sin información</span>
         </div>
       )
       case 'CAMERAS':

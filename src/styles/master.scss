@@ -6,6 +6,8 @@ $green: #50E3C2;
 $red: #ed2a20;
 $connus-blue: #00adee;
 
+$default-shadow: 0px 0px 10px rgba(#000, 0.2);
+
 // Custom normalize
 @import "./normalize.scss";
 @import "./leaflet";
@@ -26,10 +28,17 @@ html, body, #root, #app {
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
-  border-bottom: 1px solid rgb(164, 164, 164);
-  // border-radius: 4px;
+  border: 1px solid rgb(164, 164, 164);
+  border-radius: 4px;
   &:focus {
     border-color: $connus-blue;
+  }
+  &.shrinkable {
+    max-width: 120px;
+    transition: 0.3s;
+    &:focus, &:active {
+      max-width: 250px;
+    }
   }
 }
 
@@ -70,6 +79,7 @@ input[type="checkbox"] {
 ul.links {
   display: inline-block;
   height: 50px;
+  box-shadow: $default-shadow;
   &.nav {
     li {
       padding: 0;
@@ -93,8 +103,15 @@ ul.links {
     overflow: hidden;
     background-size: 18px;
     background-repeat: no-repeat;
-    &.search { padding-left: 38px !important; background-image: url('/static/img/icons/search.svg'); background-position: 12px center; }
-    &.create { padding-left: 38px !important; background-image: url('/static/img/icons/add.svg'); background-position: 12px center;  }
+    border-color: $light-gray;
+    &.search { border-left: 0; border-radius: 4px 0 0 4px; padding-left: 38px !important; background-image: url('/static/img/icons/search.svg'); background-position: 12px center; }
+    &.create { border-radius: 0 4px 4px 0; padding-left: 38px !important; background-image: url('/static/img/icons/add.svg'); background-position: 12px center;  }
+    &.search, &.create {
+      border-right: none;
+      border-top: none;
+      border-bottom: none;
+      overflow: hidden;
+    }
     &:first-child {
       border-right-width: 0;
     }
@@ -156,6 +173,7 @@ ul.links {
   user-select: none;
   font-weight: 500;
   font-size: 0.9rem;
+  &:active { background-color: $light-gray }
   &.huge {
     font-size: 1rem;
     padding: 6px 20px;
@@ -175,6 +193,7 @@ ul.links {
     background: $connus-blue;
     color: #fff;
     border: none;
+    &:active { background-color: hsl(196, 100%, 36%); }
   }
 }
 
@@ -187,7 +206,7 @@ nav {
   right: 0;
   background-color: #fff;
   z-index: 1000;
-  box-shadow: 0px 0px 10px rgba(#000, 0.2);
+  box-shadow: $default-shadow;
   display: flex;
   align-items: center;
   font-weight: 500;
@@ -209,6 +228,9 @@ nav {
       color: $gray;
       text-transform: capitalize;
       font-weight: 600;
+      &:active {
+        color: $text-gray;
+      }
       &.active {
         color: $connus-blue;
         transform: translateY(1px);
@@ -281,6 +303,15 @@ nav {
   border-radius: 3px;
 }
 
+.users-table {
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    .inline-button {
+      margin-left: 10px;
+    }
+  }
+}
 .table {
   display: flex;
   flex-direction: column;
@@ -387,6 +418,7 @@ nav {
     border: 1px solid $gray;
     margin-top: 20px;
     padding: 6px 12px;
+    border-radius: 4px;
   }
   input[type="submit"] {
     text-align: center;
@@ -411,7 +443,7 @@ nav {
     color: #fff;
     font-weight: 600;
     bottom: 0;
-    transform: translateY(60px);
+    transform: translateY(18px);
     text-align: center;
     p {
       position: relative;
@@ -670,6 +702,7 @@ nav {
     box-shadow: 0px 0px 10px rgba(#000, 0.2);
     > .content {
       padding: 20px 10px;
+      padding-bottom: 0;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -680,6 +713,7 @@ nav {
         font-size: 0.8rem;
         font-weight: 500;
         flex-shrink: 0;
+        margin-bottom: 20px;
         a {
           padding-left: 24px;
           background-size: 22px;
@@ -688,10 +722,16 @@ nav {
           background-position: left center;
         }
         .pop-window {
+          opacity: 0.6;
+          cursor: pointer;
           background-image: url("/static/img/icons/window.svg");
           padding-left: 24px;
           background-repeat: no-repeat;
           background-position: left center;
+          font-weight: 600;
+          &:active {
+            opacity: 1;
+          }
         }
       }
       .tooltip {
@@ -737,6 +777,7 @@ nav {
     .overall-header {
       flex-shrink: 0;
       margin: 30px 0;
+      margin-top: 10px;
       .bar-container {
         width: 100%;
         height: 12px;
@@ -994,6 +1035,18 @@ nav {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
+    .no-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      span {
+        font-size: 2rem;
+        font-weight: 600;
+        opacity: 0.15;
+        text-align: center;
+      }
+    }
     .info {
       &.readonly {
         input {
@@ -1059,7 +1112,7 @@ nav {
   .mini-nav {
     display: flex;
     padding: 10px 0 0;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid $gray;
     margin-bottom: 30px;
     li {
       margin: 5px 15px 0px;
@@ -1067,10 +1120,15 @@ nav {
       margin-bottom: 1px;
       padding-bottom: 8px;
       cursor: pointer;
+      color: $gray;
+      &:active {
+        color: $text-gray;
+      }
       &.active {
-        margin-bottom: -2px;
+        margin-bottom: -1px;
         font-weight: 600;
-        border-bottom: 3px solid #000;
+        color: $connus-blue;
+        border-bottom: 2px solid $connus-blue;
       }
     }
   }
