@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import { NetworkOperation } from '../lib'
+import { getSensorName, getSensorUnits } from '../lib/specialFunctions'
 
 class Alerts extends Component {
   constructor(props) {
@@ -11,19 +12,62 @@ class Alerts extends Component {
       alerts: {
         today: [],
         before: []
-      }
+      },
+      presentingAlarms: [],
+      alarmsCount: 0
     }
+
+    this.onSecond = this.onSecond.bind(this)
   }
 
   componentDidMount() {
-    NetworkOperation.getPreviousAlarms(50)
-    .then(({data}) => {
-
-    })
+    // TODO get last alerts
+    this.interval = setInterval(() => this.onSecond(), 4000)
   }
 
+  onSecond() {
+    if (this.state.presentingAlarms.length < 1) return
+    this.setState(prev => ({
+      presentingAlarms: prev.presentingAlarms.map((alarm, index) => index === (prev.presentingAlarms.length - 1) ? ({...alarm, dismissed: true}) : alarm)
+    }), () => {
+      setTimeout(() => {
+        console.log('Removing...', this.state.presentingAlarms)
+        this.setState(prev => ({
+          presentingAlarms: prev.presentingAlarms.slice(0, prev.presentingAlarms.length - 1)
+        }))
+      }, 500)
+    })
+
+  }
+
+//   shouldComponentUpdate(nextProps, {isVisible, isCreating, alarmsCount = 0}) {
+//     if (props.isVisible) return true
+// props.isCreating) return false
+//     if (this.state.alarmsCount !== alarmsCount) return true
+//     return true
+//   }
+
   componentWillReceiveProps(nextProps) {
-    if (this.props.alerts.length === nextProps.alerts.length) return
+    const alarms =
+    nextProps.alarms.reduce((sum, {zone, subzone, site, alarms = []}) =>
+      [...alarms.reduce((sum, {values = [], timestamp}) =>
+        [...values.map(value => ({...value, timestamp: new Date(timestamp).getTime(), zone, subzone, site})), ...sum],
+        []),
+      ...sum]
+    , [])
+
+    alarms.sort(({timestamp: a}, {timestamp: b}) => b - a)
+
+    if (this.state.alarmsCount === alarms.length) return
+
+    const alarmsDelta = alarms.length - this.state.alarmsCount
+
+    // console.log({alarms})
+    for (let index = 0; index < alarmsDelta; index += 1) {
+      this.setState(prev => ({
+        presentingAlarms: prev.presentingAlarms.concat([alarms[index]])
+      }))
+    }
 
     const today = new Date().getDay()
     const alerts = {
@@ -31,8 +75,8 @@ class Alerts extends Component {
       before: []
     }
 
-    this.props.alarms.map(alert => {
-      alert.alarms.map(({timestamp, values}) => {
+    nextProps.alarms.map(alert => {
+      alert.alarms.map(({timestamp}) => {
         if (new Date(timestamp).getDay() === today) {
           alerts.today = alerts.today.concat([{timestamp, ...alert}])
         } else {
@@ -42,32 +86,37 @@ class Alerts extends Component {
     })
 
     this.setState({
-      alerts
+      alerts,
+      alarmsCount: alarms.length
     })
   }
 
   render() {
     const { state, props } = this
-    const today = new Date().getDay()
-
-    console.log('PROPS', this.props.alarms)
-
-    const todayReports = props.alarms.reduce((sum, alarm) => {
-      const alarms = alarm.alarms.filter(({timestamp}) => new Date(timestamp).getDay() === today)
-      .reduce((sum, {values = [], attended, timestamp}) => [...sum, ...values.map(value => ({...value, timestamp, attended }))], [])
-      return [...sum, ...alarms]
-    }, [])
-
-    const erlierReports = props.alarms.reduce((sum, alarm) => {
-      const alarms = alarm.alarms.filter(({timestamp}) => new Date(timestamp).getDay() !== today)
-      .reduce((sum, {values = [], attended, timestamp}) => [...sum, ...values.map(value => ({...value, timestamp, attended }))], [])
-      return [...sum, ...alarms]
-    }, [])
 
     return (
       <div className={`alerts ${!props.isVisible && 'hidden'}`}>
+        <div className="floating-alerts-container">
+          <div className="floating-alerts">
+            {
+              state.presentingAlarms.sort(({timestamp: a}, {timestamp: b}) => b - a).map((alarm, index) =>
+                <div key={index + alarm._id + alarm.timestamp + alarm.site + alarm.value}
+                  className={`alarm ${alarm.dismissed && 'dismissed'}`}
+                  style={{transitionDelay: `${index / 20}s`}}
+                  >
+                  <div className="text">
+                    <span className="title">{getSensorName(alarm.key)}</span>
+                    <span className="value">{alarm.value}{getSensorUnits(alarm.key)}</span>
+                  </div>
+                  <span>{index + alarm._id + alarm.timestamp}</span>
+                  <span className="location">{alarm.zone && alarm.zone.name}, {alarm.subzone && alarm.subzone.name}, {alarm.site && alarm.site.name}</span>
+                </div>
+              )
+            }
+          </div>
+        </div>
         <div className="content">
-          <div className={`tooltip ${props.isCreating && 'hidden'}`} onClick={props.onVisibleToggle}/>
+          <div className={`tooltip ${props.isCreating && 'hidden'} ${Boolean(state.alarmsCount) && 'active'}`} onClick={props.onVisibleToggle}/>
           <div className="mini-header">
             <span className="pop-window">Hacer ventana</span>
           </div>
@@ -107,31 +156,13 @@ class Alerts extends Component {
                         <div className="alert" key={index}>
                           <div className="icon"></div>
                           <div>
-                            <p>{value[0].key} {value[0].value}</p>
+                            <p>{value.length > 0 && value[0].key} {value.length > 0 && value[0].value}</p>
                             <span className="location">Zona {siteAlarms.zone.name}, {siteAlarms.subzone.name}, {siteAlarms.site.key}</span>
                           </div>
                           <p className="date">{new Date(siteAlarms.alarms[0].timestamp).toLocaleString('es-MX')}</p>
                         </div>
                       )
                     }
-                  </div>
-                )
-              })
-            }
-          </div>
-          <div>
-            {
-              state.alerts.today.map((alert, index) =>
-                <p key={index}>{JSON.stringify(alert.timestamp)}</p>
-              )
-            }
-            {
-              state.alerts.before.map((alert, index) => {
-                const date = new Date(alert.timestamp)
-
-                return (
-                  <div key={index}>
-                    <span className="date">{date.getDate()}/{date.getMonth() + 1}/{date.getFullYear()}</span>
                   </div>
                 )
               })
@@ -147,53 +178,8 @@ Alerts.defaultProps = {
   alerts: []
 }
 
+Alerts.propTypes = {
+  alarms: PropTypes.array
+}
+
 export default Alerts
-
-
-// {
-//   "site": {
-//     "_id": "5a0b805dd6e4539441f79601",
-//     "key": "23dTas2"
-//   },
-//   "zone": {
-//     "_id": "5a0b3d43d357508658895c91",
-//     "name": "Centro"
-//   },
-//   "subzone": {
-//     "_id": "5a0b3d55d357508658895c92",
-//     "name": "Valle de México"
-//   },
-//   "alarms": [
-//     {
-//       "timestamp": 1511253451562,
-//       "values": [
-//         {
-//           "key": "ts3",
-//           "value": 90,
-//           "_id": "5a13e5cbfd09dd3b94505b92"
-//         }
-//       ],
-//       "attended": false
-//     }
-//   ],
-//   "sensors": [
-//     {
-//       "timestamp": 1511253451562,
-//       "values": [
-//         {
-//           "key": "ts1",
-//           "value": 1.8,
-//           "_id": "5a13e5cbfd09dd3b94505b91"
-//         }, {
-//           "key": "ts2",
-//           "value": 41.8,
-//           "_id": "5a13e5cbfd09dd3b94505b90"
-//         }, {
-//           "key": "ts3",
-//           "value": 60.8,
-//           "_id": "5a13e5cbfd09dd3b94505b8f"
-//         }
-//       ]
-//     }
-//   ]
-// }

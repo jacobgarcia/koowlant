@@ -21,7 +21,7 @@ function SiteMarker(props) {
 
   let sensors = []
   if (props.isSite) {
-    sensors = props.sensors.sensors
+    sensors = props.sensors ? props.sensors.sensors : []
   }
 
   const position = [parseFloat(props.position[0], 10), parseFloat(props.position[1], 10)]

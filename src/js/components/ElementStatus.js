@@ -66,7 +66,7 @@ ElementStatus.propTypes = {
   onHover: PropTypes.func,
   title: PropTypes.string,
   elements: PropTypes.array,
-  alarms: PropTypes.array,
+  alarms: PropTypes.number,
   name: PropTypes.string,
   siteKey: PropTypes.string,
   type: PropTypes.string,

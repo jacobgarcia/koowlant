@@ -802,11 +802,14 @@ nav {
   .alerts {
     top: 0;
     right: 0;
-    // border-left: 1px solid $gray;
     &.hidden {
       transform: translateX(500px);
       .tooltip {
-        background-image: url("/static/img/icons/alert.svg")
+        transition: 0.5s;
+        background-image: url("/static/img/icons/alert.svg");
+        &.active {
+          background-color: $red;
+        }
       }
     }
       .alerts-container {
@@ -827,7 +830,7 @@ nav {
           align-items: center;
           cursor: pointer;
           .location {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 500;
             color: $gray;
           }
@@ -836,12 +839,6 @@ nav {
             height: 30px;
             background-color: $red;
             margin-right: 10px;
-          }
-          .date {
-            font-weight: 600;
-            font-size: 0.8rem;
-            align-self: flex-start;
-            margin-left: auto;
           }
         }
 
@@ -860,10 +857,67 @@ nav {
     .alerts-container {
       overflow-y: scroll;
     }
+    .floating-alerts-container {
+      display: block;
+    }
+    .floating-alerts {
+      position: absolute;
+      left: -250px;
+      top: 130px;
+      z-index: 1;
+      overflow-y: scroll;
+      max-height: 100%;
+      max-height: calc(100% - 230px);
+      .alarm {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition-property: transform opacity;
+        transition-duration: 0.8s;
+        transition-timing-function: ease;
+        background-color: $red;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: $default-shadow;
+        z-index: 2000;
+        width: 240px;
+        overflow: hidden;
+        color: #fff;
+        padding-left: 45px;
+        opacity: 1;
+        &.dismissed {
+          transform: translateX(300px);
+          opacity: 0.3;
+        }
+        .text {
+          display: flex;
+          font-size: .95rem;
+          .value {
+            font-weight: 600;
+            margin-left: 6px;
+          }
+        }
+        .location {
+          font-size: 0.75rem;
+        }
+        &:active {
+          background-color: darken($red, 2);
+        }
+      }
+    }
+    .content {
+      z-index: 2000;
+      background-color: $light-gray;
+    }
+    &:not(.hidden) .floating-alerts .alarm {
+      transform: translateX(300px);
+    }
     .content .tooltip {
       left: 0;
       transform: translateX(-45px) rotateY(180deg);
       border-left: 0;
+      border-radius: 0 4px 4px 0;
     }
   }
 }
@@ -1050,7 +1104,7 @@ nav {
     .info {
       &.readonly {
         input {
-          border-bottom: none;
+          border: none;
         }
       }
       > div {
@@ -1067,7 +1121,7 @@ nav {
         padding-right: 0;
         padding-left: 0;
         &[readonly] {
-          border-bottom: none;
+          border: none;
         }
       }
     }

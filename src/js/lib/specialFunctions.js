@@ -2,7 +2,7 @@
 
 export function hashCode(str = '') { // java String#hashCode
     var hash = 0
-    for (let index = 0; index < str.length; index++) {
+    for (let index = 0; index < str.length; index += 1) {
        hash = str.charCodeAt(index) + ((hash << 5) - hash)
     }
     return hash
@@ -14,6 +14,44 @@ export function intToRGB(int) {
         .toUpperCase()
 
     return "00000".substring(0, 6 - color.length) + color
+}
+
+export function getSensorUnits(code) {
+  if (code.length < 3) return name
+  switch (code.charAt(0)) {
+    case 't':
+      return '°'
+    case 'h':
+    case 'f':
+    case 'c':
+      return '%'
+    default:
+      return ''
+  }
+}
+
+export function getSensorName(code) {
+  let name = ''
+  if (code.length < 3) return name
+  switch (code.charAt(0)) {
+    case 't':
+      name += 'Temperatura '
+      break
+    case 'h':
+      name += 'Humedad '
+      break
+    case 'f':
+      name += 'Combustible '
+      break
+    case 'c':
+      name += 'Carga '
+      break
+    default:
+      name += 'Sensor '
+      break
+  }
+  name += code.charAt(2)
+  return name
 }
 
 /**

@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression') // Files compresion
 const winston = require('winston') // Logger
 const v1 = require(path.resolve('router/v1'))
-// const NodeMediaServer = require('node-media-server')
+ const NodeMediaServer = require('node-media-server')
 const cors = require('cors')
 const app = express()
 
@@ -76,5 +76,5 @@ const config = {
     allow_origin: '*'
   }
 }
-
-// const nms = new NodeMediaServer(config).run()
+// const nms = new NodeMediaServer(config)
+// nms.run()
