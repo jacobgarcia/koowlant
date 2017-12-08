@@ -131,10 +131,9 @@ class Alerts extends Component {
                     {
                       siteAlarms.alarms[0].values.map((value, index) =>
                         <div className="alert" key={index}>
-                          <div className="icon"></div>
                           <div>
-                            <p>{value.key} {value.value}</p>
-                            <span className="location">Zona {siteAlarms.zone.name}, {siteAlarms.subzone.name}, {siteAlarms.site.key}</span>
+                            <p>{getSensorName(value.key)} {value.value}{getSensorUnits(value.key)}</p>
+                            <span className="location">Zona {siteAlarms.zone.name}, {siteAlarms.subzone.name}, {siteAlarms.site.name}</span>
                           </div>
                           <p className="date">{new Date(siteAlarms.alarms[0].timestamp).toLocaleString('es-MX')}</p>
                         </div>

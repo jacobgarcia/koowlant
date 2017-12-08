@@ -829,6 +829,8 @@ nav {
           display: flex;
           align-items: center;
           cursor: pointer;
+          justify-content: space-between;
+          padding-left: 50px;
           .location {
             font-size: 0.6rem;
             font-weight: 500;
