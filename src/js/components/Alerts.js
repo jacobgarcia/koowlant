@@ -8,6 +8,8 @@ class Alerts extends Component {
   constructor(props) {
     super(props)
 
+    console.log('Constructor')
+
     this.state = {
       alerts: {
         today: [],
@@ -37,7 +39,6 @@ class Alerts extends Component {
         }))
       }, 500)
     })
-
   }
 
 //   shouldComponentUpdate(nextProps, {isVisible, isCreating, alarmsCount = 0}) {
@@ -48,6 +49,7 @@ class Alerts extends Component {
 //   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('Will receive props')
     const alarms =
     nextProps.alarms.reduce((sum, {zone, subzone, site, alarms = []}) =>
       [...alarms.reduce((sum, {values = [], timestamp}) =>
@@ -60,13 +62,16 @@ class Alerts extends Component {
 
     if (this.state.alarmsCount === alarms.length) return
 
+    console.log({alarms: alarms.length,count:  this.state.alarmsCount})
     const alarmsDelta = alarms.length - this.state.alarmsCount
 
-    // console.log({alarms})
+    console.log({alarmsDelta})
     for (let index = 0; index < alarmsDelta; index += 1) {
-      this.setState(prev => ({
+      this.setState(prev => {
+        console.log('Conctat', prev.presentingAlarms.concat([alarms[index]]))
+        return ({
         presentingAlarms: prev.presentingAlarms.concat([alarms[index]])
-      }))
+      })})
     }
 
     const today = new Date().getDay()

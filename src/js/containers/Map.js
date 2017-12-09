@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import { Overall, Alerts, Polygon, Marker, Search, CreateElementBar } from '../components'
 import { NetworkOperation } from '../lib'
-import { setLoading, setComplete, setReport, setSubzone, setZone, setSite } from '../actions'
+import { setLoading, setComplete, setReport, setSubzone, setZone, setSite, resetReports } from '../actions'
 import { getAreaCenter } from '../lib/specialFunctions'
 
 class MapContainer extends Component {
@@ -56,6 +56,7 @@ class MapContainer extends Component {
       })
     })
 
+    this.props.resetReports()
     NetworkOperation.getReports()
     .then(({data}) => {
       data.reports.forEach(report => {
@@ -472,24 +473,16 @@ function mapStateToProps({zones, reports}) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    setZone: (id, name, positions) => {
-      dispatch(setZone(id, name, positions))
-    },
-    setSubzone: (zoneId, subzoneId, name, positions) => {
-      dispatch(setSubzone(zoneId, subzoneId, name, positions))
-    },
-    setSite: (zoneId, subzoneId, siteId, key, name, position) => {
-      dispatch(setSite(zoneId, subzoneId, siteId, key, name, position))
-    },
-    setLoading: () => {
-      dispatch(setLoading())
-    },
-    setComplete: () => {
-      dispatch(setComplete())
-    },
-    setReport: report => {
-      dispatch(setReport(report))
-    }
+    setZone: (id, name, positions) =>
+      dispatch(setZone(id, name, positions)),
+    setSubzone: (zoneId, subzoneId, name, positions) =>
+      dispatch(setSubzone(zoneId, subzoneId, name, positions)),
+    setSite: (zoneId, subzoneId, siteId, key, name, position) =>
+      dispatch(setSite(zoneId, subzoneId, siteId, key, name, position)),
+    setLoading: () => dispatch(setLoading()),
+    setComplete: () => dispatch(setComplete()),
+    setReport: report => dispatch(setReport(report)),
+    resetReports: () => dispatch(resetReports())
   }
 }
 

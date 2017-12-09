@@ -48,12 +48,13 @@ function appAlert(state = {}, action) {
 
 function reports(state = [], action) {
   switch (action.type) {
+    case 'RESET_REPORTS':
+      return []
     case 'SET_INITIAL_REPORTS':
       return [...action.reports]
     case 'SET_REPORT': {
       const foundIndex = state.findIndex(({ site }) => site.key === action.report.site.key)
       const newState = [...state] // BUG: It only creates a shallow copy
-      console.log('ACTION', action.report)
 
       foundIndex > -1
       ? newState[foundIndex] = {

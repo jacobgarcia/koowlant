@@ -117,6 +117,12 @@ export function setSite(zoneId, subzoneId, siteId, key, name, position) {
         R E P O R T S
 
  */
+ export function resetReports() {
+   return {
+     type: 'RESET_REPORTS'
+   }
+ }
+
 export function setReport(report) {
   return {
     type: 'SET_REPORT',
