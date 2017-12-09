@@ -8,8 +8,6 @@ class Alerts extends Component {
   constructor(props) {
     super(props)
 
-    console.log('Constructor')
-
     this.state = {
       alerts: {
         today: [],
@@ -33,7 +31,6 @@ class Alerts extends Component {
       presentingAlarms: prev.presentingAlarms.map((alarm, index) => index === (prev.presentingAlarms.length - 1) ? ({...alarm, dismissed: true}) : alarm)
     }), () => {
       setTimeout(() => {
-        console.log('Removing...', this.state.presentingAlarms)
         this.setState(prev => ({
           presentingAlarms: prev.presentingAlarms.slice(0, prev.presentingAlarms.length - 1)
         }))
@@ -49,7 +46,6 @@ class Alerts extends Component {
 //   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('Will receive props')
     const alarms =
     nextProps.alarms.reduce((sum, {zone, subzone, site, alarms = []}) =>
       [...alarms.reduce((sum, {values = [], timestamp}) =>
@@ -62,16 +58,12 @@ class Alerts extends Component {
 
     if (this.state.alarmsCount === alarms.length) return
 
-    console.log({alarms: alarms.length,count:  this.state.alarmsCount})
     const alarmsDelta = alarms.length - this.state.alarmsCount
 
-    console.log({alarmsDelta})
     for (let index = 0; index < alarmsDelta; index += 1) {
-      this.setState(prev => {
-        console.log('Conctat', prev.presentingAlarms.concat([alarms[index]]))
-        return ({
+      this.setState(prev => ({
         presentingAlarms: prev.presentingAlarms.concat([alarms[index]])
-      })})
+      }))
     }
 
     const today = new Date().getDay()

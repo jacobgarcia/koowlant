@@ -64,7 +64,6 @@ class App extends Component {
     // this.socket.emit('join', token)
 
     this.socket.on('connect', () => {
-      console.log('connected')
       this.socket.emit('join', token)
     })
 
@@ -73,7 +72,6 @@ class App extends Component {
     })
 
     this.socket.on('report', report => {
-      console.log('Got report', report)
       props.setReport(report)
     })
   }

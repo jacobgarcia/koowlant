@@ -17,8 +17,6 @@ router.route('/stats')
   const fromDate = new Date(from)
   const toDate = new Date(to)
 
-  console.log({fromDate, toDate})
-
   Site.aggregate([
     { $match: { company: new mongoose.Types.ObjectId(req._user.cmp) }}, // We need to cast the string to ObjectId
     // { NOT USING

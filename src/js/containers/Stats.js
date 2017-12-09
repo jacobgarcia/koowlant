@@ -88,7 +88,6 @@ class Stats extends Component {
       return
     }
 
-    console.log({from, to})
     // if (moment(to).diff(moment(from), 'months') < 2) {
     //   this.to.getDayPicker().showMonth(from)
     // }
