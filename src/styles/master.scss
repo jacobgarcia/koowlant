@@ -806,9 +806,10 @@ nav {
       transform: translateX(500px);
       .tooltip {
         transition: 0.5s;
-        background-image: url("/static/img/icons/alert.svg");
+        background-image: url("/static/img/icons/attention.svg");
         &.active {
           background-color: $red;
+          background-image: url("/static/img/icons/attention-red.svg");
         }
       }
     }
@@ -831,6 +832,12 @@ nav {
           cursor: pointer;
           justify-content: space-between;
           padding-left: 50px;
+          background-size: 15px;
+          background-repeat: no-repeat;
+          background-position: 15px center;
+          &.t { background-image: url('/static/img/icons/temperature-filled.svg'); }
+          &.c { background-image: url('/static/img/icons/battery-filled.svg'); }
+          &.f { background-image: url('/static/img/icons/fuel-filled.svg'); }
           .location {
             font-size: 0.6rem;
             font-weight: 500;
@@ -888,6 +895,12 @@ nav {
         color: #fff;
         padding-left: 45px;
         opacity: 1;
+        background-size: 15px;
+        background-repeat: no-repeat;
+        background-position: 15px center;
+        &.t { background-image: url('/static/img/icons/temperature.svg'); }
+        &.c { background-image: url('/static/img/icons/battery.svg'); }
+        &.f { background-image: url('/static/img/icons/fuel.svg'); }
         &.dismissed {
           transform: translateX(300px);
           opacity: 0.3;

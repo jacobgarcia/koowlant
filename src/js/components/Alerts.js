@@ -101,14 +101,14 @@ class Alerts extends Component {
             {
               state.presentingAlarms.sort(({timestamp: a}, {timestamp: b}) => b - a).map((alarm, index) =>
                 <div key={index + alarm._id + alarm.timestamp + alarm.site + alarm.value}
-                  className={`alarm ${alarm.dismissed && 'dismissed'}`}
+                  className={`alarm ${alarm.dismissed && 'dismissed'} ${alarm.key.length > 0 && alarm.key[0]}`}
                   style={{transitionDelay: `${index / 20}s`}}
                   >
                   <div className="text">
                     <span className="title">{getSensorName(alarm.key)}</span>
                     <span className="value">{alarm.value}{getSensorUnits(alarm.key)}</span>
                   </div>
-                  <span>{index + alarm._id + alarm.timestamp}</span>
+                  {/* <span>{index + alarm._id + alarm.timestamp}</span> */}
                   <span className="location">{alarm.zone && alarm.zone.name}, {alarm.subzone && alarm.subzone.name}, {alarm.site && alarm.site.name}</span>
                 </div>
               )
@@ -125,12 +125,11 @@ class Alerts extends Component {
             {
               props.alarms.map((siteAlarms, siteAlarmsIndex) => {
                 if (!siteAlarms.alarms || !siteAlarms.alarms.length || !siteAlarms.alarms[0].values.length) return null
-
                 return (
                   <div className="site-container" key={siteAlarmsIndex}>
                     {
                       siteAlarms.alarms[0].values.map((value, index) =>
-                        <div className="alert" key={index}>
+                        <div className={`alert ${value.key.length > 0 && value.key[0]}`} key={index}>
                           <div>
                             <p>{getSensorName(value.key)} {value.value}{getSensorUnits(value.key)}</p>
                             <span className="location">Zona {siteAlarms.zone.name}, {siteAlarms.subzone.name}, {siteAlarms.site.name}</span>
