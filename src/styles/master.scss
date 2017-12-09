@@ -903,7 +903,6 @@ nav {
         &.f { background-image: url('/static/img/icons/fuel.svg'); }
         &.dismissed {
           transform: translateX(300px);
-          opacity: 0.3;
         }
         .text {
           display: flex;
