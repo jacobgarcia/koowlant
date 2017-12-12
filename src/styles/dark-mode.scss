@@ -1,4 +1,5 @@
-$black: #1d212d;
+$dark: #1d212d;
+$light-dark: hsl(225, 21%, 24%);
 
 #app.dark-mode {
   background-color: #1d212d;
@@ -14,15 +15,18 @@ $black: #1d212d;
     transition: 1s ease 0.8s;
   }
   button, .button, .tooltip, .overall {
-    background-color: #1d212d;
+    background-color: $dark;
     color: #fff;
   }
   .overall, .alerts {
     .content {
-      background-color: $black;
+      background-color: $light-dark;
+      .status.list {
+        background-color: $dark;
+      }
     }
     .content .tooltip {
-      background-color: $black;
+      background-color: $light-dark;
       overflow: hidden;
       background-image: url();
       &:before {
@@ -33,11 +37,16 @@ $black: #1d212d;
         top: 5px;
         left: 5px;
         background-color: $connus-blue;
+        -webkit-mask-image: url("/static/img/icons/tower.svg");
         mask-image: url("/static/img/icons/tower.svg");
       }
     }
   }
+  .leaflet-pane .tooltip .content {
+    background-color: $dark;
+  }
   .alerts .content .tooltip:before {
+    -webkit-mask-image: url("/static/img/icons/attention.svg");
     mask-image: url("/static/img/icons/attention.svg");
   }
   button, input {
@@ -49,7 +58,7 @@ $black: #1d212d;
     border-color: black;
   }
   .leaflet-control-zoom a {
-    background-color: $black;
+    background-color: $dark;
     color: white;
     border-color: black;
   }

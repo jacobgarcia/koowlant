@@ -121,6 +121,7 @@ router.route('/:zoneId/subzones')
 //  Save zone and stream change
 router.route('/zones')
 .post((req, res) => {
+    console.log('Post to zones', req._user)
     const { name, positions } = req.body
     const company = req._user.cmp
 

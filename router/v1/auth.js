@@ -149,7 +149,7 @@ router.post('/authenticate', (req, res) => {
 
 router.use((req, res, next) => {
   const bearer = req.headers.authorization || 'Bearer '
-  const token = bearer.split(' ')[1]
+  const token = bearer.split(' ').pop()
 
   if (!token) {
     return res.status(401).send({ error: { message: 'No token provided' } })
