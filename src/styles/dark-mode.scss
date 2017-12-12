@@ -18,6 +18,9 @@ $black: #1d212d;
     color: #fff;
   }
   .overall, .alerts {
+    .content {
+      background-color: $black;
+    }
     .content .tooltip {
       background-color: $black;
       overflow: hidden;
