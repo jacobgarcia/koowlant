@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux'
 
+import { darkMode } from './darkMode'
+
 // Loading state
 function loading(state = 0, action) {
   switch (action.type) {
@@ -191,7 +193,8 @@ const appReducer = combineReducers({
   zones,
   administrators,
   appAlert,
-  reports
+  reports,
+  darkMode
 })
 
 export default appReducer

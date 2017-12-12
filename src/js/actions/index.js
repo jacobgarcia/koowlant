@@ -1,3 +1,5 @@
+export { toggleDarkMode } from './darkMode'
+
 /*
 
         L O A D I N G

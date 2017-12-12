@@ -79,7 +79,7 @@ class App extends Component {
   render() {
     const { props } = this
     return (
-      <div id="app">
+      <div id="app" className={props.darkMode === true ? 'dark-mode' : ''}>
         <Nav
           pathname={props.location.pathname}
           loading={props.loading}
@@ -124,10 +124,11 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-function mapStateToProps({loading, credentials}) {
+function mapStateToProps({loading, credentials, darkMode}) {
   return {
     loading,
-    credentials
+    credentials,
+    darkMode
   }
 }
 

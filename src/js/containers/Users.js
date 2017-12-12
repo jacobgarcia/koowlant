@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { Prompt } from '../components'
 import { NetworkOperation } from '../lib'
+import { toggleDarkMode } from '../actions'
 
 class User extends PureComponent {
   constructor(props) {
@@ -261,6 +262,15 @@ class Users extends Component {
               <span>Tipo de usuario</span>
               <p>{props.credentials && props.credentials.user && props.credentials.user.access}</p>
             </div>
+            <div>
+              <span>Modo obscuro</span>
+              <div className="switch white">
+                <input type="radio" name="switch" id="switch-off" onChange={props.toggleDarkMode} checked={!props.darkMode} />
+                <input type="radio" name="switch" id="switch-on" onChange={props.toggleDarkMode} checked={props.darkMode} />
+                <label htmlFor="switch-on">{props.darkMode ? 'Si' : 'No' }</label>
+                <span className="toggle" />
+              </div>
+            </div>
           </div>
           <div>
             <input type="button" value="Cerrar sesión" onClick={this.onLogout}/>
@@ -339,11 +349,18 @@ class Users extends Component {
   }
 }
 
-function mapStateToProps({zones, credentials}) {
+function mapStateToProps({zones, credentials, darkMode}) {
   return {
     zones: zones.map(({name, _id, subzones}) => ({name, _id, subzones: subzones.map(({_id, name}) => ({_id, name}))})),
-    credentials
+    credentials,
+    darkMode
   }
 }
 
-export default connect(mapStateToProps)(Users)
+function mapDispatchToProps(dispatch) {
+  return {
+    toggleDarkMode: () => dispatch(toggleDarkMode())
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Users)

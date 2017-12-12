@@ -12,6 +12,8 @@ $default-shadow: 0px 0px 10px rgba(#000, 0.2);
 @import "./normalize.scss";
 @import "./leaflet";
 @import "./calendar.scss";
+@import "./switch.scss";
+@import "./dark-mode.scss";
 
 body, .tooltip {
   font-family: 'Raleway';

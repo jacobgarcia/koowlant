@@ -430,7 +430,7 @@ class MapContainer extends Component {
             )
           }
           <TileLayer
-            url={`https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}${window.devicePixelRatio > 1 ? '@2' : ''}.png`}
+            url={`https://cartodb-basemaps-{s}.global.ssl.fastly.net/${props.darkMode ? 'dark' : 'light'}_all/{z}/{x}/{y}${window.devicePixelRatio > 1 ? '@2' : ''}.png`}
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
           />
         </Map>
@@ -464,10 +464,11 @@ MapContainer.propTypes = {
   setReport: PropTypes.func
 }
 
-function mapStateToProps({zones, reports}) {
+function mapStateToProps({zones, reports, darkMode}) {
   return {
     zones,
-    reports
+    reports,
+    darkMode
   }
 }
 
