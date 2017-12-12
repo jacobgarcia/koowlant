@@ -1,0 +1,60 @@
+$black: #1d212d;
+
+#app.dark-mode {
+  background-color: #1d212d;
+  transition: ease 0.8s;
+  color: #fff;
+  input {
+    border-color: #fff;
+    background-color: #1d212d;
+    color: #fff;
+  }
+  .app-content {
+    background-color: #1d212d;
+    transition: 1s ease 0.8s;
+  }
+  button, .button, .tooltip, .overall {
+    background-color: #1d212d;
+    color: #fff;
+  }
+  .overall, .alerts {
+    .content .tooltip {
+      background-color: $black;
+      overflow: hidden;
+      background-image: url();
+      &:before {
+        width: 35px;
+        height: 35px;
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background-color: $connus-blue;
+        mask-image: url("/static/img/icons/tower.svg");
+      }
+    }
+  }
+  .alerts .content .tooltip:before {
+    mask-image: url("/static/img/icons/attention.svg");
+  }
+  button, input {
+    &.destructive {
+      background-color: $connus-blue;
+    }
+  }
+  .button.create {
+    border-color: black;
+  }
+  .leaflet-control-zoom a {
+    background-color: $black;
+    color: white;
+    border-color: black;
+  }
+  .leaflet-control-attribution {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  nav {
+    background-color: #1d212d;
+    transition: ease 0.8s;
+  }
+}
