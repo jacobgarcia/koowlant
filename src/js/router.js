@@ -9,7 +9,7 @@ import { createStore } from 'redux'
 
 import Login from './containers/Login'
 // import Signup from './containers/Signup'
-// import Streaming from './components/Stream'
+import Streaming from './components/Stream'
 
 import App from './containers/App'
 
@@ -26,20 +26,21 @@ if (module.hot) {
   })
 }
 
-// const videoJsOptions = {
-//   autoplay: true,
-//   controls: false,
-//   sources: [{
-//     src: 'rtmp://demo.kawlantid.com/live&idiots',
-//     type: 'rtmp/mp4'
-//   }]
-// }
+const videoJsOptions = {
+  autoplay: true,
+  controls: false,
+  sources: [{
+    src: 'rtmp://demo.kawlantid.com/live&idiots',
+    type: 'rtmp/mp4'
+  }]
+}
 
 function Routes() {
   return (
     <Provider store={store}>
       <Router>
         <Switch>
+          <Route path="/streaming" render={() => <Streaming { ...videoJsOptions } />} />
           <Route path="/login" component={Login}/>
           {/* <Route path="/signup/:invitation_token" component={Signup}/> */}
           <Route path="/" component={App} />
