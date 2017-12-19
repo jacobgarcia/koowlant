@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression') // Files compresion
 const winston = require('winston') // Logger
 const v1 = require(path.resolve('router/v1'))
- const NodeMediaServer = require('node-media-server')
+const NodeMediaServer = require('node-media-server')
 const cors = require('cors')
 const app = express()
 
@@ -74,7 +74,12 @@ const config = {
   http: {
     port: 8000,
     allow_origin: '*'
-  }
+  },
+  https: {
+    port: 8443,
+    key:'/etc/letsencrypt/live/jenkins.kawlantid.com/privkey.pem',
+    cert:'/etc/letsencrypt/live/jenkins.kawlantid.com/fullchain.pem',
+  },
 }
-// const nms = new NodeMediaServer(config)
-// nms.run()
+const nms = new NodeMediaServer(config)
+nms.run()
