@@ -11,8 +11,12 @@ const NodeMediaServer = require('node-media-server')
 const cors = require('cors')
 const app = express()
 
-  mediaServerConfig = require(path.resolve('config/mediaDevServer'))
+let mediaServerConfig = {}
 
+//if (process.env.NODE_ENV === 'development')
+  mediaServerConfig = require(path.resolve('config/mediaServer'))
+//else
+  //mediaServerConfig = require(path.resolve('config/mediaDevServer'))
 
 const webpackDevServer = require(path.resolve('config/webpackDevServer')) // Dev server
 
@@ -62,6 +66,8 @@ const io = require('socket.io').listen(server)
 // io.set('origins', '*')
 // Connect sockets
 require(path.resolve('router/v1/sockets'))(io)
+
+
 
 const nms = new NodeMediaServer(mediaServerConfig)
 nms.run()
