@@ -10,10 +10,5 @@ module.exports = {
   http: {
     port: 8000,
     allow_origin: '*'
-  },
-  https: {
-    port: 8443,
-    key:'/etc/letsencrypt/live/jenkins.kawlantid.com/privkey.pem',
-    cert:'/etc/letsencrypt/live/jenkins.kawlantid.com/fullchain.pem',
   }
 }
